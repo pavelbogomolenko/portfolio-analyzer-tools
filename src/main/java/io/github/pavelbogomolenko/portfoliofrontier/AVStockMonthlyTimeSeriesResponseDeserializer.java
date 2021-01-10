@@ -25,7 +25,7 @@ public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeseria
         StockPriceTimeSeries[] stockPriceTimeSeries = new StockPriceTimeSeries[allKeys.size()];
         int counter = 0;
         for(String dateKey: allKeys) {
-            LocalDate date = LocalDate.parse(dateKey);;
+            LocalDate date = LocalDate.parse(dateKey);
             double openPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("1. open").getAsDouble();
             double highPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("2. high").getAsDouble();
             double lowPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("3. low").getAsDouble();

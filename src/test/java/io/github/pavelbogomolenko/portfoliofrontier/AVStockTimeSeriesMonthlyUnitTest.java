@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 public class AVStockTimeSeriesMonthlyUnitTest {
 
     @Test
-    void GivenStringResponseFromAVDataFetcher_WhenGetStockMonthlyTimeSeriesResponseWithValidSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse()
+    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNoDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponse()
             throws InterruptedException, IOException, URISyntaxException {
         StockPriceTimeSeries firstPrice = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2021-01-04"))
@@ -22,7 +22,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .close(3186.6300)
                 .high(3272.0)
                 .low(33144.0200)
-                .low(4411449)
+                .volume(4411449)
                 .build();
         StockPriceTimeSeries secondPrice = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2020-12-31"))
@@ -30,7 +30,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .close(3186.6300)
                 .high(3272.0)
                 .low(33144.0200)
-                .low(4411449)
+                .volume(4411449)
                 .build();
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
@@ -63,12 +63,10 @@ public class AVStockTimeSeriesMonthlyUnitTest {
 
     @Test
     void WhenGetStockMonthlyTimeSeriesResponseWithNullSymbolIsCalled_ThenThrowException_symbol_should_not_be_empty() {
-        Exception exception = assertThrows(NullPointerException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(mock(AVStockDataFetcher.class));
             avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(null);
         });
-
-        assertThat(exception, is(instanceOf(NullPointerException.class)));
     }
 
 }
