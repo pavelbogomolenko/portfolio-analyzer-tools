@@ -16,10 +16,22 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     @Test
     void GivenStringResponseFromAVDataFetcher_WhenGetStockMonthlyTimeSeriesResponseWithValidSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse()
             throws InterruptedException, IOException, URISyntaxException {
-        StockPriceTimeSeries firstPrice = new StockPriceTimeSeries(LocalDate.parse("2021-01-04"), 3270.0 ,
-                3272.0, 3144.0200, 3186.6300, 4411449);
-        StockPriceTimeSeries secondPrice = new StockPriceTimeSeries(LocalDate.parse("2020-12-31"), 3258.0000 ,
-                3272.0000, 3144.0200, 3186.6300, 4411449);
+        StockPriceTimeSeries firstPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2021-01-04"))
+                .open(3270.0)
+                .close(3186.6300)
+                .high(3272.0)
+                .low(33144.0200)
+                .low(4411449)
+                .build();
+        StockPriceTimeSeries secondPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-12-31"))
+                .open(3258.0000)
+                .close(3186.6300)
+                .high(3272.0)
+                .low(33144.0200)
+                .low(4411449)
+                .build();
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";

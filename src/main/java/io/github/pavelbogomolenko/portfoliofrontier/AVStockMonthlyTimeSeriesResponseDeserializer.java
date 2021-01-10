@@ -31,7 +31,14 @@ public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeseria
             double lowPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("3. low").getAsDouble();
             double closePrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("4. close").getAsDouble();
             double volume = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("5. volume").getAsDouble();
-            stockPriceTimeSeries[counter++] = new StockPriceTimeSeries(date, openPrice, highPrice, lowPrice, closePrice, volume);
+            stockPriceTimeSeries[counter++] = StockPriceTimeSeries.newBuilder()
+                    .date(date)
+                    .open(openPrice)
+                    .high(highPrice)
+                    .low(lowPrice)
+                    .close(closePrice)
+                    .volume(volume)
+                    .build();
         }
 
         return new AVStockMonthlyTimeSeriesResponse(monthlyTimeSeriesMetaResponse, stockPriceTimeSeries);

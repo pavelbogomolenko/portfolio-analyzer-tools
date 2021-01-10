@@ -10,13 +10,60 @@ public class StockPriceTimeSeries {
     private final double close;
     private final double volume;
 
-    public StockPriceTimeSeries(LocalDate date, double open, double high, double low, double close, double volume) {
-        this.date = date;
-        this.open = open;
-        this.high = high;
-        this.low = low;
-        this.close = close;
-        this.volume = volume;
+    private StockPriceTimeSeries(Builder builder) {
+        this.date = builder.date;
+        this.open = builder.open;
+        this.high = builder.high;
+        this.low = builder.low;
+        this.close = builder.close;
+        this.volume = builder.volume;
+    }
+
+    public static class Builder {
+        private LocalDate date;
+        private double open;
+        private double high;
+        private double low;
+        private double close;
+        private double volume;
+
+        public Builder date(LocalDate d) {
+            this.date = d;
+            return this;
+        }
+
+        public Builder open(double p) {
+            this.open = p;
+            return this;
+        }
+
+        public Builder high(double p) {
+            this.high = p;
+            return this;
+        }
+
+        public Builder low(double p) {
+            this.low = p;
+            return this;
+        }
+
+        public Builder close(double p) {
+            this.close = p;
+            return this;
+        }
+
+        public Builder volume(double volume) {
+            this.volume = volume;
+            return this;
+        }
+
+        public StockPriceTimeSeries build() {
+            return new StockPriceTimeSeries(this);
+        }
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     public LocalDate getDate() {
