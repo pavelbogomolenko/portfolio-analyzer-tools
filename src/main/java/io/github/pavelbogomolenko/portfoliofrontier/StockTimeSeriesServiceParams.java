@@ -2,12 +2,12 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 import java.time.LocalDate;
 
-public class AVStockTimeSeriesServiceParams {
+public class StockTimeSeriesServiceParams {
     private final String symbol;
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
 
-    private AVStockTimeSeriesServiceParams(Builder builder) {
+    private StockTimeSeriesServiceParams(Builder builder) {
         this.symbol = builder.symbol;
         this.dateFrom = builder.dateFrom;
         this.dateTo = builder.dateTo;
@@ -33,8 +33,8 @@ public class AVStockTimeSeriesServiceParams {
             return this;
         }
 
-        public AVStockTimeSeriesServiceParams build() {
-            return new AVStockTimeSeriesServiceParams(this);
+        public StockTimeSeriesServiceParams build() {
+            return new StockTimeSeriesServiceParams(this);
         }
     }
 

@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AVStockTimeSeriesService {
+public class AVStockTimeSeriesService implements StockTimeSeriesService {
     private final AVStockDataFetcher avStockDataFetcher;
 
     public AVStockTimeSeriesService() {
@@ -18,13 +18,14 @@ public class AVStockTimeSeriesService {
         this.avStockDataFetcher = avStockDataFetcher;
     }
 
-    public AVStockMonthlyTimeSeriesResponse getStockMonthlyTimeSeriesResponse(AVStockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
+    @Override
+    public StockMonthlyTimeSeriesResponse getStockMonthlyTimeSeriesResponse(StockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
         Objects.requireNonNull(params.getSymbol());
         String rawData = this.avStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(AVStockMonthlyTimeSeriesResponse.class, new AVStockMonthlyTimeSeriesResponseDeserializer());
-        AVStockMonthlyTimeSeriesResponse response = gsonBuilder.create().fromJson(rawData, AVStockMonthlyTimeSeriesResponse.class);
+        gsonBuilder.registerTypeAdapter(StockMonthlyTimeSeriesResponse.class, new AVStockMonthlyTimeSeriesResponseDeserializer());
+        StockMonthlyTimeSeriesResponse response = gsonBuilder.create().fromJson(rawData, StockMonthlyTimeSeriesResponse.class);
 
         ArrayList<StockPriceTimeSeries> filteredPrices = new ArrayList<>();
         for (StockPriceTimeSeries price: response.getPrices()) {
@@ -33,10 +34,10 @@ public class AVStockTimeSeriesService {
             }
         }
 
-        return new AVStockMonthlyTimeSeriesResponse(response.getMeta(), filteredPrices);
+        return new StockMonthlyTimeSeriesResponse(response.getMeta(), filteredPrices);
     }
 
-    private boolean shouldFilterOutPrice(StockPriceTimeSeries price, AVStockTimeSeriesServiceParams params) {
+    private boolean shouldFilterOutPrice(StockPriceTimeSeries price, StockTimeSeriesServiceParams params) {
         if(Objects.nonNull(params.getDateFrom()) && Objects.nonNull(params.getDateTo())) {
             if(price.getDate().getYear() >= params.getDateFrom().getYear() && price.getDate().getYear() <= params.getDateTo().getYear()) {
                 if(price.getDate().getMonthValue() >= params.getDateFrom().getMonthValue() && price.getDate().getMonthValue() <= params.getDateTo().getMonthValue()) {
