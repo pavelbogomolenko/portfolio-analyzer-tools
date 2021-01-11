@@ -17,9 +17,9 @@ public class AVStockTimeSeriesService {
         this.avStockDataFetcher = avStockDataFetcher;
     }
 
-    public AVStockMonthlyTimeSeriesResponse getStockMonthlyTimeSeriesResponse(String symbol) throws InterruptedException, IOException, URISyntaxException {
-        Objects.requireNonNull(symbol);
-        String rawData = this.avStockDataFetcher.getMonthlyTimeSeries(symbol);
+    public AVStockMonthlyTimeSeriesResponse getStockMonthlyTimeSeriesResponse(AVStockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
+        Objects.requireNonNull(params.getSymbol());
+        String rawData = this.avStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(AVStockMonthlyTimeSeriesResponse.class, new AVStockMonthlyTimeSeriesResponseDeserializer());

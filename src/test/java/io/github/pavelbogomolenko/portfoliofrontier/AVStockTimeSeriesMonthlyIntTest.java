@@ -16,7 +16,10 @@ public class AVStockTimeSeriesMonthlyIntTest {
 
         AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService();
 
-        AVStockMonthlyTimeSeriesResponse avStockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(givenSymbol);
+        AVStockTimeSeriesServiceParams params = AVStockTimeSeriesServiceParams.newBuilder()
+                .symbol(givenSymbol)
+                .build();
+        AVStockMonthlyTimeSeriesResponse avStockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
 
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));

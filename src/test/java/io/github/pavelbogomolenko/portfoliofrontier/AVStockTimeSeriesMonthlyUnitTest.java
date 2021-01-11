@@ -50,7 +50,10 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
         AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(avStockDataFetcher);
 
-        AVStockMonthlyTimeSeriesResponse avStockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(givenSymbol);
+        AVStockTimeSeriesServiceParams params = AVStockTimeSeriesServiceParams.newBuilder()
+                .symbol(givenSymbol)
+                .build();
+        AVStockMonthlyTimeSeriesResponse avStockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
 
         verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
