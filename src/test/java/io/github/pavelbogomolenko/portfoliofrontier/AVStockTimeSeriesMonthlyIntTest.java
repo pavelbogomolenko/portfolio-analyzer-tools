@@ -25,11 +25,11 @@ public class AVStockTimeSeriesMonthlyIntTest {
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
 
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0], hasProperty("date"));
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0], hasProperty("open"));
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0], hasProperty("low"));
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0], hasProperty("high"));
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0], hasProperty("close"));
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0], hasProperty("volume"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("date"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("open"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("low"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("high"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("close"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("volume"));
     }
 }

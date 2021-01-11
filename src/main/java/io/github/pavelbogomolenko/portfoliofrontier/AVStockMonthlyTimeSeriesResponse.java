@@ -1,10 +1,12 @@
 package io.github.pavelbogomolenko.portfoliofrontier;
 
+import java.util.ArrayList;
+
 public class AVStockMonthlyTimeSeriesResponse {
     private final StockMetaTimeSeries meta;
-    private final StockPriceTimeSeries[] prices;
+    private final ArrayList<StockPriceTimeSeries> prices;
 
-    public AVStockMonthlyTimeSeriesResponse(StockMetaTimeSeries meta, StockPriceTimeSeries[] prices) {
+    public AVStockMonthlyTimeSeriesResponse(StockMetaTimeSeries meta, ArrayList<StockPriceTimeSeries> prices) {
         this.meta = meta;
         this.prices = prices;
     }
@@ -13,7 +15,7 @@ public class AVStockMonthlyTimeSeriesResponse {
         return meta;
     }
 
-    public StockPriceTimeSeries[] getPrices() {
+    public ArrayList<StockPriceTimeSeries> getPrices() {
         return prices;
     }
 }

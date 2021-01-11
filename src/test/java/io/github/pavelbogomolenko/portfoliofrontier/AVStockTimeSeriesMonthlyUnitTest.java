@@ -60,8 +60,8 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
         assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
 
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[0].getDate(), is(firstPrice.getDate()));
-        assertThat(avStockMonthlyTimeSeriesResponse.getPrices()[1].getDate(), is(secondPrice.getDate()));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0).getDate(), is(firstPrice.getDate()));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(1).getDate(), is(secondPrice.getDate()));
     }
 
     @Test

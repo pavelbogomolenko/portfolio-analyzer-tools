@@ -4,6 +4,7 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeserializer<AVStockMonthlyTimeSeriesResponse> {
@@ -22,8 +23,7 @@ public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeseria
         JsonObject stockPriceJsonObject = responseJsonObject.get("Monthly Time Series").getAsJsonObject();
 
         Set<String> allKeys = stockPriceJsonObject.keySet();
-        StockPriceTimeSeries[] stockPriceTimeSeries = new StockPriceTimeSeries[allKeys.size()];
-        int counter = 0;
+        ArrayList<StockPriceTimeSeries> stockPriceTimeSeries = new ArrayList<>();
         for(String dateKey: allKeys) {
             LocalDate date = LocalDate.parse(dateKey);
             double openPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("1. open").getAsDouble();
@@ -31,7 +31,7 @@ public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeseria
             double lowPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("3. low").getAsDouble();
             double closePrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("4. close").getAsDouble();
             double volume = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("5. volume").getAsDouble();
-            stockPriceTimeSeries[counter++] = StockPriceTimeSeries.newBuilder()
+            StockPriceTimeSeries serie = StockPriceTimeSeries.newBuilder()
                     .date(date)
                     .open(openPrice)
                     .high(highPrice)
@@ -39,6 +39,7 @@ public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeseria
                     .close(closePrice)
                     .volume(volume)
                     .build();
+            stockPriceTimeSeries.add(serie);
         }
 
         return new AVStockMonthlyTimeSeriesResponse(monthlyTimeSeriesMetaResponse, stockPriceTimeSeries);
