@@ -1,6 +1,6 @@
 package io.github.pavelbogomolenko.portfoliofrontier;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,15 +12,17 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
-public class MonthlyStockPriceReturnsPerformanceUnitTest {
-    @Test
-    void shouldCalculateGrowthRatesForGivenStock() throws InterruptedException, IOException, URISyntaxException {
-        String stockSymbol = "AMZN";
-        AVStockTimeSeriesService avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesService.class);
-        StockTimeSeriesServiceParams givenInputParams = StockTimeSeriesServiceParams.newBuilder()
-                .symbol(stockSymbol)
-                .build();
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class MonthlyStockPriceReturnsPerformanceUnitTest {
+    private StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse;
+    private AVStockTimeSeriesService avStockTimeSeriesServiceMock;
+    private StockTimeSeriesServiceParams givenInputParams = StockTimeSeriesServiceParams.newBuilder()
+            .symbol("AMZN")
+            .build();
+
+    @BeforeAll
+    void initForAll() {
         StockMetaTimeSeries meta = new StockMetaTimeSeries("a", "b", "c");
         StockPriceTimeSeries marPriceTimeSeries = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2020-03-30"))
@@ -35,19 +37,71 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
                 .close(1000.0)
                 .build();
         ArrayList<StockPriceTimeSeries> priceTimeSeries = new ArrayList<>(
-            Arrays.asList(marPriceTimeSeries, febPriceTimeSeries, janPriceTimeSeries)
+                Arrays.asList(marPriceTimeSeries, febPriceTimeSeries, janPriceTimeSeries)
         );
-        StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse = new StockMonthlyTimeSeriesResponse(meta, priceTimeSeries);
+        stockMonthlyTimeSeriesResponse = new StockMonthlyTimeSeriesResponse(meta, priceTimeSeries);
+    }
 
+    @BeforeEach
+    void initBeforeEach() throws InterruptedException, IOException, URISyntaxException {
+        avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesService.class);
         when(avStockTimeSeriesServiceMock.getStockMonthlyTimeSeriesResponse(givenInputParams)).thenReturn(stockMonthlyTimeSeriesResponse);
+    }
+
+    @AfterEach
+    void tearDownAfterEach() throws InterruptedException, IOException, URISyntaxException {
+        verify(avStockTimeSeriesServiceMock, times(1)).getStockMonthlyTimeSeriesResponse(givenInputParams);
+    }
+
+    @Test
+    void shouldCalculateStockReturns() throws InterruptedException, IOException, URISyntaxException {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(2);
+
         MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(avStockTimeSeriesServiceMock, givenInputParams);
 
-        ArrayList<Double> actualGrowthRate = stockPerformance.getClosePriceGrowthRates();
+        ArrayList<Double> actualReturns = stockPerformance.getMonthlyReturns();
 
         double febToJanGrowth = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
         double marToFebGrowth = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
 
-        verify(avStockTimeSeriesServiceMock, times(1)).getStockMonthlyTimeSeriesResponse(givenInputParams);
-        assertThat(actualGrowthRate, contains(febToJanGrowth, marToFebGrowth));
+        assertThat(actualReturns, contains(febToJanGrowth, marToFebGrowth));
+    }
+
+    @Test
+    void shouldCalculateAverageReturn() throws InterruptedException, IOException, URISyntaxException {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(2);
+
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(avStockTimeSeriesServiceMock, givenInputParams);
+
+        double actualAverageReturn = stockPerformance.getAverageReturn();
+
+        double febToJanGrowth = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
+        double marToFebGrowth = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
+
+        double expectedAverageReturn = (febToJanGrowth + marToFebGrowth) / 2;
+
+        assertThat(actualAverageReturn, equalTo(expectedAverageReturn));
+    }
+
+    @Test
+    void shouldCalculateAverageAnnualReturn() throws InterruptedException, IOException, URISyntaxException {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(2);
+
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(avStockTimeSeriesServiceMock, givenInputParams);
+
+        double actualAverageAnnualReturn = stockPerformance.getAverageAnnualReturn();
+
+        double febToJanGrowth = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
+        double marToFebGrowth = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
+
+        double expectedAverageAnnualReturn = ((febToJanGrowth + marToFebGrowth) / 2) * 12;
+
+        assertThat(actualAverageAnnualReturn, equalTo(expectedAverageAnnualReturn));
     }
 }

@@ -8,19 +8,24 @@ import java.util.Arrays;
 
 public class MonthlyStockPriceReturnsPerformance {
     private final StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse;
-    private final ArrayList<Double> closePriceGrowthRates;
+    private final ArrayList<Double> monthlyReturns;
+    private final double averageReturn;
+    private final double averageAnnualReturn;
 
     public MonthlyStockPriceReturnsPerformance(StockTimeSeriesService stockTimeSeriesService, StockTimeSeriesServiceParams params)
             throws InterruptedException, IOException, URISyntaxException {
         this.stockMonthlyTimeSeriesResponse = stockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
-        this.closePriceGrowthRates = calculateClosePriceGrowthRates();
+        this.monthlyReturns = calculateMonthlyReturns();
+        this.averageReturn = this.monthlyReturns.stream()
+                .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.monthlyReturns.size();
+        this.averageAnnualReturn = this.averageReturn * 12;
     }
 
-    public ArrayList<Double> getClosePriceGrowthRates() {
-        return closePriceGrowthRates;
+    public ArrayList<Double> getMonthlyReturns() {
+        return monthlyReturns;
     }
 
-    private ArrayList<Double> calculateClosePriceGrowthRates() {
+    private ArrayList<Double> calculateMonthlyReturns() {
         ArrayList<Double> result = new ArrayList<>();
         ArrayList<StockPriceTimeSeries> priceTimeSeries = this.stockMonthlyTimeSeriesResponse.getPrices();
         for(int currentIndex = priceTimeSeries.size() - 2; currentIndex >= 0; currentIndex--) {
@@ -31,6 +36,14 @@ public class MonthlyStockPriceReturnsPerformance {
         return result;
     }
 
+    public double getAverageReturn() {
+        return averageReturn;
+    }
+
+    public double getAverageAnnualReturn() {
+        return averageAnnualReturn;
+    }
+
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
         StockTimeSeriesService stockTimeSeriesService = new AVStockTimeSeriesService();
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
@@ -39,6 +52,9 @@ public class MonthlyStockPriceReturnsPerformance {
                 .symbol("MSFT")
                 .build();
         MonthlyStockPriceReturnsPerformance monthlyStockPerf = new MonthlyStockPriceReturnsPerformance(stockTimeSeriesService, params);
-        System.out.println(Arrays.toString(monthlyStockPerf.getClosePriceGrowthRates().toArray()));
+        System.out.println("Stock: " + params.getSymbol());
+        System.out.println("MonthlyReturns: " + Arrays.toString(monthlyStockPerf.getMonthlyReturns().toArray()));
+        System.out.println("AverageReturn: " +monthlyStockPerf.getAverageReturn());
+        System.out.println("AverageAnnualReturn: " +monthlyStockPerf.getAverageAnnualReturn());
     }
 }
