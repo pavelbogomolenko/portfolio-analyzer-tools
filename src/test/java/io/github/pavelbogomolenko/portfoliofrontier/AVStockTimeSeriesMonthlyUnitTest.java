@@ -72,4 +72,99 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         });
     }
 
+    @Test
+    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponseSatisfyingInputDateRange()
+            throws InterruptedException, IOException, URISyntaxException {
+        StockPriceTimeSeries decPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-12-31"))
+                .close(3186.6300)
+                .build();
+        StockPriceTimeSeries novPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-11-30"))
+                .close(3150.6300)
+                .build();
+        StockPriceTimeSeries octPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-10-30"))
+                .close(3140.6300)
+                .build();
+        String rawStringResponse = "{";
+        rawStringResponse += "'Meta Data':";
+        rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
+        rawStringResponse += "'Monthly Time Series':";
+        rawStringResponse += "{";
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", decPrice.getDate(), decPrice.getClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", novPrice.getDate(), novPrice.getClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'}", octPrice.getDate(), octPrice.getClose());
+        rawStringResponse += "}"; // end Monthly Time Series
+        rawStringResponse += "}"; // end
+        String givenSymbol = "AMZN";
+
+        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+
+        when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(avStockDataFetcher);
+
+        AVStockTimeSeriesServiceParams params = AVStockTimeSeriesServiceParams.newBuilder()
+                .symbol(givenSymbol)
+                .dateFrom(LocalDate.parse("2020-10-30"))
+                .dateTo(LocalDate.parse("2020-11-30"))
+                .build();
+        AVStockMonthlyTimeSeriesResponse avStockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
+
+        verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
+        assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
+
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().size(), equalTo(2));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(0).getDate(), is(novPrice.getDate()));
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().get(1).getDate(), is(octPrice.getDate()));
+    }
+
+    @Test
+    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNonExistingDateRange_ShouldAVTimeSeriesMonthlyResponseHaveZeroPrices()
+            throws InterruptedException, IOException, URISyntaxException {
+        StockPriceTimeSeries decPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-12-31"))
+                .close(3186.6300)
+                .build();
+        StockPriceTimeSeries novPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-11-30"))
+                .close(3150.6300)
+                .build();
+        StockPriceTimeSeries octPrice = StockPriceTimeSeries.newBuilder()
+                .date(LocalDate.parse("2020-10-30"))
+                .close(3140.6300)
+                .build();
+        String rawStringResponse = "{";
+        rawStringResponse += "'Meta Data':";
+        rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
+        rawStringResponse += "'Monthly Time Series':";
+        rawStringResponse += "{";
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", decPrice.getDate(), decPrice.getClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", novPrice.getDate(), novPrice.getClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'}", octPrice.getDate(), octPrice.getClose());
+        rawStringResponse += "}"; // end Monthly Time Series
+        rawStringResponse += "}"; // end
+        String givenSymbol = "AMZN";
+
+        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+
+        when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(avStockDataFetcher);
+
+        AVStockTimeSeriesServiceParams params = AVStockTimeSeriesServiceParams.newBuilder()
+                .symbol(givenSymbol)
+                .dateFrom(LocalDate.parse("2020-09-30"))
+                .dateTo(LocalDate.parse("2020-08-30"))
+                .build();
+        AVStockMonthlyTimeSeriesResponse avStockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
+
+        verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
+        assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
+        assertThat(avStockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
+
+        assertThat(avStockMonthlyTimeSeriesResponse.getPrices().size(), equalTo(0));
+    }
 }
