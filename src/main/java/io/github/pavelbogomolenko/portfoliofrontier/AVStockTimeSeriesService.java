@@ -27,6 +27,10 @@ public class AVStockTimeSeriesService implements StockTimeSeriesService {
         gsonBuilder.registerTypeAdapter(StockMonthlyTimeSeriesResponse.class, new AVStockMonthlyTimeSeriesResponseDeserializer());
         StockMonthlyTimeSeriesResponse response = gsonBuilder.create().fromJson(rawData, StockMonthlyTimeSeriesResponse.class);
 
+        if(Objects.isNull(params.getDateFrom()) && Objects.isNull(params.getDateTo())) {
+            return response;
+        }
+
         ArrayList<StockPriceTimeSeries> filteredPrices = new ArrayList<>();
         for (StockPriceTimeSeries price: response.getPrices()) {
             if(shouldFilterOutPrice(price, params)) {
@@ -38,14 +42,10 @@ public class AVStockTimeSeriesService implements StockTimeSeriesService {
     }
 
     private boolean shouldFilterOutPrice(StockPriceTimeSeries price, StockTimeSeriesServiceParams params) {
-        if(Objects.nonNull(params.getDateFrom()) && Objects.nonNull(params.getDateTo())) {
-            if(price.getDate().getYear() >= params.getDateFrom().getYear() && price.getDate().getYear() <= params.getDateTo().getYear()) {
-                if(price.getDate().getMonthValue() >= params.getDateFrom().getMonthValue() && price.getDate().getMonthValue() <= params.getDateTo().getMonthValue()) {
-                    return true;
-                }
+        if(price.getDate().getYear() >= params.getDateFrom().getYear() && price.getDate().getYear() <= params.getDateTo().getYear()) {
+            if(price.getDate().getMonthValue() >= params.getDateFrom().getMonthValue() && price.getDate().getMonthValue() <= params.getDateTo().getMonthValue()) {
+                return true;
             }
-        } else {
-           return true;
         }
         return false;
     }
