@@ -11,6 +11,7 @@ public class MonthlyStockPriceReturnsPerformance {
     private final ArrayList<Double> monthlyReturns;
     private final double averageReturn;
     private final double averageAnnualReturn;
+    private final double variance;
 
     public MonthlyStockPriceReturnsPerformance(StockMonthlyTimeSeriesData data) {
         this.stockMonthlyTimeSeriesData = data;
@@ -18,6 +19,8 @@ public class MonthlyStockPriceReturnsPerformance {
         this.averageReturn = this.monthlyReturns.stream()
                 .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.monthlyReturns.size();
         this.averageAnnualReturn = this.averageReturn * 12;
+        this.variance = this.monthlyReturns.stream()
+                .reduce(0.0, (acc, cur) -> acc + Math.pow(cur - this.averageReturn, 2), Double::sum) / this.monthlyReturns.size();
     }
 
     public ArrayList<Double> getMonthlyReturns() {
@@ -43,6 +46,10 @@ public class MonthlyStockPriceReturnsPerformance {
         return averageAnnualReturn;
     }
 
+    public double getVariance() {
+        return variance;
+    }
+
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
         StockTimeSeriesService stockTimeSeriesService = new AVStockTimeSeriesServiceImpl();
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
@@ -54,7 +61,8 @@ public class MonthlyStockPriceReturnsPerformance {
         MonthlyStockPriceReturnsPerformance monthlyStockPerf = new MonthlyStockPriceReturnsPerformance(data);
         System.out.println("Stock: " + params.getSymbol());
         System.out.println("MonthlyReturns: " + Arrays.toString(monthlyStockPerf.getMonthlyReturns().toArray()));
-        System.out.println("AverageReturn: " +monthlyStockPerf.getAverageReturn());
-        System.out.println("AverageAnnualReturn: " +monthlyStockPerf.getAverageAnnualReturn());
+        System.out.println("AverageReturn: " + monthlyStockPerf.getAverageReturn());
+        System.out.println("AverageAnnualReturn: " + monthlyStockPerf.getAverageAnnualReturn());
+        System.out.println("Variance: " + monthlyStockPerf.getVariance());
     }
 }
