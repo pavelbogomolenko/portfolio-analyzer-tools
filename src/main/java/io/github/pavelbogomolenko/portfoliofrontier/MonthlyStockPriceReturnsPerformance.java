@@ -52,6 +52,10 @@ public class MonthlyStockPriceReturnsPerformance {
         return variance * 12;
     }
 
+    public String getStockSymbol() {
+        return this.stockMonthlyTimeSeriesData.getMeta().getSymbol();
+    }
+
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
         StockTimeSeriesService stockTimeSeriesService = new AVStockTimeSeriesServiceImpl();
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()

@@ -109,4 +109,13 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
         assertThat(stockPerformance.getVariance(), equalTo(expectedVariance));
         assertThat(stockPerformance.getAnnualVariance(), equalTo(expectedVariance * 12));
     }
+
+    @Test
+    void shouldHaveStockSymbol() {
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
+
+        String actualStockSymbol = stockPerformance.getStockSymbol();
+
+        assertThat(actualStockSymbol, is(equalTo(stockMonthlyTimeSeriesData.getMeta().getSymbol())));
+    }
 }
