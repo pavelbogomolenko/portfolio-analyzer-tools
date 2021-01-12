@@ -99,8 +99,6 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
 
         MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
 
-        double actualVariance = stockPerformance.getVariance();
-
         double febToJanReturn = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
         double marToFebReturn = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
 
@@ -108,6 +106,7 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
 
         double expectedVariance = (Math.pow(febToJanReturn - averageReturn, 2) + Math.pow(marToFebReturn - averageReturn, 2)) / 2;
 
-        assertThat(actualVariance, equalTo(expectedVariance));
+        assertThat(stockPerformance.getVariance(), equalTo(expectedVariance));
+        assertThat(stockPerformance.getAnnualVariance(), equalTo(expectedVariance * 12));
     }
 }

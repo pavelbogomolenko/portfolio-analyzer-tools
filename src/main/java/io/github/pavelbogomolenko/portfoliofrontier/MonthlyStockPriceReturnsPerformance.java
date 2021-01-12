@@ -10,7 +10,6 @@ public class MonthlyStockPriceReturnsPerformance {
     private final StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData;
     private final ArrayList<Double> monthlyReturns;
     private final double averageReturn;
-    private final double averageAnnualReturn;
     private final double variance;
 
     public MonthlyStockPriceReturnsPerformance(StockMonthlyTimeSeriesData data) {
@@ -18,7 +17,6 @@ public class MonthlyStockPriceReturnsPerformance {
         this.monthlyReturns = calculateMonthlyReturns();
         this.averageReturn = this.monthlyReturns.stream()
                 .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.monthlyReturns.size();
-        this.averageAnnualReturn = this.averageReturn * 12;
         this.variance = this.monthlyReturns.stream()
                 .reduce(0.0, (acc, cur) -> acc + Math.pow(cur - this.averageReturn, 2), Double::sum) / this.monthlyReturns.size();
     }
@@ -43,11 +41,15 @@ public class MonthlyStockPriceReturnsPerformance {
     }
 
     public double getAverageAnnualReturn() {
-        return averageAnnualReturn;
+        return averageReturn * 12;
     }
 
     public double getVariance() {
         return variance;
+    }
+
+    public double getAnnualVariance() {
+        return variance * 12;
     }
 
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
