@@ -2,21 +2,18 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MonthlyStockPriceReturnsPerformanceUnitTest {
-    private StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse;
-    private AVStockTimeSeriesService avStockTimeSeriesServiceMock;
+    private StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData;
+    private AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImplMock;
     private StockTimeSeriesServiceParams givenInputParams = StockTimeSeriesServiceParams.newBuilder()
             .symbol("AMZN")
             .build();
@@ -39,27 +36,16 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
         ArrayList<StockPriceTimeSeries> priceTimeSeries = new ArrayList<>(
                 Arrays.asList(marPriceTimeSeries, febPriceTimeSeries, janPriceTimeSeries)
         );
-        stockMonthlyTimeSeriesResponse = new StockMonthlyTimeSeriesResponse(meta, priceTimeSeries);
-    }
-
-    @BeforeEach
-    void initBeforeEach() throws InterruptedException, IOException, URISyntaxException {
-        avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesService.class);
-        when(avStockTimeSeriesServiceMock.getStockMonthlyTimeSeriesResponse(givenInputParams)).thenReturn(stockMonthlyTimeSeriesResponse);
-    }
-
-    @AfterEach
-    void tearDownAfterEach() throws InterruptedException, IOException, URISyntaxException {
-        verify(avStockTimeSeriesServiceMock, times(1)).getStockMonthlyTimeSeriesResponse(givenInputParams);
+        stockMonthlyTimeSeriesData = new StockMonthlyTimeSeriesData(meta, priceTimeSeries);
     }
 
     @Test
-    void shouldCalculateStockReturns() throws InterruptedException, IOException, URISyntaxException {
-        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(0);
-        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(1);
-        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(2);
+    void shouldCalculateStockReturns() {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(2);
 
-        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(avStockTimeSeriesServiceMock, givenInputParams);
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
 
         ArrayList<Double> actualReturns = stockPerformance.getMonthlyReturns();
 
@@ -70,12 +56,12 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
     }
 
     @Test
-    void shouldCalculateAverageReturn() throws InterruptedException, IOException, URISyntaxException {
-        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(0);
-        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(1);
-        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(2);
+    void shouldCalculateAverageReturn() {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(2);
 
-        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(avStockTimeSeriesServiceMock, givenInputParams);
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
 
         double actualAverageReturn = stockPerformance.getAverageReturn();
 
@@ -88,12 +74,12 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
     }
 
     @Test
-    void shouldCalculateAverageAnnualReturn() throws InterruptedException, IOException, URISyntaxException {
-        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(0);
-        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(1);
-        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesResponse.getPrices().get(2);
+    void shouldCalculateAverageAnnualReturn() {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(2);
 
-        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(avStockTimeSeriesServiceMock, givenInputParams);
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
 
         double actualAverageAnnualReturn = stockPerformance.getAverageAnnualReturn();
 

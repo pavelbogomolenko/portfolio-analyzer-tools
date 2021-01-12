@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeserializer<StockMonthlyTimeSeriesResponse> {
+public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeserializer<StockMonthlyTimeSeriesData> {
     @Override
-    public StockMonthlyTimeSeriesResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public StockMonthlyTimeSeriesData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
 
         JsonObject responseJsonObject = json.getAsJsonObject();
@@ -42,6 +42,6 @@ public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeseria
             stockPriceTimeSeries.add(serie);
         }
 
-        return new StockMonthlyTimeSeriesResponse(monthlyTimeSeriesMetaResponse, stockPriceTimeSeries);
+        return new StockMonthlyTimeSeriesData(monthlyTimeSeriesMetaResponse, stockPriceTimeSeries);
     }
 }

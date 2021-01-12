@@ -14,22 +14,22 @@ public class AVStockTimeSeriesMonthlyIntTest {
     void GivenGOOGLSymbol_WhenGetStockMonthlyTimeSeriesResponseIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
         String givenSymbol = "GOOGL";
 
-        AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService();
+        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl();
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
                 .build();
-        StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
+        StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
 
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("date"));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("open"));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("low"));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("high"));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("close"));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0), hasProperty("volume"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("date"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("open"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("low"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("high"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("close"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("volume"));
     }
 }

@@ -7,25 +7,25 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AVStockTimeSeriesService implements StockTimeSeriesService {
+public class AVStockTimeSeriesServiceImpl implements StockTimeSeriesService {
     private final AVStockDataFetcher avStockDataFetcher;
 
-    public AVStockTimeSeriesService() {
+    public AVStockTimeSeriesServiceImpl() {
         this.avStockDataFetcher = new AVStockDataFetcher();
     }
 
-    public AVStockTimeSeriesService(AVStockDataFetcher avStockDataFetcher) {
+    public AVStockTimeSeriesServiceImpl(AVStockDataFetcher avStockDataFetcher) {
         this.avStockDataFetcher = avStockDataFetcher;
     }
 
     @Override
-    public StockMonthlyTimeSeriesResponse getStockMonthlyTimeSeriesResponse(StockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
+    public StockMonthlyTimeSeriesData getStockMonthlyTimeSeriesData(StockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
         Objects.requireNonNull(params.getSymbol());
         String rawData = this.avStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(StockMonthlyTimeSeriesResponse.class, new AVStockMonthlyTimeSeriesResponseDeserializer());
-        StockMonthlyTimeSeriesResponse response = gsonBuilder.create().fromJson(rawData, StockMonthlyTimeSeriesResponse.class);
+        gsonBuilder.registerTypeAdapter(StockMonthlyTimeSeriesData.class, new AVStockMonthlyTimeSeriesResponseDeserializer());
+        StockMonthlyTimeSeriesData response = gsonBuilder.create().fromJson(rawData, StockMonthlyTimeSeriesData.class);
 
         if(Objects.isNull(params.getDateFrom()) && Objects.isNull(params.getDateTo())) {
             return response;
@@ -38,7 +38,7 @@ public class AVStockTimeSeriesService implements StockTimeSeriesService {
             }
         }
 
-        return new StockMonthlyTimeSeriesResponse(response.getMeta(), filteredPrices);
+        return new StockMonthlyTimeSeriesData(response.getMeta(), filteredPrices);
     }
 
     private boolean shouldFilterOutPrice(StockPriceTimeSeries price, StockTimeSeriesServiceParams params) {

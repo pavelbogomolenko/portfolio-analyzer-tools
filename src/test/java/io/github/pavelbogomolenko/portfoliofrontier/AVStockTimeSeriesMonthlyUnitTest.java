@@ -48,27 +48,27 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
 
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(avStockDataFetcher);
+        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(avStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
                 .build();
-        StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
+        StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
         verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
 
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0).getDate(), is(firstPrice.getDate()));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(1).getDate(), is(secondPrice.getDate()));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0).getDate(), is(firstPrice.getDate()));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(1).getDate(), is(secondPrice.getDate()));
     }
 
     @Test
     void WhenGetStockMonthlyTimeSeriesResponseWithNullSymbolIsCalled_ThenThrowException_symbol_should_not_be_empty() {
         assertThrows(NullPointerException.class, () -> {
-            AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(mock(AVStockDataFetcher.class));
-            avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(null);
+            AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(mock(AVStockDataFetcher.class));
+            avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(null);
         });
     }
 
@@ -102,23 +102,23 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
 
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(avStockDataFetcher);
+        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(avStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
                 .dateFrom(LocalDate.parse("2020-10-30"))
                 .dateTo(LocalDate.parse("2020-11-30"))
                 .build();
-        StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
+        StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
         verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
 
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().size(), equalTo(2));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(0).getDate(), is(novPrice.getDate()));
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().get(1).getDate(), is(octPrice.getDate()));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().size(), equalTo(2));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0).getDate(), is(novPrice.getDate()));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(1).getDate(), is(octPrice.getDate()));
     }
 
     @Test
@@ -151,20 +151,20 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
 
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesService avStockTimeSeriesService = new AVStockTimeSeriesService(avStockDataFetcher);
+        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(avStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
                 .dateFrom(LocalDate.parse("2020-09-30"))
                 .dateTo(LocalDate.parse("2020-08-30"))
                 .build();
-        StockMonthlyTimeSeriesResponse stockMonthlyTimeSeriesResponse = avStockTimeSeriesService.getStockMonthlyTimeSeriesResponse(params);
+        StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
         verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("info"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("symbol"));
-        assertThat(stockMonthlyTimeSeriesResponse.getMeta(), hasProperty("timeZone"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
 
-        assertThat(stockMonthlyTimeSeriesResponse.getPrices().size(), equalTo(0));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().size(), equalTo(0));
     }
 }
