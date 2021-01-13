@@ -56,6 +56,10 @@ public class MonthlyStockPriceReturnsPerformance {
         return this.stockMonthlyTimeSeriesData.getMeta().getSymbol();
     }
 
+    public double getStdDev() {
+        return Math.sqrt(this.variance);
+    }
+
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
         StockTimeSeriesService stockTimeSeriesService = new AVStockTimeSeriesServiceImpl();
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
@@ -70,5 +74,6 @@ public class MonthlyStockPriceReturnsPerformance {
         System.out.println("AverageReturn: " + monthlyStockPerf.getAverageReturn());
         System.out.println("AverageAnnualReturn: " + monthlyStockPerf.getAverageAnnualReturn());
         System.out.println("Variance: " + monthlyStockPerf.getVariance());
+        System.out.println("StdDev: " + monthlyStockPerf.getStdDev());
     }
 }

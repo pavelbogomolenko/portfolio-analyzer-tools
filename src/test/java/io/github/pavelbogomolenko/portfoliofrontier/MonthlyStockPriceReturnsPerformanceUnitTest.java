@@ -111,6 +111,26 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
     }
 
     @Test
+    void shouldCalculateVarianceAndStdDevReturn() {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(2);
+
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
+
+        double febToJanReturn = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
+        double marToFebReturn = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
+
+        double averageReturn = (febToJanReturn + marToFebReturn) / 2;
+
+        double expectedVariance = (Math.pow(febToJanReturn - averageReturn, 2) + Math.pow(marToFebReturn - averageReturn, 2)) / 2;
+
+        assertThat(stockPerformance.getVariance(), equalTo(expectedVariance));
+        assertThat(stockPerformance.getAnnualVariance(), equalTo(expectedVariance * 12));
+        assertThat(stockPerformance.getStdDev(), equalTo(Math.sqrt(expectedVariance)));
+    }
+
+    @Test
     void shouldHaveStockSymbol() {
         MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
 
