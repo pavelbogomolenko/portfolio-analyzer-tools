@@ -92,6 +92,23 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
     }
 
     @Test
+    void shouldCalculateDifferenceBetweenEachReturnAndAverageReturn() {
+        StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
+        StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
+        StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(2);
+
+        MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
+
+        double febToJanReturn = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
+        double marToFebReturn = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
+
+        double averageReturn = (febToJanReturn + marToFebReturn) / 2;
+
+        ArrayList<Double> expectedDiffs = new ArrayList<>(Arrays.asList((febToJanReturn - averageReturn), (marToFebReturn - averageReturn)));
+        assertThat(stockPerformance.getMonthlyReturnsToAverageDiff(), contains(expectedDiffs.get(0), expectedDiffs.get(1)));
+    }
+
+    @Test
     void shouldCalculateVarianceReturn() {
         StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
         StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
@@ -111,7 +128,7 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
     }
 
     @Test
-    void shouldCalculateVarianceAndStdDevReturn() {
+    void shouldCalculateVarianceAndStdDev() {
         StockPriceTimeSeries marPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(0);
         StockPriceTimeSeries febPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(1);
         StockPriceTimeSeries janPriceTimeSeries = stockMonthlyTimeSeriesData.getPrices().get(2);

@@ -5,11 +5,13 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class MonthlyStockPriceReturnsPerformance {
     private final StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData;
     private final ArrayList<Double> monthlyReturns;
     private final double averageReturn;
+    private final ArrayList<Double> monthlyReturnsToAverageDiff;
     private final double variance;
 
     public MonthlyStockPriceReturnsPerformance(StockMonthlyTimeSeriesData data) {
@@ -17,8 +19,10 @@ public class MonthlyStockPriceReturnsPerformance {
         this.monthlyReturns = calculateMonthlyReturns();
         this.averageReturn = this.monthlyReturns.stream()
                 .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.monthlyReturns.size();
-        this.variance = this.monthlyReturns.stream()
-                .reduce(0.0, (acc, cur) -> acc + Math.pow(cur - this.averageReturn, 2), Double::sum) / this.monthlyReturns.size();
+        this.monthlyReturnsToAverageDiff = this.monthlyReturns.stream().map(e -> e - this.averageReturn)
+                .collect(Collectors.toCollection(ArrayList::new));
+        this.variance = this.monthlyReturnsToAverageDiff.stream()
+                .reduce(0.0, (acc, cur) -> acc + Math.pow(cur, 2), Double::sum) / this.monthlyReturns.size();
     }
 
     public ArrayList<Double> getMonthlyReturns() {
@@ -60,6 +64,10 @@ public class MonthlyStockPriceReturnsPerformance {
         return Math.sqrt(this.variance);
     }
 
+    public ArrayList<Double> getMonthlyReturnsToAverageDiff() {
+        return this.monthlyReturnsToAverageDiff;
+    }
+
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
         StockTimeSeriesService stockTimeSeriesService = new AVStockTimeSeriesServiceImpl();
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
@@ -73,6 +81,7 @@ public class MonthlyStockPriceReturnsPerformance {
         System.out.println("MonthlyReturns: " + Arrays.toString(monthlyStockPerf.getMonthlyReturns().toArray()));
         System.out.println("AverageReturn: " + monthlyStockPerf.getAverageReturn());
         System.out.println("AverageAnnualReturn: " + monthlyStockPerf.getAverageAnnualReturn());
+        System.out.println("MonthlyReturnsToAverageDiff: " + monthlyStockPerf.getMonthlyReturnsToAverageDiff());
         System.out.println("Variance: " + monthlyStockPerf.getVariance());
         System.out.println("StdDev: " + monthlyStockPerf.getStdDev());
     }
