@@ -13,7 +13,6 @@ import static org.hamcrest.Matchers.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MonthlyStockPriceReturnsPerformanceUnitTest {
     private StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData;
-    private AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImplMock;
     private StockTimeSeriesServiceParams givenInputParams = StockTimeSeriesServiceParams.newBuilder()
             .symbol("AMZN")
             .build();
