@@ -5,59 +5,39 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PortfolioReturnsPerformance {
     private final StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService;
+    private final ArrayList<MonthlyStockPriceReturnsPerformance> stockPriceReturnsPerformances;
+    private final PortfolioReturnsPerformanceParams params;
 
-    public PortfolioReturnsPerformance(StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService) {
+    public PortfolioReturnsPerformance(StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService, PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
         this.stockTimeSeriesDataProviderService = stockTimeSeriesDataProviderService;
+        this.params = params;
+        this.stockPriceReturnsPerformances = calculateStockPriceReturnsPerformances(this.params);
     }
 
-    public ArrayList<MonthlyStockPriceReturnsPerformance> getMonthlyStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
-        ArrayList<MonthlyStockPriceReturnsPerformance> result = new ArrayList<>();
-        int yearDiffCount = params.getDateTo().getYear() - params.getDateFrom().getYear();
-        int monthCount = Math.abs(params.getDateTo().getMonthValue() - params.getDateFrom().getMonthValue());
-        int expectedItemsCount = monthCount;
-        if(yearDiffCount > 0) {
-            expectedItemsCount = yearDiffCount * expectedItemsCount;
-        }
-
-        for(String symbol: params.getSymbols()) {
-            StockTimeSeriesServiceParams serviceParams = StockTimeSeriesServiceParams.newBuilder()
-                    .symbol(symbol)
-                    .dateFrom(params.getDateFrom())
-                    .dateTo(params.getDateTo())
-                    .build();
-
-            StockMonthlyTimeSeriesData data = this.stockTimeSeriesDataProviderService.getStockMonthlyTimeSeriesData(serviceParams);
-            if(data.getPrices().size() <= expectedItemsCount) {
-                throw new IllegalArgumentException("Stock data for '%s' less than given time range");
-            }
-            MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(data);
-            result.add(stockPerformance);
-        }
-        return result;
+    public ArrayList<MonthlyStockPriceReturnsPerformance> getMonthlyStockPriceReturnsPerformances() {
+        return stockPriceReturnsPerformances;
     }
 
-    public double[][] getReturnsVarianceCovarianceMatrix(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
-        ArrayList<MonthlyStockPriceReturnsPerformance> portfolioPerf = getMonthlyStockPriceReturnsPerformances(params);
-
-        int porfolioSize = portfolioPerf.size();
-        int porfolioStockReturnsSize = portfolioPerf.get(0).getMonthlyReturnsToAverageDiff().size();
+    public double[][] getReturnsVarianceCovarianceMatrix() {
+        ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances();
+        int porfolioSize = portfolio.size();
+        int porfolioStockReturnsSize = portfolio.get(0).getMonthlyReturnsToAverageDiff().size();
         double[][] varCovarMatrix = new double[porfolioSize][porfolioSize];
         for (int col = 0; col < porfolioSize; col++) {
             for(int row = 0; row < porfolioSize; row++) {
-                varCovarMatrix[col][row] = calculateDotProduct(portfolioPerf.get(col), portfolioPerf.get(row)) / porfolioStockReturnsSize;
+                varCovarMatrix[col][row] = calculateDotProduct(portfolio.get(col), portfolio.get(row)) / porfolioStockReturnsSize;
             }
         }
         return varCovarMatrix;
     }
 
-    public void printVarianceCovarianceMatrix(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
-        double[][] varCovarMatrix = getReturnsVarianceCovarianceMatrix(params);
+    public void printVarianceCovarianceMatrix() {
+        double[][] varCovarMatrix = getReturnsVarianceCovarianceMatrix();
 
         int maxSymbolLength = params.getSymbols().stream()
                 .map(s -> s.length())
@@ -98,11 +78,36 @@ public class PortfolioReturnsPerformance {
         return result;
     }
 
+    private ArrayList<MonthlyStockPriceReturnsPerformance> calculateStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
+        ArrayList<MonthlyStockPriceReturnsPerformance> result = new ArrayList<>();
+        int yearDiffCount = params.getDateTo().getYear() - params.getDateFrom().getYear();
+        int monthCount = Math.abs(params.getDateTo().getMonthValue() - params.getDateFrom().getMonthValue());
+        int expectedItemsCount = monthCount;
+        if(yearDiffCount > 0) {
+            expectedItemsCount = yearDiffCount * expectedItemsCount;
+        }
+
+        for(String symbol: params.getSymbols()) {
+            StockTimeSeriesServiceParams serviceParams = StockTimeSeriesServiceParams.newBuilder()
+                    .symbol(symbol)
+                    .dateFrom(params.getDateFrom())
+                    .dateTo(params.getDateTo())
+                    .build();
+
+            StockMonthlyTimeSeriesData data = this.stockTimeSeriesDataProviderService.getStockMonthlyTimeSeriesData(serviceParams);
+            if(data.getPrices().size() <= expectedItemsCount) {
+                throw new IllegalArgumentException(String.format("Stock data for '%s' less than given time range", symbol));
+            }
+            MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(data);
+            result.add(stockPerformance);
+        }
+        return result;
+    }
+
     public static void main(String[] args)
             throws InterruptedException, IOException, URISyntaxException {
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl();
-        PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService);
-
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbol("AMZN")
                 .symbol("MSFT")
@@ -114,11 +119,18 @@ public class PortfolioReturnsPerformance {
                 .dateFrom(LocalDate.parse("2015-01-01"))
                 .dateTo(LocalDate.parse("2020-12-30"))
                 .build();
-//        for(MonthlyStockPriceReturnsPerformance stockReturnsPerformance: pRP.getMonthlyStockPriceReturnsPerformances(params)) {
-//            System.out.println("Stock: " + stockReturnsPerformance.getStockSymbol());
-//            System.out.println("Monthly Returns: " + Arrays.toString(stockReturnsPerformance.getMonthlyReturns().toArray()));
-//        }
+        PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService, params);
 
-        pRP.printVarianceCovarianceMatrix(params);
+        for(MonthlyStockPriceReturnsPerformance stockReturnsPerformance: pRP.getMonthlyStockPriceReturnsPerformances()) {
+            System.out.println("Stock: " + stockReturnsPerformance.getStockSymbol());
+            System.out.println("Monthly Returns: " + Arrays.toString(stockReturnsPerformance.getMonthlyReturns().toArray()));
+            System.out.println("Average Monthly Return: " + stockReturnsPerformance.getAverageReturn());
+            System.out.println("Average Annual Return: " + stockReturnsPerformance.getAverageAnnualReturn());
+            System.out.println("Monthly Variance: " + stockReturnsPerformance.getVariance());
+            System.out.println("Annual Variance: " + stockReturnsPerformance.getAnnualVariance());
+            System.out.println("Monthly StdDev: " + stockReturnsPerformance.getStdDev());
+        }
+
+        pRP.printVarianceCovarianceMatrix();
     }
 }

@@ -97,13 +97,13 @@ public class PortfolioReturnsPerformanceUnitTest {
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesDataProviderServiceImpl.class);
         when(avStockTimeSeriesServiceMock.getStockMonthlyTimeSeriesData(any())).thenReturn(msftData, googleData,ibmData);
 
-        PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock);
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
                 .build();
-        ArrayList<MonthlyStockPriceReturnsPerformance> actualResult = portfolioReturnsPerformance.getMonthlyStockPriceReturnsPerformances(params);
+        PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock, params);
+        ArrayList<MonthlyStockPriceReturnsPerformance> actualResult = portfolioReturnsPerformance.getMonthlyStockPriceReturnsPerformances();
 
         StockTimeSeriesServiceParamsMatcher msftParamMatcher = new StockTimeSeriesServiceParamsMatcher(msftParams);
         StockTimeSeriesServiceParamsMatcher googleParamMatcher = new StockTimeSeriesServiceParamsMatcher(googleParams);
@@ -141,35 +141,27 @@ public class PortfolioReturnsPerformanceUnitTest {
         StockMonthlyTimeSeriesData msftData = new StockMonthlyTimeSeriesData(msftMetaData, msftPriceData);
         when(avStockTimeSeriesServiceMock.getStockMonthlyTimeSeriesData(any())).thenReturn(msftData);
 
-        PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock);
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
                 .build();
-
         assertThrows(IllegalArgumentException.class, () -> {
-            portfolioReturnsPerformance.getMonthlyStockPriceReturnsPerformances(params);
+            new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock, params);
         });
     }
 
     @Test
-    void shouldBuildReturnsVarianceCovarianceMatrix() throws InterruptedException, IOException, URISyntaxException {
+    void shouldBuildReturnsVarianceCovarianceMatrix() {
         MonthlyStockPriceReturnsPerformance msftPerf = new MonthlyStockPriceReturnsPerformance(msftData);
         MonthlyStockPriceReturnsPerformance googlePerf = new MonthlyStockPriceReturnsPerformance(googleData);
         MonthlyStockPriceReturnsPerformance ibmPerf = new MonthlyStockPriceReturnsPerformance(googleData);
         ArrayList<MonthlyStockPriceReturnsPerformance> portfolioReturns = new ArrayList<>(Arrays.asList(msftPerf, googlePerf, ibmPerf));
 
         PortfolioReturnsPerformance portfolioReturnsPerformance = mock(PortfolioReturnsPerformance.class, CALLS_REAL_METHODS);
-        PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
-                .symbols(symbols)
-                .dateFrom(dateFrom)
-                .dateTo(dateTo)
-                .build();
-        PortfolioReturnsPerformanceParamsMatcher paramsMatcher = new PortfolioReturnsPerformanceParamsMatcher(params);
-        doReturn(portfolioReturns).when(portfolioReturnsPerformance).getMonthlyStockPriceReturnsPerformances(argThat(paramsMatcher));
+        doReturn(portfolioReturns).when(portfolioReturnsPerformance).getMonthlyStockPriceReturnsPerformances();
 
-        double[][] resultMatrix = portfolioReturnsPerformance.getReturnsVarianceCovarianceMatrix(params);
+        double[][] resultMatrix = portfolioReturnsPerformance.getReturnsVarianceCovarianceMatrix();
 
         assertThat(resultMatrix.length, is(equalTo(portfolioReturns.size())));
         assertThat(resultMatrix[0].length, is(equalTo(portfolioReturns.size())));
