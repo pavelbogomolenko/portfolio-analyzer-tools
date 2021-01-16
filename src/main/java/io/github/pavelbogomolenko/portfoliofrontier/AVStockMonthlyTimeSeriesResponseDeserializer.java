@@ -1,19 +1,29 @@
 package io.github.pavelbogomolenko.portfoliofrontier;
 
 import com.google.gson.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Set;
 
 public class AVStockMonthlyTimeSeriesResponseDeserializer implements JsonDeserializer<StockMonthlyTimeSeriesData> {
+    private static final Logger logger = LoggerFactory.getLogger(AVStockMonthlyTimeSeriesResponseDeserializer.class);
+
     @Override
     public StockMonthlyTimeSeriesData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
 
         JsonObject responseJsonObject = json.getAsJsonObject();
-        JsonObject metaJsonObject = responseJsonObject.get("Meta Data").getAsJsonObject();
+        JsonElement metaJsonElement = responseJsonObject.get("Meta Data");
+        if(Objects.isNull(metaJsonElement)) {
+            logger.error(responseJsonObject.toString());
+            throw new RuntimeException("AV API has returned unexpected response");
+        }
+        JsonObject metaJsonObject = metaJsonElement.getAsJsonObject();
 
         String info = metaJsonObject.get("1. Information").getAsString();
         String symbol = metaJsonObject.get("2. Symbol").getAsString();

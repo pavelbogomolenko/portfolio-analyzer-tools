@@ -65,6 +65,22 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     }
 
     @Test
+    void shouldThrowWhenUnexpectedResponseHasBeenReturned() throws InterruptedException, IOException, URISyntaxException {
+        String unexpectedRawResponse = "{'some': thing}";
+        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+
+        when(avStockDataFetcher.getMonthlyTimeSeries("someSymbol")).thenReturn(unexpectedRawResponse);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
+
+        assertThrows(RuntimeException.class, () -> {
+            StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
+                    .symbol("someSymbol")
+                    .build();
+            StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
+        });
+    }
+
+    @Test
     void WhenGetStockMonthlyTimeSeriesResponseWithNullSymbolIsCalled_ThenThrowException_symbol_should_not_be_empty() {
         assertThrows(NullPointerException.class, () -> {
             AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(mock(AVStockDataFetcher.class));

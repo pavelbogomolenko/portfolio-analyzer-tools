@@ -108,7 +108,9 @@ public class PortfolioReturnsPerformance {
                 .symbol("MSFT")
                 .symbol("GOOGL")
                 .symbol("IBM")
-                .symbol("BMW.DE")
+//                .symbol("BMW.DE")
+//                .symbol("FB")
+                .symbol("CSCO")
                 .dateFrom(LocalDate.parse("2015-01-01"))
                 .dateTo(LocalDate.parse("2020-12-30"))
                 .build();
