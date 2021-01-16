@@ -69,13 +69,13 @@ public class MonthlyStockPriceReturnsPerformance {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
-        StockTimeSeriesService stockTimeSeriesService = new AVStockTimeSeriesServiceImpl();
+        StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService = new AVStockTimeSeriesDataProviderServiceImpl();
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .dateFrom(LocalDate.parse("2015-01-01"))
                 .dateTo(LocalDate.parse("2020-12-30"))
                 .symbol("MSFT")
                 .build();
-        StockMonthlyTimeSeriesData data = stockTimeSeriesService.getStockMonthlyTimeSeriesData(params);
+        StockMonthlyTimeSeriesData data = stockTimeSeriesDataProviderService.getStockMonthlyTimeSeriesData(params);
         MonthlyStockPriceReturnsPerformance monthlyStockPerf = new MonthlyStockPriceReturnsPerformance(data);
         System.out.println("Stock: " + params.getSymbol());
         System.out.println("MonthlyReturns: " + Arrays.toString(monthlyStockPerf.getMonthlyReturns().toArray()));

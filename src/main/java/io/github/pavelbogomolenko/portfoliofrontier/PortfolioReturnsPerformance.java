@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PortfolioReturnsPerformance {
-    private final StockTimeSeriesService stockTimeSeriesService;
+    private final StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService;
 
-    public PortfolioReturnsPerformance(StockTimeSeriesService stockTimeSeriesService) {
-        this.stockTimeSeriesService = stockTimeSeriesService;
+    public PortfolioReturnsPerformance(StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService) {
+        this.stockTimeSeriesDataProviderService = stockTimeSeriesDataProviderService;
     }
 
     public ArrayList<MonthlyStockPriceReturnsPerformance> getMonthlyStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
@@ -31,7 +30,7 @@ public class PortfolioReturnsPerformance {
                     .dateTo(params.getDateTo())
                     .build();
 
-            StockMonthlyTimeSeriesData data = this.stockTimeSeriesService.getStockMonthlyTimeSeriesData(serviceParams);
+            StockMonthlyTimeSeriesData data = this.stockTimeSeriesDataProviderService.getStockMonthlyTimeSeriesData(serviceParams);
             if(data.getPrices().size() <= expectedItemsCount) {
                 throw new IllegalArgumentException("Stock data for '%s' less than given time range");
             }
@@ -101,7 +100,7 @@ public class PortfolioReturnsPerformance {
 
     public static void main(String[] args)
             throws InterruptedException, IOException, URISyntaxException {
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesServiceImpl();
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl();
         PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService);
 
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()

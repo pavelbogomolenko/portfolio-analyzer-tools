@@ -14,7 +14,7 @@ public class AVStockTimeSeriesMonthlyIntTest {
     void GivenGOOGLSymbol_WhenGetStockMonthlyTimeSeriesResponseIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
         String givenSymbol = "GOOGL";
 
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl();
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl();
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)

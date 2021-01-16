@@ -94,7 +94,7 @@ public class PortfolioReturnsPerformanceUnitTest {
     @Test
     void givenListOfStockSymbolsAndDateRange_whenGetMonthlyStockPriceReturnsPerformanceIsCalled_shouldReturnListOfMonthlyStockPriceReturnsPerformance()
             throws InterruptedException, IOException, URISyntaxException {
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesServiceImpl.class);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesDataProviderServiceImpl.class);
         when(avStockTimeSeriesServiceMock.getStockMonthlyTimeSeriesData(any())).thenReturn(msftData, googleData,ibmData);
 
         PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock);
@@ -126,7 +126,7 @@ public class PortfolioReturnsPerformanceUnitTest {
         LocalDate dateFrom = LocalDate.parse("2020-10-30");
         LocalDate dateTo = LocalDate.parse("2020-12-30");
 
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesServiceImpl.class);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesDataProviderServiceImpl.class);
 
         StockMetaTimeSeries msftMetaData = new StockMetaTimeSeries("a", symbols.get(0), "us");
         StockPriceTimeSeries msftOctPriceData = StockPriceTimeSeries.newBuilder()

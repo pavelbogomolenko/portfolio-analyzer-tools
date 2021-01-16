@@ -48,7 +48,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
 
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(avStockDataFetcher);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
@@ -67,7 +67,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     @Test
     void WhenGetStockMonthlyTimeSeriesResponseWithNullSymbolIsCalled_ThenThrowException_symbol_should_not_be_empty() {
         assertThrows(NullPointerException.class, () -> {
-            AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(mock(AVStockDataFetcher.class));
+            AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(mock(AVStockDataFetcher.class));
             avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(null);
         });
     }
@@ -102,7 +102,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
 
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(avStockDataFetcher);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
@@ -151,7 +151,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
 
         when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesServiceImpl(avStockDataFetcher);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)

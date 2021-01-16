@@ -7,14 +7,14 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AVStockTimeSeriesServiceImpl implements StockTimeSeriesService {
+public class AVStockTimeSeriesDataProviderServiceImpl implements StockTimeSeriesDataProviderService {
     private final AVStockDataFetcher avStockDataFetcher;
 
-    public AVStockTimeSeriesServiceImpl() {
+    public AVStockTimeSeriesDataProviderServiceImpl() {
         this.avStockDataFetcher = new AVStockDataFetcher();
     }
 
-    public AVStockTimeSeriesServiceImpl(AVStockDataFetcher avStockDataFetcher) {
+    public AVStockTimeSeriesDataProviderServiceImpl(AVStockDataFetcher avStockDataFetcher) {
         this.avStockDataFetcher = avStockDataFetcher;
     }
 
