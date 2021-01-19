@@ -8,20 +8,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class AVStockTimeSeriesDataProviderServiceImpl implements StockTimeSeriesDataProviderService {
-    private final AVStockDataFetcher avStockDataFetcher;
+    private final AVApiStockDataFetcher avApiStockDataFetcher;
 
-    public AVStockTimeSeriesDataProviderServiceImpl() {
-        this.avStockDataFetcher = new AVStockDataFetcher();
-    }
-
-    public AVStockTimeSeriesDataProviderServiceImpl(AVStockDataFetcher avStockDataFetcher) {
-        this.avStockDataFetcher = avStockDataFetcher;
+    public AVStockTimeSeriesDataProviderServiceImpl(AVApiStockDataFetcher avApiStockDataFetcher) {
+        this.avApiStockDataFetcher = avApiStockDataFetcher;
     }
 
     @Override
     public StockMonthlyTimeSeriesData getStockMonthlyTimeSeriesData(StockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
         Objects.requireNonNull(params.getSymbol());
-        String rawData = this.avStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
+        String rawData = this.avApiStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(StockMonthlyTimeSeriesData.class, new AVStockMonthlyTimeSeriesResponseDeserializer());

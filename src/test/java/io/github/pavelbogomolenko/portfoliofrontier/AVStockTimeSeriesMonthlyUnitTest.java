@@ -45,17 +45,17 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcherImpl = mock(AVHttpApiStockDataFetcherImpl.class);
 
-        when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
+        when(avHttpApiStockDataFetcherImpl.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcherImpl);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
                 .build();
         StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
-        verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
+        verify(avHttpApiStockDataFetcherImpl, times(1)).getMonthlyTimeSeries("AMZN");
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
@@ -67,10 +67,10 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     @Test
     void shouldThrowWhenUnexpectedResponseHasBeenReturned() throws InterruptedException, IOException, URISyntaxException {
         String unexpectedRawResponse = "{'some': thing}";
-        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcherImpl = mock(AVHttpApiStockDataFetcherImpl.class);
 
-        when(avStockDataFetcher.getMonthlyTimeSeries("someSymbol")).thenReturn(unexpectedRawResponse);
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
+        when(avHttpApiStockDataFetcherImpl.getMonthlyTimeSeries("someSymbol")).thenReturn(unexpectedRawResponse);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcherImpl);
 
         assertThrows(RuntimeException.class, () -> {
             StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
@@ -83,7 +83,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     @Test
     void WhenGetStockMonthlyTimeSeriesResponseWithNullSymbolIsCalled_ThenThrowException_symbol_should_not_be_empty() {
         assertThrows(NullPointerException.class, () -> {
-            AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(mock(AVStockDataFetcher.class));
+            AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(mock(AVHttpApiStockDataFetcherImpl.class));
             avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(null);
         });
     }
@@ -115,10 +115,10 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcherImpl = mock(AVHttpApiStockDataFetcherImpl.class);
 
-        when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
+        when(avHttpApiStockDataFetcherImpl.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcherImpl);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
@@ -127,7 +127,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .build();
         StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
-        verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
+        verify(avHttpApiStockDataFetcherImpl, times(1)).getMonthlyTimeSeries("AMZN");
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
@@ -164,10 +164,10 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVStockDataFetcher avStockDataFetcher = mock(AVStockDataFetcher.class);
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcherImpl = mock(AVHttpApiStockDataFetcherImpl.class);
 
-        when(avStockDataFetcher.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avStockDataFetcher);
+        when(avHttpApiStockDataFetcherImpl.getMonthlyTimeSeries(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcherImpl);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
@@ -176,7 +176,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .build();
         StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
-        verify(avStockDataFetcher, times(1)).getMonthlyTimeSeries("AMZN");
+        verify(avHttpApiStockDataFetcherImpl, times(1)).getMonthlyTimeSeries("AMZN");
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
         assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));

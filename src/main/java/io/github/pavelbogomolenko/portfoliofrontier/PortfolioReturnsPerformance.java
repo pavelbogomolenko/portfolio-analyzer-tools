@@ -107,7 +107,8 @@ public class PortfolioReturnsPerformance {
 
     public static void main(String[] args)
             throws InterruptedException, IOException, URISyntaxException {
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl();
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbol("AMZN")
                 .symbol("MSFT")

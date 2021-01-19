@@ -69,7 +69,8 @@ public class MonthlyStockPriceReturnsPerformance {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
-        StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService = new AVStockTimeSeriesDataProviderServiceImpl();
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
+        StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .dateFrom(LocalDate.parse("2015-01-01"))
                 .dateTo(LocalDate.parse("2020-12-30"))

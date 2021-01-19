@@ -11,13 +11,34 @@ import static org.hamcrest.Matchers.*;
 public class AVStockTimeSeriesMonthlyIntTest {
 
     @Test
-    void GivenGOOGLSymbol_WhenGetStockMonthlyTimeSeriesResponseIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
-        String givenSymbol = "GOOGL";
-
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl();
+    void GivenAVHttpApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
+        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
-                .symbol(givenSymbol)
+                .symbol("GOOGL")
+                .build();
+        StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
+
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("info"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("symbol"));
+        assertThat(stockMonthlyTimeSeriesData.getMeta(), hasProperty("timeZone"));
+
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("date"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("open"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("low"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("high"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("close"));
+        assertThat(stockMonthlyTimeSeriesData.getPrices().get(0), hasProperty("volume"));
+    }
+
+    @Test
+    void GivenAVFsApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
+        AVFsApiStockDataFetcherImpl avFsApiStockDataFetcher = new AVFsApiStockDataFetcherImpl();
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avFsApiStockDataFetcher);
+
+        StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
+                .symbol("AMZN")
                 .build();
         StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
