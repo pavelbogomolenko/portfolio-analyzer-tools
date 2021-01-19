@@ -12,6 +12,7 @@ public class MonthlyStockPriceReturnsPerformance {
     private final ArrayList<Double> monthlyReturns;
     private final double averageReturn;
     private final ArrayList<Double> monthlyReturnsToAverageDiff;
+    private final double monthlyReturnsToAverageSquared;
     private final double variance;
 
     public MonthlyStockPriceReturnsPerformance(StockMonthlyTimeSeriesData data) {
@@ -21,8 +22,9 @@ public class MonthlyStockPriceReturnsPerformance {
                 .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.monthlyReturns.size();
         this.monthlyReturnsToAverageDiff = this.monthlyReturns.stream().map(e -> e - this.averageReturn)
                 .collect(Collectors.toCollection(ArrayList::new));
-        this.variance = this.monthlyReturnsToAverageDiff.stream()
-                .reduce(0.0, (acc, cur) -> acc + Math.pow(cur, 2), Double::sum) / this.monthlyReturns.size();
+        this.monthlyReturnsToAverageSquared = this.monthlyReturnsToAverageDiff.stream()
+                .reduce(0.0, (acc, cur) -> acc + Math.pow(cur, 2), Double::sum);
+        this.variance = this.monthlyReturnsToAverageSquared / this.monthlyReturns.size();
     }
 
     public ArrayList<Double> getMonthlyReturns() {
@@ -66,6 +68,10 @@ public class MonthlyStockPriceReturnsPerformance {
 
     public ArrayList<Double> getMonthlyReturnsToAverageDiff() {
         return this.monthlyReturnsToAverageDiff;
+    }
+
+    public double getMonthlyReturnsToAverageSquared() {
+        return this.monthlyReturnsToAverageSquared;
     }
 
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
