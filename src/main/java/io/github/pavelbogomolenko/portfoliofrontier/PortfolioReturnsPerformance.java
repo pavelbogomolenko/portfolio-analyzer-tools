@@ -81,8 +81,8 @@ public class PortfolioReturnsPerformance {
     private ArrayList<MonthlyStockPriceReturnsPerformance> calculateStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
             throws InterruptedException, IOException, URISyntaxException {
         ArrayList<MonthlyStockPriceReturnsPerformance> result = new ArrayList<>();
-        int yearDiffCount = params.getDateTo().getYear() - params.getDateFrom().getYear();
-        int monthCount = Math.abs(params.getDateTo().getMonthValue() - params.getDateFrom().getMonthValue());
+        int yearDiffCount = (params.getDateTo().getYear() - params.getDateFrom().getYear()) + 1;
+        int monthCount = Math.abs(params.getDateTo().getMonthValue() - params.getDateFrom().getMonthValue()) + 1;
         int expectedItemsCount = monthCount;
         if(yearDiffCount > 0) {
             expectedItemsCount = yearDiffCount * expectedItemsCount;
@@ -96,7 +96,8 @@ public class PortfolioReturnsPerformance {
                     .build();
 
             StockMonthlyTimeSeriesData data = this.stockTimeSeriesDataProviderService.getStockMonthlyTimeSeriesData(serviceParams);
-            if(data.getPrices().size() <= expectedItemsCount) {
+            int stockPricesSize = data.getPrices().size();
+            if(stockPricesSize != expectedItemsCount) {
                 throw new IllegalArgumentException(String.format("Stock data for '%s' less than given time range", symbol));
             }
             MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(data);
@@ -107,17 +108,32 @@ public class PortfolioReturnsPerformance {
 
     public static void main(String[] args)
             throws InterruptedException, IOException, URISyntaxException {
-        AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
-        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
+        AVFsApiStockDataFetcherImpl avFsApiStockDataFetcher = new AVFsApiStockDataFetcherImpl();
+        AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl(avFsApiStockDataFetcher);
+
+        ArrayList<String> symbols = new ArrayList<>(Arrays.asList(
+                "AMZN",
+                "EBAY",
+                "AAPL",
+                "ABC",
+                "AMD",
+                "GOOGL",
+                "ABBV",
+                "CDNS",
+                "EA",
+                "CSCO",
+                "XRAY",
+                "FANG",
+                "GS",
+                "WMT",
+                "BA",
+                "MSFT",
+                "BAC",
+                "T"
+        ));
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
-                .symbol("AMZN")
-                .symbol("MSFT")
-                .symbol("GOOGL")
-                .symbol("IBM")
-//                .symbol("BMW.DE")
-//                .symbol("FB")
-                .symbol("CSCO")
-                .dateFrom(LocalDate.parse("2015-01-01"))
+                .symbols(symbols)
+                .dateFrom(LocalDate.parse("2013-02-01"))
                 .dateTo(LocalDate.parse("2020-12-30"))
                 .build();
         PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService, params);
@@ -127,6 +143,7 @@ public class PortfolioReturnsPerformance {
             System.out.println("Monthly Returns: " + Arrays.toString(stockReturnsPerformance.getMonthlyReturns().toArray()));
             System.out.println("Average Monthly Return: " + stockReturnsPerformance.getAverageReturn());
             System.out.println("Average Annual Return: " + stockReturnsPerformance.getAverageAnnualReturn());
+            System.out.println("Monthly Returns Minus Average: " + stockReturnsPerformance.getMonthlyReturnsToAverageDiff());
             System.out.println("Monthly Variance: " + stockReturnsPerformance.getVariance());
             System.out.println("Annual Variance: " + stockReturnsPerformance.getAnnualVariance());
             System.out.println("Monthly StdDev: " + stockReturnsPerformance.getStdDev());
