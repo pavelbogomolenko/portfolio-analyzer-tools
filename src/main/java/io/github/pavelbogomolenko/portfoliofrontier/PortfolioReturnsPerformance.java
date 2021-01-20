@@ -36,9 +36,30 @@ public class PortfolioReturnsPerformance {
         return varCovarMatrix;
     }
 
-    public void printVarianceCovarianceMatrix() {
-        double[][] varCovarMatrix = getReturnsVarianceCovarianceMatrix();
+    public double[][] getPearsonCorrelationCoefficientMatrix() {
+        ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances();
+        int porfolioSize = portfolio.size();
+        double[][] correlationMatrix = new double[porfolioSize][porfolioSize];
+        for (int col = 0; col < porfolioSize; col++) {
+            for( int row = 0; row < porfolioSize; row++) {
+                MonthlyStockPriceReturnsPerformance stockPerfA = portfolio.get(col);
+                MonthlyStockPriceReturnsPerformance stockPerfB = portfolio.get(row);
+                double divider = Math.sqrt(stockPerfA.getMonthlyReturnsToAverageSquared() * stockPerfB.getMonthlyReturnsToAverageSquared());
+                correlationMatrix[col][row] = calculateDotProduct(stockPerfA, stockPerfB) / divider;
+            }
+        }
+        return correlationMatrix;
+    }
 
+    public void printVarianceCovarianceMatrix() {
+        printMatrixWithHeaders(getReturnsVarianceCovarianceMatrix());
+    }
+
+    public void printCorrelationMatrix() {
+        printMatrixWithHeaders(getPearsonCorrelationCoefficientMatrix());
+    }
+
+    private void printMatrixWithHeaders(double[][] matrix) {
         int maxSymbolLength = params.getSymbols().stream()
                 .map(s -> s.length())
                 .max(Integer::compare).get() + 2;
@@ -55,14 +76,14 @@ public class PortfolioReturnsPerformance {
         }
         System.out.print("\n");
 
-        for (int col = 0; col < varCovarMatrix.length; col++) {
+        for (int col = 0; col < matrix.length; col++) {
             StringBuilder colStr = new StringBuilder();
             colStr.append(params.getSymbols().get(col));
             for(int i = 0; i < maxSymbolLength - params.getSymbols().get(col).length(); i++) {
                 colStr.append(" ");
             }
-            for(int row = 0; row < varCovarMatrix.length; row++) {
-                colStr.append(String.format("%.6f", varCovarMatrix[col][row]) + " ");
+            for(int row = 0; row < matrix.length; row++) {
+                colStr.append(String.format("%.6f", matrix[col][row]) + " ");
             }
             System.out.println(colStr.toString());
         }
@@ -149,6 +170,9 @@ public class PortfolioReturnsPerformance {
             System.out.println("Monthly StdDev: " + stockReturnsPerformance.getStdDev());
         }
 
+        System.out.println("Portfolio Returns VAR-COVAR matrix");
         pRP.printVarianceCovarianceMatrix();
+        System.out.println("Portfolio Returns correlation matrix");
+        pRP.printCorrelationMatrix();
     }
 }
