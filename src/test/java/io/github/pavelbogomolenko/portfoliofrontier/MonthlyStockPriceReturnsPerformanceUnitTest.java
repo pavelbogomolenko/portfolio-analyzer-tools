@@ -47,11 +47,13 @@ public class MonthlyStockPriceReturnsPerformanceUnitTest {
         MonthlyStockPriceReturnsPerformance stockPerformance = new MonthlyStockPriceReturnsPerformance(stockMonthlyTimeSeriesData);
 
         ArrayList<Double> actualReturns = stockPerformance.getMonthlyReturns();
+        ArrayList<LocalDate> actualReturnDates = stockPerformance.getDatesOfReturns();
 
         double febToJanGrowth = (febPriceTimeSeries.getClose() - janPriceTimeSeries.getClose()) / janPriceTimeSeries.getClose();
         double marToFebGrowth = (marPriceTimeSeries.getClose() - febPriceTimeSeries.getClose()) / febPriceTimeSeries.getClose();
 
         assertThat(actualReturns, contains(febToJanGrowth, marToFebGrowth));
+        assertThat(actualReturnDates, contains(febPriceTimeSeries.getDate(), marPriceTimeSeries.getDate()));
     }
 
     @Test

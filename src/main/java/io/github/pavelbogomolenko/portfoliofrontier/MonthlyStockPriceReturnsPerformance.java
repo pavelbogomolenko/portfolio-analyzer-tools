@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class MonthlyStockPriceReturnsPerformance {
     private final StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData;
     private final ArrayList<Double> monthlyReturns;
+    private final ArrayList<LocalDate> datesOfReturns;
     private final double averageReturn;
     private final ArrayList<Double> monthlyReturnsToAverageDiff;
     private final double monthlyReturnsToAverageSquared;
@@ -17,6 +18,7 @@ public class MonthlyStockPriceReturnsPerformance {
 
     public MonthlyStockPriceReturnsPerformance(StockMonthlyTimeSeriesData data) {
         this.stockMonthlyTimeSeriesData = data;
+        datesOfReturns = new ArrayList<>();
         this.monthlyReturns = calculateMonthlyReturns();
         this.averageReturn = this.monthlyReturns.stream()
                 .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.monthlyReturns.size();
@@ -31,6 +33,10 @@ public class MonthlyStockPriceReturnsPerformance {
         return monthlyReturns;
     }
 
+    public ArrayList<LocalDate> getDatesOfReturns() {
+        return datesOfReturns;
+    }
+
     private ArrayList<Double> calculateMonthlyReturns() {
         ArrayList<Double> result = new ArrayList<>();
         ArrayList<StockPriceTimeSeries> priceTimeSeries = this.stockMonthlyTimeSeriesData.getPrices();
@@ -38,6 +44,7 @@ public class MonthlyStockPriceReturnsPerformance {
             int prevIndex = currentIndex + 1;
             double growthRate = (priceTimeSeries.get(currentIndex).getClose() - priceTimeSeries.get(prevIndex).getClose()) /  priceTimeSeries.get(prevIndex).getClose();
             result.add(growthRate);
+            datesOfReturns.add(priceTimeSeries.get(currentIndex).getDate());
         }
         return result;
     }

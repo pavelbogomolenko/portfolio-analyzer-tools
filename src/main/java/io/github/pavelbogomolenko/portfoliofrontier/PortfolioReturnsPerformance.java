@@ -161,6 +161,7 @@ public class PortfolioReturnsPerformance {
 
         for(MonthlyStockPriceReturnsPerformance stockReturnsPerformance: pRP.getMonthlyStockPriceReturnsPerformances()) {
             System.out.println("Stock: " + stockReturnsPerformance.getStockSymbol());
+            System.out.println("Dates: " + Arrays.toString(stockReturnsPerformance.getDatesOfReturns().toArray()));
             System.out.println("Monthly Returns: " + Arrays.toString(stockReturnsPerformance.getMonthlyReturns().toArray()));
             System.out.println("Average Monthly Return: " + stockReturnsPerformance.getAverageReturn());
             System.out.println("Average Annual Return: " + stockReturnsPerformance.getAverageAnnualReturn());
