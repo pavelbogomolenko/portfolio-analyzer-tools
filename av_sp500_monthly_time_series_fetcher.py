@@ -511,6 +511,39 @@ SP500_SYMBOLS = [
     "ZTS"
 ]
 
+DAX = [
+    "ADS.DE",
+    "ALV.DE",
+    "BAS.DE",
+    "BAYN.DE",
+    "BEI.DE",
+    "BMW.DE",
+    "CON.DE",
+    "1COV.DE",
+    "DAI.DE",
+    "DHER.DE",
+    "DBK.DE",
+    "DB1.DE",
+    "DPW.DE",
+    "DTE.DE",
+    "DWNI.DE",
+    "EOAN.DE",
+    "FRE.DE",
+    "FME.DE",
+    "HEI.DE",
+    "HEN3.DE",
+    "IFX.DE",
+    "LIN.DE",
+    "MRK.DE",
+    "MTX.DE",
+    "MUV2.DE",
+    "RWE.DE",
+    "SAP.DE",
+    "SIE.DE",
+    "VOW3.DE",
+    "VNA.DE"
+]
+
 AV_API_URL = "https://www.alphavantage.co/"
 AV_API_KEY = os.environ['AV_API_KEY']
 
@@ -518,7 +551,7 @@ AV_API_KEY = os.environ['AV_API_KEY']
 def fetch_and_save_sp500_monthly_time_series_data():
     dirname = os.path.dirname(__file__)
     bad_status_code_count = 0
-    for s in SP500_SYMBOLS:
+    for s in DAX:
         path_to_file = os.path.join(dirname, "data/{}.txt".format(s))
         if os.path.exists(path_to_file):
             print("{} file exists. Skipping...".format(s))
