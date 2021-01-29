@@ -61,7 +61,7 @@ public class PortfolioReturnsPerformance {
 
     private void printMatrixWithHeaders(double[][] matrix, PortfolioReturnsPerformanceParams params) {
         int maxSymbolLength = params.getSymbols().stream()
-                .map(s -> s.length())
+                .map(String::length)
                 .max(Integer::compare).get() + 2;
 
         for(int i = 0; i < maxSymbolLength; i++) {
@@ -79,9 +79,7 @@ public class PortfolioReturnsPerformance {
         for (int col = 0; col < matrix.length; col++) {
             StringBuilder colStr = new StringBuilder();
             colStr.append(params.getSymbols().get(col));
-            for(int i = 0; i < maxSymbolLength - params.getSymbols().get(col).length(); i++) {
-                colStr.append(" ");
-            }
+            colStr.append(" ".repeat(Math.max(0, maxSymbolLength - params.getSymbols().get(col).length())));
             for(int row = 0; row < matrix.length; row++) {
                 colStr.append(String.format("%.6f", matrix[col][row]) + " ");
             }
