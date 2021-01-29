@@ -16,7 +16,7 @@ public class AVStockTimeSeriesDataProviderServiceImpl implements StockTimeSeries
     }
 
     @Override
-    public StockMonthlyTimeSeriesData getStockMonthlyTimeSeriesData(StockTimeSeriesServiceParams params) throws InterruptedException, IOException, URISyntaxException {
+    public StockMonthlyTimeSeriesData getStockMonthlyTimeSeriesData(StockTimeSeriesServiceParams params) throws InterruptedException, IOException {
         Objects.requireNonNull(params.getSymbol());
         String rawData = this.avApiStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
 

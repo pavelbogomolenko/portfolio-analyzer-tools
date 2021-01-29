@@ -27,13 +27,19 @@ public class AVHttpApiStockDataFetcherImpl implements AVApiStockDataFetcher {
     }
 
     @Override
-    public String getMonthlyTimeSeries(String symbol) throws IOException, InterruptedException, URISyntaxException {
-        String apiEndpointUrl = String.format("%squery?function=TIME_SERIES_MONTHLY&symbol=%s&apikey=%s", AV_BASE_URL, symbol, this.avApiKey);
-        HttpRequest httpGetRequest = HttpRequest.newBuilder(new URI(apiEndpointUrl))
-                .GET()
-                .build();
+    public String getMonthlyTimeSeries(String symbol) throws IOException, InterruptedException {
+        String result = null;
+        try {
+            String apiEndpointUrl = String.format("%squery?function=TIME_SERIES_MONTHLY&symbol=%s&apikey=%s", AV_BASE_URL, symbol, this.avApiKey);
+            HttpRequest httpGetRequest = HttpRequest.newBuilder(new URI(apiEndpointUrl))
+                    .GET()
+                    .build();
 
-        HttpResponse response = this.httpClient.send(httpGetRequest, HttpResponse.BodyHandlers.ofString());
-        return response.body().toString();
+            HttpResponse response = this.httpClient.send(httpGetRequest, HttpResponse.BodyHandlers.ofString());
+            result = response.body().toString();
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+        return result;
     }
 }

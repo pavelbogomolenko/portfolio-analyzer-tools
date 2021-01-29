@@ -2,7 +2,6 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -16,12 +15,12 @@ public class PortfolioReturnsPerformance {
     }
 
     public ArrayList<MonthlyStockPriceReturnsPerformance> getMonthlyStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         return calculateStockPriceReturnsPerformances(params);
     }
 
     public double[][] getReturnsVarianceCovarianceMatrix(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances(params);
         int porfolioSize = portfolio.size();
         int porfolioStockReturnsSize = portfolio.get(0).getMonthlyReturnsToAverageDiff().size();
@@ -35,7 +34,7 @@ public class PortfolioReturnsPerformance {
     }
 
     public double[][] getPearsonCorrelationCoefficientMatrix(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances(params);
         int porfolioSize = portfolio.size();
         double[][] correlationMatrix = new double[porfolioSize][porfolioSize];
@@ -51,12 +50,12 @@ public class PortfolioReturnsPerformance {
     }
 
     public void printVarianceCovarianceMatrix(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         printMatrixWithHeaders(getReturnsVarianceCovarianceMatrix(params), params);
     }
 
     public void printCorrelationMatrix(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         printMatrixWithHeaders(getPearsonCorrelationCoefficientMatrix(params), params);
     }
 
@@ -101,7 +100,7 @@ public class PortfolioReturnsPerformance {
     }
 
     private ArrayList<MonthlyStockPriceReturnsPerformance> calculateStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         ArrayList<MonthlyStockPriceReturnsPerformance> result = new ArrayList<>();
         long expectedItemsCount = ChronoUnit.MONTHS.between(params.getDateFrom().withDayOfMonth(1), params.getDateTo().withDayOfMonth(1)) + 1;
 
@@ -123,8 +122,7 @@ public class PortfolioReturnsPerformance {
         return result;
     }
 
-    public static void main(String[] args)
-            throws InterruptedException, IOException, URISyntaxException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         AVFsApiStockDataFetcherImpl avFsApiStockDataFetcher = new AVFsApiStockDataFetcherImpl();
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesService = new AVStockTimeSeriesDataProviderServiceImpl(avFsApiStockDataFetcher);
 
