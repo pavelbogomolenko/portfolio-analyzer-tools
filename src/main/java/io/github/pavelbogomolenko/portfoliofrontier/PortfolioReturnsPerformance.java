@@ -4,6 +4,7 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -102,12 +103,7 @@ public class PortfolioReturnsPerformance {
     private ArrayList<MonthlyStockPriceReturnsPerformance> calculateStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
             throws InterruptedException, IOException, URISyntaxException {
         ArrayList<MonthlyStockPriceReturnsPerformance> result = new ArrayList<>();
-        int yearDiffCount = (params.getDateTo().getYear() - params.getDateFrom().getYear()) + 1;
-        int monthCount = Math.abs(params.getDateTo().getMonthValue() - params.getDateFrom().getMonthValue()) + 1;
-        int expectedItemsCount = monthCount;
-        if(yearDiffCount > 0) {
-            expectedItemsCount = yearDiffCount * expectedItemsCount;
-        }
+        long expectedItemsCount = ChronoUnit.MONTHS.between(params.getDateFrom().withDayOfMonth(1), params.getDateTo().withDayOfMonth(1)) + 1;
 
         for(String symbol: params.getSymbols()) {
             StockTimeSeriesServiceParams serviceParams = StockTimeSeriesServiceParams.newBuilder()
@@ -155,7 +151,7 @@ public class PortfolioReturnsPerformance {
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(LocalDate.parse("2013-02-01"))
-                .dateTo(LocalDate.parse("2020-12-30"))
+                .dateTo(LocalDate.parse("2020-12-31"))
                 .build();
         PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService, params);
 

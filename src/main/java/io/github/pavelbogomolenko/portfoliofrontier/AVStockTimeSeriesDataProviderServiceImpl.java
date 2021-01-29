@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -38,11 +39,13 @@ public class AVStockTimeSeriesDataProviderServiceImpl implements StockTimeSeries
     }
 
     private boolean shouldFilterOutPrice(StockPriceTimeSeries price, StockTimeSeriesServiceParams params) {
-        if(price.getDate().getYear() >= params.getDateFrom().getYear() && price.getDate().getYear() <= params.getDateTo().getYear()) {
-            if(price.getDate().getMonthValue() >= params.getDateFrom().getMonthValue() && price.getDate().getMonthValue() <= params.getDateTo().getMonthValue()) {
-                return true;
-            }
+        if(isLocalDateBetween(price.getDate(), params.getDateFrom(), params.getDateTo())) {
+            return true;
         }
         return false;
+    }
+
+    private boolean isLocalDateBetween(LocalDate date, LocalDate from, LocalDate to) {
+        return !(date.isBefore(from) || date.isAfter(to));
     }
 }
