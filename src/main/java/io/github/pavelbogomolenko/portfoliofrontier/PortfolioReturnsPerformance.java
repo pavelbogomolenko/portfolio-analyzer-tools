@@ -10,22 +10,19 @@ import java.util.Arrays;
 
 public class PortfolioReturnsPerformance {
     private final StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService;
-    private final ArrayList<MonthlyStockPriceReturnsPerformance> stockPriceReturnsPerformances;
-    private final PortfolioReturnsPerformanceParams params;
 
-    public PortfolioReturnsPerformance(StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService, PortfolioReturnsPerformanceParams params)
-            throws InterruptedException, IOException, URISyntaxException {
+    public PortfolioReturnsPerformance(StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService) {
         this.stockTimeSeriesDataProviderService = stockTimeSeriesDataProviderService;
-        this.params = params;
-        this.stockPriceReturnsPerformances = calculateStockPriceReturnsPerformances(this.params);
     }
 
-    public ArrayList<MonthlyStockPriceReturnsPerformance> getMonthlyStockPriceReturnsPerformances() {
-        return stockPriceReturnsPerformances;
+    public ArrayList<MonthlyStockPriceReturnsPerformance> getMonthlyStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
+        return calculateStockPriceReturnsPerformances(params);
     }
 
-    public double[][] getReturnsVarianceCovarianceMatrix() {
-        ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances();
+    public double[][] getReturnsVarianceCovarianceMatrix(PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
+        ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances(params);
         int porfolioSize = portfolio.size();
         int porfolioStockReturnsSize = portfolio.get(0).getMonthlyReturnsToAverageDiff().size();
         double[][] varCovarMatrix = new double[porfolioSize][porfolioSize];
@@ -37,8 +34,9 @@ public class PortfolioReturnsPerformance {
         return varCovarMatrix;
     }
 
-    public double[][] getPearsonCorrelationCoefficientMatrix() {
-        ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances();
+    public double[][] getPearsonCorrelationCoefficientMatrix(PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
+        ArrayList<MonthlyStockPriceReturnsPerformance> portfolio = getMonthlyStockPriceReturnsPerformances(params);
         int porfolioSize = portfolio.size();
         double[][] correlationMatrix = new double[porfolioSize][porfolioSize];
         for (int col = 0; col < porfolioSize; col++) {
@@ -52,15 +50,17 @@ public class PortfolioReturnsPerformance {
         return correlationMatrix;
     }
 
-    public void printVarianceCovarianceMatrix() {
-        printMatrixWithHeaders(getReturnsVarianceCovarianceMatrix());
+    public void printVarianceCovarianceMatrix(PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
+        printMatrixWithHeaders(getReturnsVarianceCovarianceMatrix(params), params);
     }
 
-    public void printCorrelationMatrix() {
-        printMatrixWithHeaders(getPearsonCorrelationCoefficientMatrix());
+    public void printCorrelationMatrix(PortfolioReturnsPerformanceParams params)
+            throws InterruptedException, IOException, URISyntaxException {
+        printMatrixWithHeaders(getPearsonCorrelationCoefficientMatrix(params), params);
     }
 
-    private void printMatrixWithHeaders(double[][] matrix) {
+    private void printMatrixWithHeaders(double[][] matrix, PortfolioReturnsPerformanceParams params) {
         int maxSymbolLength = params.getSymbols().stream()
                 .map(s -> s.length())
                 .max(Integer::compare).get() + 2;
@@ -153,9 +153,9 @@ public class PortfolioReturnsPerformance {
                 .dateFrom(LocalDate.parse("2013-02-01"))
                 .dateTo(LocalDate.parse("2020-12-31"))
                 .build();
-        PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService, params);
+        PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService);
 
-        for(MonthlyStockPriceReturnsPerformance stockReturnsPerformance: pRP.getMonthlyStockPriceReturnsPerformances()) {
+        for(MonthlyStockPriceReturnsPerformance stockReturnsPerformance: pRP.getMonthlyStockPriceReturnsPerformances(params)) {
             System.out.println("Stock: " + stockReturnsPerformance.getStockSymbol());
             System.out.println("Dates: " + Arrays.toString(stockReturnsPerformance.getDatesOfReturns().toArray()));
             System.out.println("Monthly Returns: " + Arrays.toString(stockReturnsPerformance.getMonthlyReturns().toArray()));
@@ -168,8 +168,8 @@ public class PortfolioReturnsPerformance {
         }
 
         System.out.println("Portfolio Returns VAR-COVAR matrix");
-        pRP.printVarianceCovarianceMatrix();
+        pRP.printVarianceCovarianceMatrix(params);
         System.out.println("Portfolio Returns correlation matrix");
-        pRP.printCorrelationMatrix();
+        pRP.printCorrelationMatrix(params);
     }
 }

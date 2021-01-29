@@ -102,8 +102,8 @@ public class PortfolioReturnsPerformanceUnitTest {
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
                 .build();
-        PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock, params);
-        ArrayList<MonthlyStockPriceReturnsPerformance> actualResult = portfolioReturnsPerformance.getMonthlyStockPriceReturnsPerformances();
+        PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock);
+        ArrayList<MonthlyStockPriceReturnsPerformance> actualResult = portfolioReturnsPerformance.getMonthlyStockPriceReturnsPerformances(params);
 
         StockTimeSeriesServiceParamsMatcher msftParamMatcher = new StockTimeSeriesServiceParamsMatcher(msftParams);
         StockTimeSeriesServiceParamsMatcher googleParamMatcher = new StockTimeSeriesServiceParamsMatcher(googleParams);
@@ -147,21 +147,27 @@ public class PortfolioReturnsPerformanceUnitTest {
                 .dateTo(dateTo)
                 .build();
         assertThrows(IllegalArgumentException.class, () -> {
-            new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock, params);
+            PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock);
+            portfolioReturnsPerformance.getMonthlyStockPriceReturnsPerformances(params);
         });
     }
 
     @Test
-    void shouldBuildReturnsVarianceCovarianceMatrix() {
+    void shouldBuildReturnsVarianceCovarianceMatrix() throws InterruptedException, IOException, URISyntaxException {
         MonthlyStockPriceReturnsPerformance msftPerf = new MonthlyStockPriceReturnsPerformance(msftData);
         MonthlyStockPriceReturnsPerformance googlePerf = new MonthlyStockPriceReturnsPerformance(googleData);
         MonthlyStockPriceReturnsPerformance ibmPerf = new MonthlyStockPriceReturnsPerformance(googleData);
         ArrayList<MonthlyStockPriceReturnsPerformance> portfolioReturns = new ArrayList<>(Arrays.asList(msftPerf, googlePerf, ibmPerf));
 
         PortfolioReturnsPerformance portfolioReturnsPerformance = mock(PortfolioReturnsPerformance.class, CALLS_REAL_METHODS);
-        doReturn(portfolioReturns).when(portfolioReturnsPerformance).getMonthlyStockPriceReturnsPerformances();
+        PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
+                .symbols(symbols)
+                .dateFrom(dateFrom)
+                .dateTo(dateTo)
+                .build();
+        doReturn(portfolioReturns).when(portfolioReturnsPerformance).getMonthlyStockPriceReturnsPerformances(params);
 
-        double[][] resultMatrix = portfolioReturnsPerformance.getReturnsVarianceCovarianceMatrix();
+        double[][] resultMatrix = portfolioReturnsPerformance.getReturnsVarianceCovarianceMatrix(params);
 
         assertThat(resultMatrix.length, is(equalTo(portfolioReturns.size())));
         assertThat(resultMatrix[0].length, is(equalTo(portfolioReturns.size())));
