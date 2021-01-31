@@ -2,7 +2,6 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -15,7 +14,7 @@ public class AVStockTimeSeriesDataProviderServiceImpl implements StockTimeSeries
     }
 
     @Override
-    public StockMonthlyTimeSeriesData getStockMonthlyTimeSeriesData(StockTimeSeriesServiceParams params) throws InterruptedException, IOException {
+    public StockMonthlyTimeSeriesData getStockMonthlyTimeSeriesData(StockTimeSeriesServiceParams params) {
         Objects.requireNonNull(params.getSymbol());
         String rawData = this.avApiStockDataFetcher.getMonthlyTimeSeries(params.getSymbol());
 

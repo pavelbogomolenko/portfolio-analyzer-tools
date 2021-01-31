@@ -2,16 +2,13 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class AVStockTimeSeriesMonthlyIntTest {
 
     @Test
-    void GivenAVHttpApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
+    void GivenAVHttpApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() {
         AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
 
@@ -33,7 +30,7 @@ public class AVStockTimeSeriesMonthlyIntTest {
     }
 
     @Test
-    void GivenAVFsApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() throws InterruptedException, IOException, URISyntaxException {
+    void GivenAVFsApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() {
         AVFsApiStockDataFetcherImpl avFsApiStockDataFetcher = new AVFsApiStockDataFetcherImpl();
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceImpl = new AVStockTimeSeriesDataProviderServiceImpl(avFsApiStockDataFetcher);
 

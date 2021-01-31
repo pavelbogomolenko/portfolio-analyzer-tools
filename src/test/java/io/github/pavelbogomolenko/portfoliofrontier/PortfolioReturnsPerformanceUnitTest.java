@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -93,8 +92,7 @@ public class PortfolioReturnsPerformanceUnitTest {
     }
 
     @Test
-    void givenListOfStockSymbolsAndDateRange_whenGetMonthlyStockPriceReturnsPerformanceIsCalled_shouldReturnListOfMonthlyStockPriceReturnsPerformance()
-            throws InterruptedException, IOException, URISyntaxException {
+    void givenListOfStockSymbolsAndDateRange_whenGetMonthlyStockPriceReturnsPerformanceIsCalled_shouldReturnListOfMonthlyStockPriceReturnsPerformance() {
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesDataProviderServiceImpl.class);
         when(avStockTimeSeriesServiceMock.getStockMonthlyTimeSeriesData(any())).thenReturn(msftData, googleData,ibmData);
 
@@ -121,8 +119,7 @@ public class PortfolioReturnsPerformanceUnitTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenStockTimeSeriesHasLessRecordsThanMonthGivenWithDateRange()
-            throws InterruptedException, IOException {
+    void shouldThrowExceptionWhenStockTimeSeriesHasLessRecordsThanMonthGivenWithDateRange() {
         ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
 
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesDataProviderServiceImpl.class);
@@ -152,7 +149,7 @@ public class PortfolioReturnsPerformanceUnitTest {
     }
 
     @Test
-    void shouldBuildReturnsVarianceCovarianceMatrix() throws InterruptedException, IOException {
+    void shouldBuildReturnsVarianceCovarianceMatrix() {
         MonthlyStockPriceReturnsPerformance msftPerf = new MonthlyStockPriceReturnsPerformance(msftData);
         MonthlyStockPriceReturnsPerformance googlePerf = new MonthlyStockPriceReturnsPerformance(googleData);
         MonthlyStockPriceReturnsPerformance ibmPerf = new MonthlyStockPriceReturnsPerformance(googleData);

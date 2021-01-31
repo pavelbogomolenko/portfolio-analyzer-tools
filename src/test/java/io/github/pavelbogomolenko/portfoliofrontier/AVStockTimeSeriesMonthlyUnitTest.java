@@ -2,8 +2,6 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
@@ -15,8 +13,7 @@ import static org.mockito.Mockito.*;
 public class AVStockTimeSeriesMonthlyUnitTest {
 
     @Test
-    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNoDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponse()
-            throws InterruptedException, IOException {
+    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNoDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponse() {
         StockPriceTimeSeries firstPrice = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2021-01-04"))
                 .open(3270.0)
@@ -66,7 +63,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     }
 
     @Test
-    void shouldThrowWhenUnexpectedResponseHasBeenReturned() throws InterruptedException, IOException, URISyntaxException {
+    void shouldThrowWhenUnexpectedResponseHasBeenReturned() {
         String unexpectedRawResponse = "{'some': thing}";
         AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcherImpl = mock(AVHttpApiStockDataFetcherImpl.class);
 
@@ -90,8 +87,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     }
 
     @Test
-    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponseSatisfyingInputDateRange()
-            throws InterruptedException, IOException, URISyntaxException {
+    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponseSatisfyingInputDateRange() {
         StockPriceTimeSeries decPrice = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2020-12-31"))
                 .close(3186.6300)
@@ -139,8 +135,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     }
 
     @Test
-    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNonExistingDateRange_ShouldAVTimeSeriesMonthlyResponseHaveZeroPrices()
-            throws InterruptedException, IOException, URISyntaxException {
+    void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNonExistingDateRange_ShouldAVTimeSeriesMonthlyResponseHaveZeroPrices() {
         StockPriceTimeSeries decPrice = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2020-12-31"))
                 .close(3186.6300)

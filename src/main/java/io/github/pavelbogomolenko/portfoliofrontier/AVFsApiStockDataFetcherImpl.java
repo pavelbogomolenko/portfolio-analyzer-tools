@@ -12,8 +12,12 @@ public class AVFsApiStockDataFetcherImpl implements AVApiStockDataFetcher {
     }
 
     @Override
-    public String getMonthlyTimeSeries(String symbol) throws IOException {
-        Path fileName = Path.of(FS_STORAGE_PATH + symbol + ".txt");
-        return Files.readString(fileName);
+    public String getMonthlyTimeSeries(String symbol) {
+        try {
+            Path fileName = Path.of(FS_STORAGE_PATH + symbol + ".txt");
+            return Files.readString(fileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

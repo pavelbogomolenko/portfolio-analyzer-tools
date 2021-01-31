@@ -1,7 +1,5 @@
 package io.github.pavelbogomolenko.portfoliofrontier;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -82,7 +80,7 @@ public class MonthlyStockPriceReturnsPerformance {
         return this.monthlyReturnsToAverageSquared;
     }
 
-    public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
+    public static void main(String[] args) {
         AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
         StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
