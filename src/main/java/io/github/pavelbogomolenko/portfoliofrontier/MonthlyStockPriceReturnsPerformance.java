@@ -3,6 +3,7 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -85,8 +86,8 @@ public class MonthlyStockPriceReturnsPerformance {
         AVHttpApiStockDataFetcherImpl avHttpApiStockDataFetcher = new AVHttpApiStockDataFetcherImpl();
         StockTimeSeriesDataProviderService stockTimeSeriesDataProviderService = new AVStockTimeSeriesDataProviderServiceImpl(avHttpApiStockDataFetcher);
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
-                .dateFrom(LocalDate.parse("2015-01-01"))
-                .dateTo(LocalDate.parse("2020-12-30"))
+                .dateFrom(YearMonth.parse("2015-01-01"))
+                .dateTo(YearMonth.parse("2020-12-30"))
                 .symbol("MSFT")
                 .build();
         StockMonthlyTimeSeriesData data = stockTimeSeriesDataProviderService.getStockMonthlyTimeSeriesData(params);

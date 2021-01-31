@@ -2,7 +2,7 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,7 +100,7 @@ public class PortfolioReturnsPerformance {
     private ArrayList<MonthlyStockPriceReturnsPerformance> calculateStockPriceReturnsPerformances(PortfolioReturnsPerformanceParams params)
             throws InterruptedException, IOException {
         ArrayList<MonthlyStockPriceReturnsPerformance> result = new ArrayList<>();
-        long expectedItemsCount = ChronoUnit.MONTHS.between(params.getDateFrom().withDayOfMonth(1), params.getDateTo().withDayOfMonth(1)) + 1;
+        long expectedItemsCount = ChronoUnit.MONTHS.between(params.getDateFrom(), params.getDateTo()) + 1;
 
         for(String symbol: params.getSymbols()) {
             StockTimeSeriesServiceParams serviceParams = StockTimeSeriesServiceParams.newBuilder()
@@ -146,8 +146,8 @@ public class PortfolioReturnsPerformance {
         ));
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbols(symbols)
-                .dateFrom(LocalDate.parse("2013-02-01"))
-                .dateTo(LocalDate.parse("2020-12-31"))
+                .dateFrom(YearMonth.parse("2013-02"))
+                .dateTo(YearMonth.parse("2020-12"))
                 .build();
         PortfolioReturnsPerformance pRP = new PortfolioReturnsPerformance(avStockTimeSeriesService);
 

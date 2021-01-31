@@ -1,12 +1,12 @@
 package io.github.pavelbogomolenko.portfoliofrontier;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 
 public class PortfolioReturnsPerformanceParams {
     private final ArrayList<String> symbols;
-    private final LocalDate dateFrom;
-    private final LocalDate dateTo;
+    private final YearMonth dateFrom;
+    private final YearMonth dateTo;
 
     private PortfolioReturnsPerformanceParams(Builder builder) {
         this.symbols = builder.symbols;
@@ -16,8 +16,8 @@ public class PortfolioReturnsPerformanceParams {
 
     public static class Builder {
         private ArrayList<String> symbols = new ArrayList<>();
-        private LocalDate dateFrom;
-        private LocalDate dateTo;
+        private YearMonth dateFrom;
+        private YearMonth dateTo;
 
         public Builder symbol(String s) {
             this.symbols.add(s);
@@ -29,12 +29,12 @@ public class PortfolioReturnsPerformanceParams {
             return this;
         }
 
-        public Builder dateFrom(LocalDate d) {
+        public Builder dateFrom(YearMonth d) {
             this.dateFrom = d;
             return this;
         }
 
-        public Builder dateTo(LocalDate d) {
+        public Builder dateTo(YearMonth d) {
             this.dateTo = d;
             return this;
         }
@@ -52,11 +52,11 @@ public class PortfolioReturnsPerformanceParams {
         return symbols;
     }
 
-    public LocalDate getDateFrom() {
+    public YearMonth getDateFrom() {
         return dateFrom;
     }
 
-    public LocalDate getDateTo() {
+    public YearMonth getDateTo() {
         return dateTo;
     }
 }

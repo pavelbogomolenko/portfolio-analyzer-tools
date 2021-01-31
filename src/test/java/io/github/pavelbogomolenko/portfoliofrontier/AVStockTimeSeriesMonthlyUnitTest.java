@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,7 +16,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
 
     @Test
     void WhenCallingGetStockMonthlyTimeSeriesResponseWithValidSymbolAndNoDateRange_ShouldAVTimeSeriesMonthlyResponseContainAllMonthlyTimeSeriesFromAVStockDataFetcherResponse()
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         StockPriceTimeSeries firstPrice = StockPriceTimeSeries.newBuilder()
                 .date(LocalDate.parse("2021-01-04"))
                 .open(3270.0)
@@ -122,8 +123,8 @@ public class AVStockTimeSeriesMonthlyUnitTest {
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
-                .dateFrom(LocalDate.parse("2020-10-30"))
-                .dateTo(LocalDate.parse("2020-11-30"))
+                .dateFrom(YearMonth.parse("2020-10"))
+                .dateTo(YearMonth.parse("2020-11"))
                 .build();
         StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 
@@ -171,8 +172,8 @@ public class AVStockTimeSeriesMonthlyUnitTest {
 
         StockTimeSeriesServiceParams params = StockTimeSeriesServiceParams.newBuilder()
                 .symbol(givenSymbol)
-                .dateFrom(LocalDate.parse("2020-09-30"))
-                .dateTo(LocalDate.parse("2020-08-30"))
+                .dateFrom(YearMonth.parse("2020-09"))
+                .dateTo(YearMonth.parse("2020-08"))
                 .build();
         StockMonthlyTimeSeriesData stockMonthlyTimeSeriesData = avStockTimeSeriesServiceImpl.getStockMonthlyTimeSeriesData(params);
 

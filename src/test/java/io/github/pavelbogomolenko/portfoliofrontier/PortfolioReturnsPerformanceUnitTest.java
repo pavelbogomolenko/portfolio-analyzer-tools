@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,8 +20,8 @@ import static org.hamcrest.Matchers.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PortfolioReturnsPerformanceUnitTest {
     private final ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
-    private final LocalDate dateFrom = LocalDate.parse("2020-10-30");
-    private final  LocalDate dateTo = LocalDate.parse("2020-12-30");
+    private final YearMonth dateFrom = YearMonth.parse("2020-10");
+    private final  YearMonth dateTo = YearMonth.parse("2020-12");
     private final StockTimeSeriesServiceParams msftParams = StockTimeSeriesServiceParams.newBuilder()
             .symbol(symbols.get(0))
             .dateFrom(dateFrom)
@@ -44,7 +45,7 @@ public class PortfolioReturnsPerformanceUnitTest {
     void initBeforeAll() {
         StockMetaTimeSeries msftMetaData = new StockMetaTimeSeries("a", symbols.get(0), "us");
         StockPriceTimeSeries msftOctPriceData = StockPriceTimeSeries.newBuilder()
-                .date(dateFrom)
+                .date(LocalDate.parse("2020-10-30"))
                 .close(500)
                 .build();
         StockPriceTimeSeries msftNovPriceData = StockPriceTimeSeries.newBuilder()
@@ -60,7 +61,7 @@ public class PortfolioReturnsPerformanceUnitTest {
 
         StockMetaTimeSeries googleMetaData = new StockMetaTimeSeries("a", symbols.get(1), "us");
         StockPriceTimeSeries googleOctPriceData = StockPriceTimeSeries.newBuilder()
-                .date(dateFrom)
+                .date(LocalDate.parse("2020-10-30"))
                 .close(500)
                 .build();
         StockPriceTimeSeries googleNovPriceData = StockPriceTimeSeries.newBuilder()
@@ -76,7 +77,7 @@ public class PortfolioReturnsPerformanceUnitTest {
 
         StockMetaTimeSeries ibmMetaData = new StockMetaTimeSeries("a", symbols.get(2), "us");
         StockPriceTimeSeries ibmOctPriceData = StockPriceTimeSeries.newBuilder()
-                .date(dateFrom)
+                .date(LocalDate.parse("2020-10-30"))
                 .close(500)
                 .build();
         StockPriceTimeSeries ibmNovPriceData = StockPriceTimeSeries.newBuilder()
@@ -121,16 +122,14 @@ public class PortfolioReturnsPerformanceUnitTest {
 
     @Test
     void shouldThrowExceptionWhenStockTimeSeriesHasLessRecordsThanMonthGivenWithDateRange()
-            throws InterruptedException, IOException, URISyntaxException {
+            throws InterruptedException, IOException {
         ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
-        LocalDate dateFrom = LocalDate.parse("2020-10-30");
-        LocalDate dateTo = LocalDate.parse("2020-12-30");
 
         AVStockTimeSeriesDataProviderServiceImpl avStockTimeSeriesServiceMock = mock(AVStockTimeSeriesDataProviderServiceImpl.class);
 
         StockMetaTimeSeries msftMetaData = new StockMetaTimeSeries("a", symbols.get(0), "us");
         StockPriceTimeSeries msftOctPriceData = StockPriceTimeSeries.newBuilder()
-                .date(dateFrom)
+                .date(LocalDate.parse("2020-10-30"))
                 .close(500)
                 .build();
         StockPriceTimeSeries msftNovPriceData = StockPriceTimeSeries.newBuilder()
@@ -143,8 +142,8 @@ public class PortfolioReturnsPerformanceUnitTest {
 
         PortfolioReturnsPerformanceParams params = PortfolioReturnsPerformanceParams.newBuilder()
                 .symbols(symbols)
-                .dateFrom(dateFrom)
-                .dateTo(dateTo)
+                .dateFrom(YearMonth.parse("2020-10"))
+                .dateTo(YearMonth.parse("2020-12"))
                 .build();
         assertThrows(IllegalArgumentException.class, () -> {
             PortfolioReturnsPerformance portfolioReturnsPerformance = new PortfolioReturnsPerformance(avStockTimeSeriesServiceMock);
@@ -153,7 +152,7 @@ public class PortfolioReturnsPerformanceUnitTest {
     }
 
     @Test
-    void shouldBuildReturnsVarianceCovarianceMatrix() throws InterruptedException, IOException, URISyntaxException {
+    void shouldBuildReturnsVarianceCovarianceMatrix() throws InterruptedException, IOException {
         MonthlyStockPriceReturnsPerformance msftPerf = new MonthlyStockPriceReturnsPerformance(msftData);
         MonthlyStockPriceReturnsPerformance googlePerf = new MonthlyStockPriceReturnsPerformance(googleData);
         MonthlyStockPriceReturnsPerformance ibmPerf = new MonthlyStockPriceReturnsPerformance(googleData);

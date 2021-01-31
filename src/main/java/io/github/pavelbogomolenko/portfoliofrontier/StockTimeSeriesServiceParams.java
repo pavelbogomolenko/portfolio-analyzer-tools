@@ -1,11 +1,11 @@
 package io.github.pavelbogomolenko.portfoliofrontier;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 
 public class StockTimeSeriesServiceParams {
     private final String symbol;
-    private final LocalDate dateFrom;
-    private final LocalDate dateTo;
+    private final YearMonth dateFrom;
+    private final YearMonth dateTo;
 
     private StockTimeSeriesServiceParams(Builder builder) {
         this.symbol = builder.symbol;
@@ -15,20 +15,20 @@ public class StockTimeSeriesServiceParams {
 
     public static class Builder {
         private String symbol;
-        private LocalDate dateFrom;
-        private LocalDate dateTo;
+        private YearMonth dateFrom;
+        private YearMonth dateTo;
 
         public Builder symbol(String s) {
             this.symbol = s;
             return this;
         }
 
-        public Builder dateFrom(LocalDate d) {
+        public Builder dateFrom(YearMonth d) {
             this.dateFrom = d;
             return this;
         }
 
-        public Builder dateTo(LocalDate d) {
+        public Builder dateTo(YearMonth d) {
             this.dateTo = d;
             return this;
         }
@@ -46,11 +46,11 @@ public class StockTimeSeriesServiceParams {
         return symbol;
     }
 
-    public LocalDate getDateFrom() {
+    public YearMonth getDateFrom() {
         return dateFrom;
     }
 
-    public LocalDate getDateTo() {
+    public YearMonth getDateTo() {
         return dateTo;
     }
 }

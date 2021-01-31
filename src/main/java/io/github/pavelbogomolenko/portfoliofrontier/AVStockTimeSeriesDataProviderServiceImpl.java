@@ -3,8 +3,7 @@ package io.github.pavelbogomolenko.portfoliofrontier;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -39,13 +38,14 @@ public class AVStockTimeSeriesDataProviderServiceImpl implements StockTimeSeries
     }
 
     private boolean shouldFilterOutPrice(StockPriceTimeSeries price, StockTimeSeriesServiceParams params) {
-        if(isLocalDateBetween(price.getDate(), params.getDateFrom(), params.getDateTo())) {
+        YearMonth d = YearMonth.of(price.getDate().getYear(), price.getDate().getMonth());
+        if(isLocalDateBetween(d, params.getDateFrom(), params.getDateTo())) {
             return true;
         }
         return false;
     }
 
-    private boolean isLocalDateBetween(LocalDate date, LocalDate from, LocalDate to) {
+    private boolean isLocalDateBetween(YearMonth date, YearMonth from, YearMonth to) {
         return !(date.isBefore(from) || date.isAfter(to));
     }
 }
