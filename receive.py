@@ -12,7 +12,7 @@ def message_dispatcher(body):
     d = json.loads(body)
     print(d['weights'])
     print(d['varCovarMatrix'])
-    print(portfolio_optimizer.minimize_portfolio_stddev_func(d['varCovarMatrix']))
+    print(portfolio_optimizer.minimize_portfolio_stddev(d['varCovarMatrix']))
 
 
 def main():
