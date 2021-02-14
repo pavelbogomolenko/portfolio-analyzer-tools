@@ -19,6 +19,10 @@ P_VAR_COVAR_MATRIX_EX = [
 ]
 
 
+def sharpe_ratio(rp, rf, sdp):
+    return (rp - rf) / sdp
+
+
 def __portfolio_expected_return_func(average_returns, sign=1.0):
     def f(weights):
         res = sign * np.dot(weights, average_returns)
