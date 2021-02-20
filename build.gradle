@@ -32,7 +32,6 @@ test {
 }
 
 application {
-//    mainClass = 'io.github.pavelbogomolenko.portfoliofrontier.MonthlyStockPriceReturnsPerformance'
-    mainClass = 'io.github.pavelbogomolenko.portfoliofrontier.PortfolioReturnsPerformance'
+    mainClass = 'io.github.pavelbogomolenko.timeseries.DataSetsRelation'
 }
 
