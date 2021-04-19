@@ -4,29 +4,6 @@ import numpy as np
 from scipy.optimize import minimize
 
 
-#           AMZN     MSFT     GOOGL    IBM      CSCO
-# AMZN   0.007106 0.003409 0.003438 0.002831 0.002611
-# MSFT   0.003409 0.003604 0.002411 0.001941 0.001770
-# GOOGL  0.003438 0.002411 0.004139 0.002006 0.001479
-# IBM    0.002831 0.001941 0.002006 0.004500 0.002768
-# CSCO   0.002611 0.001770 0.001479 0.002768 0.004715
-# P_VAR_COVAR_MATRIX_EX = [
-#     [0.007106 * 12, 0.003409 * 12, 0.003438 * 12, 0.002831 * 12, 0.002611 * 12],
-#     [0.003409 * 12, 0.003604 * 12, 0.002411 * 12, 0.001941 * 12, 0.001770 * 12],
-#     [0.003438 * 12, 0.002411 * 12, 0.004139 * 12, 0.002006 * 12, 0.001479 * 12],
-#     [0.002831 * 12, 0.001941 * 12, 0.002006 * 12, 0.004500 * 12, 0.002768 * 12],
-#     [0.002611 * 12, 0.001770 * 12, 0.001479 * 12, 0.002768 * 12, 0.004715 * 12]
-# ]
-
-P_VAR_COVAR_MATRIX_EX = [
-    [0.007106, 0.003409, 0.003438, 0.002831, 0.002611],
-    [0.003409, 0.003604, 0.002411, 0.001941, 0.001770],
-    [0.003438, 0.002411, 0.004139, 0.002006, 0.001479],
-    [0.002831, 0.001941, 0.002006, 0.004500, 0.002768],
-    [0.002611, 0.001770, 0.001479, 0.002768, 0.004715]
-]
-
-
 def sharpe_ratio(rp, rf, sdp):
     return (rp - rf) / sdp
 
@@ -81,20 +58,27 @@ def minimize_portfolio_stddev(var_covar_matrix):
 
 
 if __name__ == '__main__':
-    average_monthly_returns = [0.15, 0.33, 0.36, 0.1, 0.1]
+    P_VAR_COVAR_MATRIX_EX = [
+        [0.077954, 0.011816, 0.023064, 0.043168, 0.023529],
+        [0.011816, 0.105067, 0.023125, 0.006284, 0.011748],
+        [0.023064, 0.023125, 0.174433, 0.008508, 0.019677],
+        [0.043168, 0.006284, 0.008508, 0.080181, 0.022632],
+        [0.023529, 0.011748, 0.019677, 0.022632, 0.040280]
+    ]
+    average_annual_returns = [0.32, 0.002, 0.13, 0.126, 0.27]
 
     user_weights = [0.6, 0.1, 0.1, 0.1, 0.1]
-    print("user weight return", portfolio_expected_return(average_monthly_returns, user_weights))
+    print("user weight return", portfolio_expected_return(average_annual_returns, user_weights))
     print("user weight (stddev)", portfolio_stddev(P_VAR_COVAR_MATRIX_EX, user_weights))
 
     eq_weights = [0.2, 0.2, 0.2, 0.2, 0.2]
-    print("eq weight return", portfolio_expected_return(average_monthly_returns, eq_weights))
+    print("eq weight return", portfolio_expected_return(average_annual_returns, eq_weights))
     print("eq weight (stddev)", portfolio_stddev(P_VAR_COVAR_MATRIX_EX, eq_weights))
 
     minimized_std_dev = minimize_portfolio_stddev(P_VAR_COVAR_MATRIX_EX)
-    print("efficient return (min stddev)", portfolio_expected_return(average_monthly_returns, minimized_std_dev["weights"]))
+    print("efficient return (min stddev)", portfolio_expected_return(average_annual_returns, minimized_std_dev["weights"]))
     print("efficient (min) stddev", minimized_std_dev)
 
-    max_return = maximize_portfolio_expected_return(average_monthly_returns)
+    max_return = maximize_portfolio_expected_return(average_annual_returns)
     print("max return", max_return)
     print("max return (stddev)", portfolio_stddev(P_VAR_COVAR_MATRIX_EX, max_return["weights"]))
