@@ -100,12 +100,12 @@ public class DataSetsRelationUnitTest {
         ArrayList<DataSet> ts = new ArrayList<>(Arrays.asList(msftTs, googleTs, ibmTs));
 
         DataSetsRelation relations = new DataSetsRelation();
-        double[][] resultMatrix = relations.varianceCovarianceMatrix(ts);
+        double[][] resultMatrix = relations.annualizedVarCovarMatrix(ts);
 
-        assertThat(resultMatrix.length, is(equalTo(ts.size())));
-        assertThat(resultMatrix[0].length, is(equalTo(ts.size())));
-        assertThat(resultMatrix[0][0], is(equalTo(msftTs.getVariance())));
-        assertThat(resultMatrix[1][1], is(equalTo(googleTs.getVariance())));
-        assertThat(resultMatrix[2][2], is(equalTo(ibmTs.getVariance())));
+        assertThat(resultMatrix.length, is(ts.size()));
+        assertThat(resultMatrix[0].length, is(ts.size()));
+        assertThat(resultMatrix[0][0], is(msftTs.getVariance() * 12));
+        assertThat(resultMatrix[1][1], is(googleTs.getVariance() * 12));
+        assertThat(resultMatrix[2][2], is(ibmTs.getVariance() * 12));
     }
 }

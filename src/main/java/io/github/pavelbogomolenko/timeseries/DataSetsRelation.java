@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class DataSetsRelation {
 
-    public double[][] varianceCovarianceMatrix(ArrayList<DataSet> dataSetList) {
+    public double[][] varianceCovarianceMatrix(ArrayList<DataSet> dataSetList, int scale) {
         int matrixSize = dataSetList.size();
         int observedDataPointsNumber = dataSetList.get(0).getDataPoints().size() - 1;
         double[][] varCovarMatrix = new double[matrixSize][matrixSize];
@@ -19,10 +19,14 @@ public class DataSetsRelation {
             for(int row = 0; row < matrixSize; row++) {
                 ArrayList<Double> growthRatesToAverageA = dataSetList.get(col).getGrowthRatesToAverage();
                 ArrayList<Double> growthRatesToAverageB = dataSetList.get(row).getGrowthRatesToAverage();
-                varCovarMatrix[col][row] = dotProduct(growthRatesToAverageA, growthRatesToAverageB) / observedDataPointsNumber;
+                varCovarMatrix[col][row] = (dotProduct(growthRatesToAverageA, growthRatesToAverageB) / observedDataPointsNumber) * scale;
             }
         }
         return varCovarMatrix;
+    }
+
+    public double[][] annualizedVarCovarMatrix(ArrayList<DataSet> dataSetList) {
+        return this.varianceCovarianceMatrix(dataSetList, 12);
     }
 
     public double[][] correlationMatrix(ArrayList<DataSet> dataSetList) {
@@ -42,7 +46,7 @@ public class DataSetsRelation {
     }
 
     public void printVarianceCovarianceMatrix(ArrayList<DataSet> ts, ArrayList<String> headers) {
-        printMatrixWithHeaders(varianceCovarianceMatrix(ts), headers);
+        printMatrixWithHeaders(varianceCovarianceMatrix(ts, 1), headers);
     }
 
     public void printCorrelationMatrix(ArrayList<DataSet> ts, ArrayList<String> headers) {
