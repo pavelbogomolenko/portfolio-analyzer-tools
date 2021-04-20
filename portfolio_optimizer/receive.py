@@ -1,23 +1,40 @@
 #!/usr/bin/env python
 import sys
+import time
 import os
 import json
 
 import pika
+from pika.exceptions import AMQPConnectionError
 
 import portfolio_optimizer as po
 
-RABBITMQ_HOST = "localhost"
+RABBITMQ_HOST = "rabbitmq"
 EXCHANGE = "portfoliomanager"
 PULL_ROUTING_KEY = "pfc_req."
 PUSH_ROUTING_KEY = "pfc_resp."
 PULL_QUEUE = "push"
 PUSH_QUEUE = "pull"
-RISK_FREE_RATE = 0.01
+RISK_FREE_RATE = 0.02
+
+
+def rabbitmq_safe_connect():
+    num_retries = 3
+    retry_count = 0
+    while True:
+        try:
+            return pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+        except AMQPConnectionError:
+            if retry_count == num_retries - 1:
+                print("unable to re-connect to rabbitmq after 3 tries")
+                sys.exit(1)
+            print("trying to re-connect to rabbitmq..")
+            time.sleep(5)
+            retry_count += 1
 
 
 def send_message(msg):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+    connection = rabbitmq_safe_connect()
     channel = connection.channel()
     channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic", durable=False, auto_delete=False)
 
@@ -81,7 +98,7 @@ def message_dispatcher(body):
 
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+    connection = rabbitmq_safe_connect()
     channel = connection.channel()
 
     channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic", durable=False, auto_delete=False)
