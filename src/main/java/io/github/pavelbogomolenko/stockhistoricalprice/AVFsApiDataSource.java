@@ -14,7 +14,11 @@ public class AVFsApiDataSource implements AVApiDataSource {
     @Override
     public String getStockMonthlyHistoricalPriceData(String symbol) {
         try {
-            Path fileName = Path.of(FS_STORAGE_PATH + symbol + ".json");
+            String pathToFile = FS_STORAGE_PATH + symbol + ".json";
+            if(!System.getenv("DOCKER_RELATIVE_PATH_BEGIN").equals("")) {
+                pathToFile = "/" + pathToFile;
+            }
+            Path fileName = Path.of(pathToFile);
             return Files.readString(fileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
