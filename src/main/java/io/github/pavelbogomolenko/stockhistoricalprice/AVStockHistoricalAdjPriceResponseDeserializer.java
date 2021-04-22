@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 
-public class AVStockHistoricalPriceResponseDeserializer implements JsonDeserializer<StockPriceTimeSeries> {
-    private static final Logger logger = LoggerFactory.getLogger(AVStockHistoricalPriceResponseDeserializer.class);
+public class AVStockHistoricalAdjPriceResponseDeserializer implements JsonDeserializer<StockPriceTimeSeries> {
+    private static final Logger logger = LoggerFactory.getLogger(AVStockHistoricalAdjPriceResponseDeserializer.class);
 
     @Override
     public StockPriceTimeSeries deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -40,13 +40,15 @@ public class AVStockHistoricalPriceResponseDeserializer implements JsonDeseriali
             double highPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("2. high").getAsDouble();
             double lowPrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("3. low").getAsDouble();
             double closePrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("4. close").getAsDouble();
-            double volume = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("5. volume").getAsDouble();
+            double adjClosePrice = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("5. adjusted close").getAsDouble();
+            double volume = stockPriceJsonObject.get(dateKey).getAsJsonObject().get("6. volume").getAsDouble();
             StockPrice serie = StockPrice.newBuilder()
                     .date(date)
                     .open(openPrice)
                     .high(highPrice)
                     .low(lowPrice)
                     .close(closePrice)
+                    .adjClose(adjClosePrice)
                     .volume(volume)
                     .build();
             stockPriceTimeSeries.add(serie);

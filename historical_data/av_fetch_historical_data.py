@@ -12,7 +12,8 @@ AV_API_KEY = os.environ['AV_API_KEY']
 
 
 def __fetch_data_for_symbol__(symbol):
-    avl_fq_url = "{}query?function=TIME_SERIES_MONTHLY&symbol={}&apikey={}".format(AV_API_URL, symbol, AV_API_KEY)
+    avl_fq_url = "{}query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol={}&apikey={}".format(AV_API_URL, symbol,
+                                                                                            AV_API_KEY)
     print("Fetching data for: {}".format(symbol))
     r = requests.get(avl_fq_url)
     if r.status_code != 200:
@@ -50,7 +51,7 @@ def historical_data_fetcher():
     now = dt.now()
     dirname = os.path.dirname(os.path.abspath(__file__))
     for symbol in symbols.ALL:
-        path_to_file = os.path.join(dirname, "data/stockprice/monthly/{}.json".format(symbol))
+        path_to_file = os.path.join(dirname, "data/stockprice/monthly-tmp/{}.json".format(symbol))
         if os.path.exists(path_to_file):
             last_modified = os.path.getmtime(path_to_file)
             dt_delta = relativedelta(now, dt.fromtimestamp(last_modified))

@@ -77,7 +77,6 @@ SP500 = [
     "BMY",
     "AVGO",
     "BR",
-    "BF.B",
     "CHRW",
     "COG",
     "CDNS",
