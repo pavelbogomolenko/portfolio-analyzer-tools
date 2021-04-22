@@ -29,8 +29,8 @@ public class AVHttpApiDataSource implements AVApiDataSource {
     }
 
     @Override
-    public String getStockMonthlyHistoricalPriceData(String symbol) {
-        String apiEndpointUrl = String.format("%squery?function=TIME_SERIES_MONTHLY&symbol=%s&apikey=%s",
+    public String getStockMonthlyHistoricalAdjPriceData(String symbol) {
+        String apiEndpointUrl = String.format("%squery?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=%s&apikey=%s",
                 AV_BASE_URL, symbol, this.avApiKey);
         return this.request.get(apiEndpointUrl);
     }

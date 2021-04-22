@@ -18,6 +18,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .date(LocalDate.parse("2021-01-04"))
                 .open(3270.0)
                 .close(3186.6300)
+                .adjClose(186.6300)
                 .high(3272.0)
                 .low(33144.0200)
                 .volume(4411449)
@@ -26,6 +27,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .date(LocalDate.parse("2020-12-31"))
                 .open(3258.0000)
                 .close(3186.6300)
+                .adjClose(186.0)
                 .high(3272.0)
                 .low(33144.0200)
                 .volume(4411449)
@@ -35,46 +37,48 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
         rawStringResponse += "'Monthly Time Series':";
         rawStringResponse += "{";
-        rawStringResponse += String.format("'%s': {'1. open': '%s', '2. high': '%s', '3. low': '%s', '4. close': '%s', '5. volume': '%s'},",
-                firstPrice.getDate(), firstPrice.getOpen(), firstPrice.getHigh(), firstPrice.getLow(), firstPrice.getClose(), firstPrice.getVolume());
-        rawStringResponse += String.format("'%s': {'1. open': '%s', '2. high': '%s', '3. low': '%s', '4. close': '%s', '5. volume': '%s'}",
-                secondPrice.getDate(), secondPrice.getOpen(), secondPrice.getHigh(), secondPrice.getLow(), secondPrice.getClose(), secondPrice.getVolume());
+        rawStringResponse += String.format("'%s': {'1. open': '%s', '2. high': '%s', '3. low': '%s', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '%s'},",
+                firstPrice.getDate(), firstPrice.getOpen(), firstPrice.getHigh(), firstPrice.getLow(), firstPrice.getClose(), firstPrice.getAdjClose(), firstPrice.getVolume());
+        rawStringResponse += String.format("'%s': {'1. open': '%s', '2. high': '%s', '3. low': '%s', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '%s'}",
+                secondPrice.getDate(), secondPrice.getOpen(), secondPrice.getHigh(), secondPrice.getLow(), secondPrice.getClose(), secondPrice.getAdjClose(), secondPrice.getVolume());
         rawStringResponse += "}"; // end Monthly Time Series
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVHttpApiDataSource avHttpApiStockDataFetcherImpl = mock(AVHttpApiDataSource.class);
+        AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
 
-        when(avHttpApiStockDataFetcherImpl.getStockMonthlyHistoricalPriceData(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(avHttpApiStockDataFetcherImpl);
+        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockHistoricalPriceProviderService avStockHistoricalPriceProviderService = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol(givenSymbol)
                 .build();
-        StockPriceTimeSeries stockPriceTimeSeries = avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(params);
+        StockPriceTimeSeries stockPriceTimeSeries = avStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
-        verify(avHttpApiStockDataFetcherImpl, times(1)).getStockMonthlyHistoricalPriceData("AMZN");
+        verify(avHttpApiDataSource, times(1)).getStockMonthlyHistoricalAdjPriceData("AMZN");
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
 
         assertThat(stockPriceTimeSeries.getPrices().get(0).getDate(), is(firstPrice.getDate()));
         assertThat(stockPriceTimeSeries.getPrices().get(1).getDate(), is(secondPrice.getDate()));
+        assertThat(stockPriceTimeSeries.getPrices().get(0).getAdjClose(), is(firstPrice.getAdjClose()));
+        assertThat(stockPriceTimeSeries.getPrices().get(1).getAdjClose(), is(secondPrice.getAdjClose()));
     }
 
     @Test
     void shouldThrowWhenUnexpectedResponseHasBeenReturned() {
         String unexpectedRawResponse = "{'some': thing}";
-        AVHttpApiDataSource avHttpApiStockDataFetcherImpl = mock(AVHttpApiDataSource.class);
+        AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
 
-        when(avHttpApiStockDataFetcherImpl.getStockMonthlyHistoricalPriceData("someSymbol")).thenReturn(unexpectedRawResponse);
-        AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(avHttpApiStockDataFetcherImpl);
+        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData("someSymbol")).thenReturn(unexpectedRawResponse);
+        AVStockHistoricalPriceProviderService service = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
         assertThrows(RuntimeException.class, () -> {
             StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                     .symbol("someSymbol")
                     .build();
-            StockPriceTimeSeries stockPriceTimeSeries = avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(params);
+            StockPriceTimeSeries stockPriceTimeSeries = service.getStockMonthlyHistoricalPrices(params);
         });
     }
 
@@ -95,36 +99,41 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         StockPrice novPrice = StockPrice.newBuilder()
                 .date(LocalDate.parse("2020-11-30"))
                 .close(3150.6300)
+                .adjClose(150.6300)
                 .build();
         StockPrice octPrice = StockPrice.newBuilder()
                 .date(LocalDate.parse("2020-10-30"))
                 .close(3140.6300)
+                .adjClose(140.6300)
                 .build();
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
         rawStringResponse += "'Monthly Time Series':";
         rawStringResponse += "{";
-        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", decPrice.getDate(), decPrice.getClose());
-        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", novPrice.getDate(), novPrice.getClose());
-        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'}", octPrice.getDate(), octPrice.getClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'},",
+                decPrice.getDate(), decPrice.getClose(), decPrice.getAdjClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'},",
+                novPrice.getDate(), novPrice.getClose(), novPrice.getAdjClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'}",
+                octPrice.getDate(), octPrice.getClose(), octPrice.getAdjClose());
         rawStringResponse += "}"; // end Monthly Time Series
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVHttpApiDataSource avHttpApiStockDataFetcherImpl = mock(AVHttpApiDataSource.class);
+        AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
 
-        when(avHttpApiStockDataFetcherImpl.getStockMonthlyHistoricalPriceData(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(avHttpApiStockDataFetcherImpl);
+        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockHistoricalPriceProviderService avStockHistoricalPriceProviderService = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol(givenSymbol)
                 .dateFrom(YearMonth.parse("2020-10"))
                 .dateTo(YearMonth.parse("2020-11"))
                 .build();
-        StockPriceTimeSeries stockPriceTimeSeries = avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(params);
+        StockPriceTimeSeries stockPriceTimeSeries = avStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
-        verify(avHttpApiStockDataFetcherImpl, times(1)).getStockMonthlyHistoricalPriceData("AMZN");
+        verify(avHttpApiDataSource, times(1)).getStockMonthlyHistoricalAdjPriceData("AMZN");
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
@@ -139,40 +148,46 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         StockPrice decPrice = StockPrice.newBuilder()
                 .date(LocalDate.parse("2020-12-31"))
                 .close(3186.6300)
+                .adjClose(186.6300)
                 .build();
         StockPrice novPrice = StockPrice.newBuilder()
                 .date(LocalDate.parse("2020-11-30"))
                 .close(3150.6300)
+                .adjClose(150.6300)
                 .build();
         StockPrice octPrice = StockPrice.newBuilder()
                 .date(LocalDate.parse("2020-10-30"))
                 .close(3140.6300)
+                .adjClose(140.6300)
                 .build();
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
         rawStringResponse += "'Monthly Time Series':";
         rawStringResponse += "{";
-        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", decPrice.getDate(), decPrice.getClose());
-        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'},", novPrice.getDate(), novPrice.getClose());
-        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. volume': '1'}", octPrice.getDate(), octPrice.getClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'},",
+                decPrice.getDate(), decPrice.getClose(), decPrice.getAdjClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'},",
+                novPrice.getDate(), novPrice.getClose(), novPrice.getAdjClose());
+        rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'}",
+                octPrice.getDate(), octPrice.getClose(), octPrice.getAdjClose());
         rawStringResponse += "}"; // end Monthly Time Series
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVHttpApiDataSource avHttpApiStockDataFetcherImpl = mock(AVHttpApiDataSource.class);
+        AVHttpApiDataSource avHttpApiDs = mock(AVHttpApiDataSource.class);
 
-        when(avHttpApiStockDataFetcherImpl.getStockMonthlyHistoricalPriceData(givenSymbol)).thenReturn(rawStringResponse);
-        AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(avHttpApiStockDataFetcherImpl);
+        when(avHttpApiDs.getStockMonthlyHistoricalAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
+        AVStockHistoricalPriceProviderService service = new AVStockHistoricalPriceProviderService(avHttpApiDs);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol(givenSymbol)
                 .dateFrom(YearMonth.parse("2020-09"))
                 .dateTo(YearMonth.parse("2020-08"))
                 .build();
-        StockPriceTimeSeries stockPriceTimeSeries = avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(params);
+        StockPriceTimeSeries stockPriceTimeSeries = service.getStockMonthlyHistoricalPrices(params);
 
-        verify(avHttpApiStockDataFetcherImpl, times(1)).getStockMonthlyHistoricalPriceData("AMZN");
+        verify(avHttpApiDs, times(1)).getStockMonthlyHistoricalAdjPriceData("AMZN");
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));

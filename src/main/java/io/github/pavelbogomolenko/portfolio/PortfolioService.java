@@ -32,7 +32,7 @@ public class PortfolioService {
             if(stockPricesSize != expectedItemsCount) {
                 throw new IllegalArgumentException(String.format("Stock data for '%s' less than given time range", symbol));
             }
-            DataSet closePriceDataSet = ListToDataSet.convert(data.getPrices(), "date", "close");
+            DataSet closePriceDataSet = ListToDataSet.convert(data.getPrices(), "date", "adjClose");
             allClosePriceTSMeasures.add(closePriceDataSet);
         }
         return allClosePriceTSMeasures;

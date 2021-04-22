@@ -1,5 +1,5 @@
 package io.github.pavelbogomolenko.stockhistoricalprice;
 
 public interface AVApiDataSource {
-    String getStockMonthlyHistoricalPriceData(String symbol);
+    String getStockMonthlyHistoricalAdjPriceData(String symbol);
 }

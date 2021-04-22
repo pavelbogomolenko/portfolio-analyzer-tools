@@ -8,6 +8,7 @@ public class StockPrice {
     private final double high;
     private final double low;
     private final double close;
+    private final double adjClose;
     private final double volume;
 
     private StockPrice(Builder builder) {
@@ -16,6 +17,7 @@ public class StockPrice {
         this.high = builder.high;
         this.low = builder.low;
         this.close = builder.close;
+        this.adjClose = builder.adjClose;
         this.volume = builder.volume;
     }
 
@@ -25,6 +27,7 @@ public class StockPrice {
         private double high;
         private double low;
         private double close;
+        private double adjClose;
         private double volume;
 
         public Builder date(LocalDate d) {
@@ -52,6 +55,11 @@ public class StockPrice {
             return this;
         }
 
+        public Builder adjClose(double p) {
+            this.adjClose = p;
+            return this;
+        }
+
         public Builder volume(double volume) {
             this.volume = volume;
             return this;
@@ -67,26 +75,30 @@ public class StockPrice {
     }
 
     public LocalDate getDate() {
-        return date;
+        return this.date;
     }
 
     public double getOpen() {
-        return open;
+        return this.open;
     }
 
     public double getHigh() {
-        return high;
+        return this.high;
     }
 
     public double getLow() {
-        return low;
+        return this.low;
     }
 
     public double getClose() {
-        return close;
+        return this.close;
+    }
+
+    public double getAdjClose() {
+        return this.adjClose;
     }
 
     public double getVolume() {
-        return volume;
+        return this.volume;
     }
 }
