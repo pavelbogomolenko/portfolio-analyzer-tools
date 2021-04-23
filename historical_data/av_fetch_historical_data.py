@@ -51,7 +51,7 @@ def historical_data_fetcher():
     now = dt.now()
     dirname = os.path.dirname(os.path.abspath(__file__))
     for symbol in symbols.ALL:
-        path_to_file = os.path.join(dirname, "data/stockprice/monthly-tmp/{}.json".format(symbol))
+        path_to_file = os.path.join(dirname, "data/stockprice/monthly/{}.json".format(symbol))
         if os.path.exists(path_to_file):
             last_modified = os.path.getmtime(path_to_file)
             dt_delta = relativedelta(now, dt.fromtimestamp(last_modified))
