@@ -35,7 +35,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
-        rawStringResponse += "'Monthly Time Series':";
+        rawStringResponse += "'Monthly Adjusted Time Series':";
         rawStringResponse += "{";
         rawStringResponse += String.format("'%s': {'1. open': '%s', '2. high': '%s', '3. low': '%s', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '%s'},",
                 firstPrice.getDate(), firstPrice.getOpen(), firstPrice.getHigh(), firstPrice.getLow(), firstPrice.getClose(), firstPrice.getAdjClose(), firstPrice.getVolume());
@@ -109,7 +109,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
-        rawStringResponse += "'Monthly Time Series':";
+        rawStringResponse += "'Monthly Adjusted Time Series':";
         rawStringResponse += "{";
         rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'},",
                 decPrice.getDate(), decPrice.getClose(), decPrice.getAdjClose());
@@ -163,7 +163,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         String rawStringResponse = "{";
         rawStringResponse += "'Meta Data':";
         rawStringResponse += "{'1. Information': 'info', '2. Symbol': 'AMZN', '3. Last Refreshed': '2021-01-04', '4. Time Zone': 'us'},";
-        rawStringResponse += "'Monthly Time Series':";
+        rawStringResponse += "'Monthly Adjusted Time Series':";
         rawStringResponse += "{";
         rawStringResponse += String.format("'%s': {'1. open': '1', '2. high': '1', '3. low': '1', '4. close': '%s', '5. adjusted close': '%s', '6. volume': '1'},",
                 decPrice.getDate(), decPrice.getClose(), decPrice.getAdjClose());

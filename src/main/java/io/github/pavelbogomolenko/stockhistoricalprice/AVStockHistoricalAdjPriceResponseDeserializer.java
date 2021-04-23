@@ -30,7 +30,7 @@ public class AVStockHistoricalAdjPriceResponseDeserializer implements JsonDeseri
         String timezone = metaJsonObject.get("4. Time Zone").getAsString();
         StockPriceMeta monthlyTimeSeriesMetaResponse = new StockPriceMeta(info, symbol, timezone);
 
-        JsonObject stockPriceJsonObject = responseJsonObject.get("Monthly Time Series").getAsJsonObject();
+        JsonObject stockPriceJsonObject = responseJsonObject.get("Monthly Adjusted Time Series").getAsJsonObject();
 
         Set<String> allKeys = stockPriceJsonObject.keySet();
         ArrayList<StockPrice> stockPriceTimeSeries = new ArrayList<>();
