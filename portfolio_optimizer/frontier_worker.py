@@ -1,47 +1,23 @@
 #!/usr/bin/env python
-import sys
-import time
-import os
 import json
+import os
+import sys
 
-import pika
-from pika.exceptions import AMQPConnectionError
-
-import portfolio_optimizer as po
+from common.rabbitmq_wrapper import RabbitExchangeWrapper
+import frontier_compute.portfolio_optimizer as po
 
 RABBITMQ_HOST = "rabbitmq"
 EXCHANGE = "portfoliomanager"
-PULL_ROUTING_KEY = "pfc_req."
-PUSH_ROUTING_KEY = "pfc_resp."
+PULL_ROUTING_KEY = "pfc_req.#"
+PUSH_ROUTING_KEY = "pfc_resp.#"
 PULL_QUEUE = "push"
 PUSH_QUEUE = "pull"
 RISK_FREE_RATE = 0.02
 
 
-def rabbitmq_safe_connect():
-    num_retries = 3
-    retry_count = 0
-    while True:
-        try:
-            return pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
-        except AMQPConnectionError:
-            if retry_count == num_retries - 1:
-                print("unable to re-connect to rabbitmq after 3 tries")
-                sys.exit(1)
-            print("trying to re-connect to rabbitmq..")
-            time.sleep(5)
-            retry_count += 1
-
-
 def send_message(msg):
-    connection = rabbitmq_safe_connect()
-    channel = connection.channel()
-    channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic", durable=False, auto_delete=False)
-
-    channel.queue_declare(queue=PUSH_QUEUE, exclusive=False, durable=False)
-    print(" Sending message %s" % msg)
-    channel.basic_publish(exchange=EXCHANGE, routing_key=PUSH_ROUTING_KEY + "frontier_result", body=msg)
-    connection.close()
+    rmq_wrapper = RabbitExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
+    rmq_wrapper.send_message_and_close(PUSH_QUEUE, PUSH_ROUTING_KEY, msg)
 
 
 def message_dispatcher(body):
@@ -97,29 +73,19 @@ def message_dispatcher(body):
     send_message(json.dumps(frontier_dict))
 
 
-def main():
-    connection = rabbitmq_safe_connect()
-    channel = connection.channel()
-
-    channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic", durable=False, auto_delete=False)
-    queue = channel.queue_declare(PULL_QUEUE, exclusive=False, durable=False).method.queue
-
-    channel.queue_bind(exchange=EXCHANGE, queue=queue, routing_key=PULL_ROUTING_KEY + ".#")
-
+def consume():
     def callback(ch, method, properties, body):
         decoded_body = body.decode()
         print(" [x] Received %r" % decoded_body)
         message_dispatcher(decoded_body)
 
-    channel.basic_consume(queue, on_message_callback=callback, auto_ack=True)
-
-    print(" [*] Waiting for messages. To exit press CTRL+C")
-    channel.start_consuming()
+    rmq_wrapper = RabbitExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
+    rmq_wrapper.consume(PULL_QUEUE, PULL_ROUTING_KEY, callback)
 
 
 if __name__ == "__main__":
     try:
-        main()
+        consume()
     except KeyboardInterrupt:
         print("Interrupted")
         try:
