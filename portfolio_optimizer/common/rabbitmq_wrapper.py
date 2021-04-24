@@ -5,7 +5,7 @@ import pika
 from pika.exceptions import AMQPConnectionError
 
 
-class RabbitExchangeWrapper:
+class RabbitBlockingTopicExchangeWrapper:
     MAX_CONN_RETRIES = 3
 
     def __init__(self, host, exchange):

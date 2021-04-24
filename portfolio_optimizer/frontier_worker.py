@@ -3,21 +3,17 @@ import json
 import os
 import sys
 
-from common.rabbitmq_wrapper import RabbitExchangeWrapper
+from common.rabbitmq_wrapper import RabbitBlockingTopicExchangeWrapper
 import frontier_compute.portfolio_optimizer as po
 
-RABBITMQ_HOST = "rabbitmq"
-EXCHANGE = "portfoliomanager"
-PULL_ROUTING_KEY = "pfc_req.#"
-PUSH_ROUTING_KEY = "pfc_resp.#"
-PULL_QUEUE = "push"
-PUSH_QUEUE = "pull"
-RISK_FREE_RATE = 0.02
+from worker_config import RABBITMQ_HOST, EXCHANGE, FRONTIER_PULL_ROUTING_KEY, \
+    FRONTIER_PUSH_ROUTING_KEY, FRONTIER_PULL_QUEUE, FRONTIER_PUSH_QUEUE, \
+    RISK_FREE_RATE, PSIM_PULL_QUEUE, PSIM_PULL_ROUTING_KEY
 
 
-def send_message(msg):
-    rmq_wrapper = RabbitExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
-    rmq_wrapper.send_message_and_close(PUSH_QUEUE, PUSH_ROUTING_KEY, msg)
+def send_message(msg, queue, routing_key):
+    rmq_wrapper = RabbitBlockingTopicExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
+    rmq_wrapper.send_message_and_close(queue, routing_key, msg)
 
 
 def message_dispatcher(body):
@@ -70,7 +66,8 @@ def message_dispatcher(body):
         "eq_weighted": eq_weighted_return_d,
         "user": user_return_d
     }
-    send_message(json.dumps(frontier_dict))
+    send_message(json.dumps(frontier_dict), FRONTIER_PUSH_QUEUE, FRONTIER_PUSH_ROUTING_KEY)
+    send_message(json.dumps(frontier_dict), PSIM_PULL_QUEUE, PSIM_PULL_ROUTING_KEY)
 
 
 def consume():
@@ -79,8 +76,8 @@ def consume():
         print(" [x] Received %r" % decoded_body)
         message_dispatcher(decoded_body)
 
-    rmq_wrapper = RabbitExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
-    rmq_wrapper.consume(PULL_QUEUE, PULL_ROUTING_KEY, callback)
+    rmq_wrapper = RabbitBlockingTopicExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
+    rmq_wrapper.consume(FRONTIER_PULL_QUEUE, FRONTIER_PULL_ROUTING_KEY, callback)
 
 
 if __name__ == "__main__":
