@@ -9,6 +9,7 @@ import symbols
 
 AV_API_URL = "https://www.alphavantage.co/"
 AV_API_KEY = os.environ['AV_API_KEY']
+DIRNAME = os.path.dirname(os.path.abspath(__file__))
 
 
 def __fetch_data_for_symbol__(symbol):
@@ -47,17 +48,30 @@ def __fetch_and_save__(symbol, f):
     __save_to_file__(f, data)
 
 
+def __is_date_first_day_of_month__(date):
+    first_day_of_month = dt.today().replace(day=1).date()
+    return date == first_day_of_month
+
+
+def __skip_update__(path_to_file):
+    today = dt.today()
+    if os.path.exists(path_to_file):
+        last_modified = os.path.getmtime(path_to_file)
+        dt_delta = relativedelta(today, dt.fromtimestamp(last_modified))
+        if __is_date_first_day_of_month__(today.date()) and dt_delta.days > 0:
+            return False
+        if dt_delta.days < 4:
+            print("Skip updating {}. Data is up-to-date".format(path_to_file))
+            return True
+    return False
+
+
 def historical_data_fetcher():
-    now = dt.now()
-    dirname = os.path.dirname(os.path.abspath(__file__))
     for symbol in symbols.ALL:
-        path_to_file = os.path.join(dirname, "data/stockprice/monthly/{}.json".format(symbol))
-        if os.path.exists(path_to_file):
-            last_modified = os.path.getmtime(path_to_file)
-            dt_delta = relativedelta(now, dt.fromtimestamp(last_modified))
-            if dt_delta.months == 0:
-                print("Skip updating {}. Data is up-to-date".format(symbol))
-                continue
+        path_to_file = os.path.join(DIRNAME, "data/stockprice/monthly/{}.json".format(symbol))
+        if __skip_update__(path_to_file):
+            print("Skip updating {}. Data is up-to-date".format(symbol))
+            continue
         __fetch_and_save__(symbol, path_to_file)
 
 
