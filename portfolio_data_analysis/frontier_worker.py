@@ -71,13 +71,8 @@ def message_dispatcher(body):
 
 
 def consume():
-    def callback(ch, method, properties, body):
-        decoded_body = body.decode()
-        print(" [x] Received %r" % decoded_body)
-        message_dispatcher(decoded_body)
-
     rmq_wrapper = RabbitBlockingTopicExchangeWrapper(RABBITMQ_HOST, EXCHANGE)
-    rmq_wrapper.consume(FRONTIER_PULL_QUEUE, FRONTIER_PULL_ROUTING_KEY, callback)
+    rmq_wrapper.consume(FRONTIER_PULL_QUEUE, FRONTIER_PULL_ROUTING_KEY, message_dispatcher)
 
 
 if __name__ == "__main__":

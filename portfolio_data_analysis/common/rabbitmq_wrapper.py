@@ -33,7 +33,12 @@ class RabbitBlockingTopicExchangeWrapper:
         queue = self.__channel.queue_declare(queue_name, exclusive=False, durable=False).method.queue
         self.__channel.queue_bind(exchange=self.exchange, queue=queue, routing_key=routing_key)
 
-        self.__channel.basic_consume(queue, on_message_callback=cb, auto_ack=True)
+        def on_message_callback(ch, method, properties, body):
+            decoded_body = body.decode()
+            print(" [x] Received %r" % decoded_body)
+            cb(decoded_body)
+
+        self.__channel.basic_consume(queue, on_message_callback=on_message_callback, auto_ack=True)
 
         print(" [*] Waiting for messages.")
         self.__channel.start_consuming()

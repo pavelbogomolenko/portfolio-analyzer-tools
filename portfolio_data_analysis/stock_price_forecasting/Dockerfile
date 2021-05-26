@@ -7,6 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p data/stockprice/monthly
-
-CMD [ "python", "./arima.py" ]
+CMD [ "python", "./stock_price_forecast_worker.py" ]

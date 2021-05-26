@@ -9,4 +9,4 @@ COPY . .
 
 RUN mkdir -p data/stockprice/monthly
 
-CMD [ "python", "./av_fetch_historical_data.py" ]
+CMD [ "python", "./av_fetch_stock_monthly_historical_prices.py" ]
