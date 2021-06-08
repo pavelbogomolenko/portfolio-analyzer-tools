@@ -643,4 +643,12 @@ NASDAQ100 = [
     "FOX"
 ]
 
+MARKET_INDICIES = [
+    "^NDX",
+    "^GSPC",
+    "^DJI",
+    "^RUT",
+    "^GDAXI"
+]
+
 ALL = sorted(set(SP500 + DAX + NASDAQ100))
