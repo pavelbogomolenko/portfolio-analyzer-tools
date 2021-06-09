@@ -5,6 +5,8 @@ public enum StockHistoricalPriceRange {
     ONE_YEAR("1y"),
     TWO_YEARS("2y"),
     FIVE_YEARS("5y"),
+    SEVEN_YEARS("7y"),
+    TEN_YEARS("10y"),
     FIFTEEN_YEARS("15y");
 
     private final String range;

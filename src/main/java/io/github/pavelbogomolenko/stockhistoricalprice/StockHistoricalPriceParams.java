@@ -1,6 +1,8 @@
 package io.github.pavelbogomolenko.stockhistoricalprice;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 
 public class StockHistoricalPriceParams {
     private final String symbol;
@@ -38,6 +40,15 @@ public class StockHistoricalPriceParams {
 
         public Builder range(StockHistoricalPriceRange range) {
             this.range = range;
+            String rangeStr = this.range.getRange();
+            if (rangeStr.isEmpty()) {
+                return this;
+            }
+            int rangeValue = Integer.parseInt(rangeStr.substring(0, 1));
+            LocalDate dateTo = LocalDate.now().minus(1, ChronoUnit.MONTHS);
+            LocalDate dateFrom = dateTo.minus(12 * rangeValue, ChronoUnit.MONTHS);
+            this.dateFrom = YearMonth.from(dateFrom);
+            this.dateTo = YearMonth.from(dateTo);
             return this;
         }
 
