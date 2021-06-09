@@ -9,24 +9,27 @@ import io.github.pavelbogomolenko.timeseries.DataSet;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class PortfolioService {
+public class PortfolioHistoricalDataSetService {
     private final StockHistoricalPriceProviderService stockHistoricalPriceProviderService;
 
-    public PortfolioService(StockHistoricalPriceProviderService stockHistoricalPriceProviderService) {
+    public PortfolioHistoricalDataSetService(StockHistoricalPriceProviderService stockHistoricalPriceProviderService) {
         this.stockHistoricalPriceProviderService = stockHistoricalPriceProviderService;
     }
 
-    public ArrayList<DataSet> getDataSetListForStocksClosePrices(PortfolioParams params) {
+    public ArrayList<DataSet> getDataSetListForStocksMonthlyClosePrices(PortfolioHistoricalDatasetParams portfolioHistoricalDatasetParams) {
         ArrayList<DataSet> allClosePriceTSMeasures = new ArrayList<>();
-        long expectedItemsCount = ChronoUnit.MONTHS.between(params.getDateFrom(), params.getDateTo()) + 1;
-
-        for(String symbol: params.getSymbols()) {
-            StockHistoricalPriceParams serviceParams = StockHistoricalPriceParams.newBuilder()
-                    .symbol(symbol)
-                    .dateFrom(params.getDateFrom())
-                    .dateTo(params.getDateTo())
-                    .build();
-
+        for(String symbol: portfolioHistoricalDatasetParams.getSymbols()) {
+            StockHistoricalPriceParams.Builder serviceParamBuilder = StockHistoricalPriceParams.newBuilder()
+                    .symbol(symbol);
+            if(portfolioHistoricalDatasetParams.getRange() == null) {
+                serviceParamBuilder
+                        .dateFrom(portfolioHistoricalDatasetParams.getDateFrom())
+                        .dateTo(portfolioHistoricalDatasetParams.getDateTo());
+            } else {
+                serviceParamBuilder.range(portfolioHistoricalDatasetParams.getRange());
+            }
+            StockHistoricalPriceParams serviceParams = serviceParamBuilder.build();
+            long expectedItemsCount = ChronoUnit.MONTHS.between(serviceParams.getDateFrom(), serviceParams.getDateTo()) + 1;
             StockPriceTimeSeries data = this.stockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(serviceParams);
             int stockPricesSize = data.getPrices().size();
             if(stockPricesSize != expectedItemsCount) {

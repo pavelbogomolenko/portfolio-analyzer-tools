@@ -65,7 +65,7 @@ public class IexStockHistoricalPriceProviderServiceUnitTest {
         rawHttpResponseBody += "]";
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol("aapl")
-                .range(StockHistoricalPriceRange.ONE_YEAR)
+                .range(StockHistoricalPriceRangeParam.ONE_YEAR)
                 .build();
         String url = String.format("https://cloud.iexapis.com/stable/stock/%s/chart/%s?token=%s",
                 params.getSymbol(),

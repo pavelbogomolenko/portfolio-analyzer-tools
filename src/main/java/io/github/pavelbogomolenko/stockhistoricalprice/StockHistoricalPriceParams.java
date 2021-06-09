@@ -8,7 +8,7 @@ public class StockHistoricalPriceParams {
     private final String symbol;
     private final YearMonth dateFrom;
     private final YearMonth dateTo;
-    private final StockHistoricalPriceRange range;
+    private final StockHistoricalPriceRangeParam range;
 
     private StockHistoricalPriceParams(Builder builder) {
         this.symbol = builder.symbol;
@@ -21,10 +21,10 @@ public class StockHistoricalPriceParams {
         private String symbol;
         private YearMonth dateFrom;
         private YearMonth dateTo;
-        private StockHistoricalPriceRange range = StockHistoricalPriceRange.NO_RANGE;
+        private StockHistoricalPriceRangeParam range = StockHistoricalPriceRangeParam.NO_RANGE;
 
         public Builder symbol(String s) {
-            this.symbol = s;
+            this.symbol = s.toUpperCase();
             return this;
         }
 
@@ -38,7 +38,7 @@ public class StockHistoricalPriceParams {
             return this;
         }
 
-        public Builder range(StockHistoricalPriceRange range) {
+        public Builder range(StockHistoricalPriceRangeParam range) {
             this.range = range;
             String rangeStr = this.range.getRange();
             if (rangeStr.isEmpty()) {

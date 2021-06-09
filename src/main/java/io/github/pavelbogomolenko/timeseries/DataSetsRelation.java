@@ -1,8 +1,8 @@
 package io.github.pavelbogomolenko.timeseries;
 
 
-import io.github.pavelbogomolenko.portfolio.PortfolioParams;
-import io.github.pavelbogomolenko.portfolio.PortfolioService;
+import io.github.pavelbogomolenko.portfolio.PortfolioHistoricalDatasetParams;
+import io.github.pavelbogomolenko.portfolio.PortfolioHistoricalDataSetService;
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 
 import java.time.YearMonth;
@@ -92,7 +92,7 @@ public class DataSetsRelation {
     public static void main(String[] args) {
         AVStockHistoricalPriceProviderService stockHistoricalPriceProvider = AVStockHistoricalPriceProviderService.newBuilder()
                 .buildWithFsDataSource();
-        PortfolioService portfolioService = new PortfolioService(stockHistoricalPriceProvider);
+        PortfolioHistoricalDataSetService portfolioHistoricalDataSetService = new PortfolioHistoricalDataSetService(stockHistoricalPriceProvider);
         ArrayList<String> symbols = new ArrayList<>(Arrays.asList(
                 "AMZN",
                 "EBAY",
@@ -111,12 +111,12 @@ public class DataSetsRelation {
                 "BAC",
                 "T"
         ));
-        PortfolioParams params = PortfolioParams.newBuilder()
+        PortfolioHistoricalDatasetParams params = PortfolioHistoricalDatasetParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(YearMonth.parse("2013-02"))
                 .dateTo(YearMonth.parse("2020-12"))
                 .build();
-        ArrayList<DataSet> dataSetList = portfolioService.getDataSetListForStocksClosePrices(params);
+        ArrayList<DataSet> dataSetList = portfolioHistoricalDataSetService.getDataSetListForStocksMonthlyClosePrices(params);
 
         for(DataSet tsMeasure: dataSetList) {
             System.out.println("Dates: " + Arrays.toString(tsMeasure.getDataPoints().stream().map(dataPoint -> dataPoint.getDate()).toArray()));

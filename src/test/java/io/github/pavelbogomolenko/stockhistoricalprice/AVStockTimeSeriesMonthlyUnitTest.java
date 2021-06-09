@@ -68,10 +68,12 @@ public class AVStockTimeSeriesMonthlyUnitTest {
 
     @Test
     void shouldThrowWhenUnexpectedResponseHasBeenReturned() {
+        String givenSymbol = "someSymbol";
         String unexpectedRawResponse = "{'some': thing}";
         AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
 
-        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData("someSymbol")).thenReturn(unexpectedRawResponse);
+        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(givenSymbol.toUpperCase()))
+                .thenReturn(unexpectedRawResponse);
         AVStockHistoricalPriceProviderService service = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
         assertThrows(RuntimeException.class, () -> {

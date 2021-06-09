@@ -1,6 +1,6 @@
 package io.github.pavelbogomolenko.stockhistoricalprice;
 
-public enum StockHistoricalPriceRange {
+public enum StockHistoricalPriceRangeParam {
     NO_RANGE(""),
     ONE_YEAR("1y"),
     TWO_YEARS("2y"),
@@ -11,7 +11,7 @@ public enum StockHistoricalPriceRange {
 
     private final String range;
 
-    StockHistoricalPriceRange(String range) {
+    StockHistoricalPriceRangeParam(String range) {
         this.range = range;
     }
 

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PortfolioServiceUnitTest {
+public class PortfolioHistoricalDataSetServiceUnitTest {
     private final ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
     private final YearMonth dateFrom = YearMonth.parse("2020-10");
     private final  YearMonth dateTo = YearMonth.parse("2020-12");
@@ -98,13 +98,13 @@ public class PortfolioServiceUnitTest {
         AVStockHistoricalPriceProviderService avStockTimeSeriesServiceMock = mock(AVStockHistoricalPriceProviderService.class);
         when(avStockTimeSeriesServiceMock.getStockMonthlyHistoricalPrices(any())).thenReturn(msftData, googleData,ibmData);
 
-        PortfolioParams params = PortfolioParams.newBuilder()
+        PortfolioHistoricalDatasetParams params = PortfolioHistoricalDatasetParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
                 .build();
-        PortfolioService portfolio = new PortfolioService(avStockTimeSeriesServiceMock);
-        ArrayList<DataSet> actualResult = portfolio.getDataSetListForStocksClosePrices(params);
+        PortfolioHistoricalDataSetService portfolio = new PortfolioHistoricalDataSetService(avStockTimeSeriesServiceMock);
+        ArrayList<DataSet> actualResult = portfolio.getDataSetListForStocksMonthlyClosePrices(params);
 
         StockHistoricalPriceParamsMatcher msftParamMatcher = new StockHistoricalPriceParamsMatcher(msftParams);
         StockHistoricalPriceParamsMatcher googleParamMatcher = new StockHistoricalPriceParamsMatcher(googleParams);
@@ -139,14 +139,14 @@ public class PortfolioServiceUnitTest {
         StockPriceTimeSeries msftData = new StockPriceTimeSeries(msftMetaData, msftPriceData);
         when(avStockTimeSeriesServiceMock.getStockMonthlyHistoricalPrices(any())).thenReturn(msftData);
 
-        PortfolioParams params = PortfolioParams.newBuilder()
+        PortfolioHistoricalDatasetParams params = PortfolioHistoricalDatasetParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(YearMonth.parse("2020-10"))
                 .dateTo(YearMonth.parse("2020-12"))
                 .build();
         assertThrows(IllegalArgumentException.class, () -> {
-            PortfolioService portfolioService = new PortfolioService(avStockTimeSeriesServiceMock);
-            portfolioService.getDataSetListForStocksClosePrices(params);
+            PortfolioHistoricalDataSetService portfolioHistoricalDataSetService = new PortfolioHistoricalDataSetService(avStockTimeSeriesServiceMock);
+            portfolioHistoricalDataSetService.getDataSetListForStocksMonthlyClosePrices(params);
         });
     }
 }

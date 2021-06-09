@@ -16,7 +16,7 @@ public class StockHistoricalPriceParamsUnitTest {
     @ParameterizedTest
     @ValueSource(strings = {"ONE_YEAR", "FIVE_YEARS", "SEVEN_YEARS"})
     void whenGivenValidRangeShouldConvertItToDateFromAndDateTo(String rangeStr) {
-        StockHistoricalPriceRange range = StockHistoricalPriceRange.valueOf(rangeStr);
+        StockHistoricalPriceRangeParam range = StockHistoricalPriceRangeParam.valueOf(rangeStr);
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol("qwerty")
                 .range(range)
@@ -32,9 +32,18 @@ public class StockHistoricalPriceParamsUnitTest {
     void whenGivenNoRangeShouldConvertItToDateFromAndDateTo() {
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol("qwerty")
-                .range(StockHistoricalPriceRange.NO_RANGE)
+                .range(StockHistoricalPriceRangeParam.NO_RANGE)
                 .build();
         assertThat(params.getDateFrom(), equalTo(null));
         assertThat(params.getDateTo(), equalTo(null));
+    }
+
+    @Test
+    void shouldAlwaysConvertSymbolToUpperCase() {
+        String givenSymbol = "aapl";
+        StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
+                .symbol(givenSymbol)
+                .build();
+        assertThat(params.getSymbol(), equalTo(givenSymbol.toUpperCase()));
     }
 }

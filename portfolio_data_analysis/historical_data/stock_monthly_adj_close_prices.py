@@ -7,7 +7,7 @@ DATA_FOLDER = "data/stockprice/monthly/"
 def get(symbol):
     result = []
     dirname = os.getcwd()
-    path_to_file = os.path.join(dirname, "{}{}.json".format(DATA_FOLDER, symbol))
+    path_to_file = os.path.join(dirname, "{}{}.json".format(DATA_FOLDER, symbol.upper()))
     with open(path_to_file) as f:
         data = json.load(f)
         monthly_ts = data["Monthly Adjusted Time Series"]
