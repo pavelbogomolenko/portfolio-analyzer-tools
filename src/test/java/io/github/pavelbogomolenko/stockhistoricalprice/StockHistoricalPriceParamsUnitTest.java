@@ -29,6 +29,20 @@ public class StockHistoricalPriceParamsUnitTest {
     }
 
     @Test
+    void shouldProperlyHandle10AndMoreYearsRanges() {
+        StockHistoricalPriceRangeParam range = StockHistoricalPriceRangeParam.TEN_YEARS;
+        StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
+                .symbol("qwerty")
+                .range(StockHistoricalPriceRangeParam.TEN_YEARS)
+                .build();
+        int intRange = Integer.parseInt(range.getRange().substring(0, 2));
+        LocalDate expectedDateTo = LocalDate.now().minus(1, ChronoUnit.MONTHS);
+        LocalDate expectedDateFrom = expectedDateTo.minus(12 * intRange, ChronoUnit.MONTHS);
+        assertThat(params.getDateFrom(), is(YearMonth.from(expectedDateFrom)));
+        assertThat(params.getDateTo(), is(YearMonth.from(expectedDateTo)));
+    }
+
+    @Test
     void whenGivenNoRangeShouldConvertItToDateFromAndDateTo() {
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol("qwerty")

@@ -45,6 +45,9 @@ public class StockHistoricalPriceParams {
                 return this;
             }
             int rangeValue = Integer.parseInt(rangeStr.substring(0, 1));
+            if(rangeStr.length() > 2) {
+                rangeValue = Integer.parseInt(rangeStr.substring(0, 2));
+            }
             LocalDate dateTo = LocalDate.now().minus(1, ChronoUnit.MONTHS);
             LocalDate dateFrom = dateTo.minus(12 * rangeValue, ChronoUnit.MONTHS);
             this.dateFrom = YearMonth.from(dateFrom);
