@@ -1,17 +1,16 @@
 import os
 import sys
-from datetime import datetime as dt
+import time
 
-from dateutil.relativedelta import relativedelta
 import requests
 
-import symbols
+import historical_data.symbols as symbols
 
 AV_API_URL = "https://www.alphavantage.co/"
 AV_API_KEY = os.environ['AV_API_KEY']
-DIRNAME = os.path.dirname(os.path.abspath(__file__))
 AV_FUNCTION_TS_MONTHLY_ADJUSTED = "TIME_SERIES_MONTHLY_ADJUSTED"
 AV_FUNCTION_STOCK_OVERVIEW = "OVERVIEW"
+MIN_SEC_PER_REQUEST = 60 / 75
 AVAILABLE_FUNCTIONS = [AV_FUNCTION_TS_MONTHLY_ADJUSTED, AV_FUNCTION_STOCK_OVERVIEW]
 
 
@@ -50,36 +49,23 @@ def __fetch_and_save__(av_function_name, symbol, f):
     __save_to_file__(f, data)
 
 
-def __is_date_first_day_of_month__(date):
-    first_day_of_month = dt.today().replace(day=1).date()
-    return date == first_day_of_month
-
-
-def __skip_update__(path_to_file):
-    today = dt.today()
-    if os.path.exists(path_to_file):
-        last_modified = os.path.getmtime(path_to_file)
-        dt_delta = relativedelta(today, dt.fromtimestamp(last_modified))
-        if __is_date_first_day_of_month__(today.date()) and dt_delta.days > 0:
-            return False
-        if dt_delta.days < 4:
-            print("Skip updating {}. Data is up-to-date".format(path_to_file))
-            return True
-    return False
-
-
 def data_fetcher(av_function_name, storage_path):
     if av_function_name not in AVAILABLE_FUNCTIONS:
         print("Provided not valid AV function name: '{}'".format(av_function_name))
         sys.exit(0)
 
-    if not os.path.exists(os.path.join(DIRNAME, storage_path)):
+    if not os.path.exists(storage_path):
         print("Provided storage_path doesnt exists: '{}'".format(storage_path))
         sys.exit(0)
 
     for symbol in symbols.ALL:
-        path_to_file = os.path.join(DIRNAME, "{}/{}.json".format(storage_path, symbol))
-        if __skip_update__(path_to_file):
-            print("Skip updating {}. Data is up-to-date".format(symbol))
-            continue
+        path_to_file = os.path.join(storage_path, "{}/{}.json".format(storage_path, symbol))
+        before_fetch_time = time.time()
         __fetch_and_save__(av_function_name, symbol, path_to_file)
+        fetch_and_save_seconds = time.time() - before_fetch_time
+        if fetch_and_save_seconds >= MIN_SEC_PER_REQUEST:
+            continue
+        else:
+            sec_to_next_fetch = MIN_SEC_PER_REQUEST - fetch_and_save_seconds
+            time.sleep(sec_to_next_fetch)
+

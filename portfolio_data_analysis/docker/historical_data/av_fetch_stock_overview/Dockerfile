@@ -7,6 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p data/stock/overview
+RUN mkdir -p data/stockoverview
 
 CMD [ "python", "./av_fetch_stock_overview.py" ]
