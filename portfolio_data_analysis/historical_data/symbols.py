@@ -505,39 +505,6 @@ SP500 = [
     "ZTS"
 ]
 
-DAX = [
-    "ADS.DE",
-    "ALV.DE",
-    "BAS.DE",
-    "BAYN.DE",
-    "BEI.DE",
-    "BMW.DE",
-    "CON.DE",
-    "1COV.DE",
-    "DAI.DE",
-    "DHER.DE",
-    "DBK.DE",
-    "DB1.DE",
-    "DPW.DE",
-    "DTE.DE",
-    "DWNI.DE",
-    "EOAN.DE",
-    "FRE.DE",
-    "FME.DE",
-    "HEI.DE",
-    "HEN3.DE",
-    "IFX.DE",
-    "LIN.DE",
-    "MRK.DE",
-    "MTX.DE",
-    "MUV2.DE",
-    "RWE.DE",
-    "SAP.DE",
-    "SIE.DE",
-    "VOW3.DE",
-    "VNA.DE"
-]
-
 NASDAQ100 = [
     "AAPL",
     "MSFT",
@@ -647,8 +614,7 @@ MARKET_INDICIES = [
     "^NDX",
     "^GSPC",
     "^DJI",
-    "^RUT",
-    "^GDAXI"
+    "^RUT"
 ]
 
-ALL = sorted(set(SP500 + DAX + NASDAQ100))
+ALL = sorted(set(SP500 + NASDAQ100))
