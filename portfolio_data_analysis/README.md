@@ -36,7 +36,37 @@ docker run -ti -v $(pwd)/data:/usr/src/app/data -e AV_API_KEY=YOUR_API_KEY pavlo
 
 # Push
 docker push pavlobogomolenko/av_fetch_stock_overview
-```    
+```
+
+#### Alphavantage Stock Overview Index
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/av_stock_overview_index/Dockerfile .
+    -t pavlobogomolenko/av_stock_overview_index
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data -e AV_API_KEY=YOUR_API_KEY pavlobogomolenko/av_stock_overview_index
+
+# Push
+docker push pavlobogomolenko/av_stock_overview_index
+```
+
+#### Alphavantage Stock Cash Flow
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/av_fetch_stock_cash_flow/Dockerfile .
+    -t pavlobogomolenko/av_fetch_stock_cash_flow
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data -e AV_API_KEY=YOUR_API_KEY pavlobogomolenko/av_fetch_stock_cash_flow
+
+# Push
+docker push pavlobogomolenko/av_fetch_stock_cash_flow
+```
 
 #### Yahoo Finance Monthly Historical Prices
 
