@@ -96,7 +96,22 @@ docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/yf_fetch_stock_
 
 # Push
 docker push pavlobogomolenko/yf_fetch_stock_monthly_historical_prices
-```    
+```
+
+#### treasury.gov fetch daily treasury yields
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/fetch_us_treasury_yields/Dockerfile . 
+    -t pavlobogomolenko/fetch_us_treasury_yields
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/fetch_us_treasury_yields
+
+# Push
+docker push pavlobogomolenko/fetch_us_treasury_yields
+```
 
 ### Portfolio Frontier
 
