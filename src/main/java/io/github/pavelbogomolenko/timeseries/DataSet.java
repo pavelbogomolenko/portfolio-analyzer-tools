@@ -3,20 +3,18 @@ package io.github.pavelbogomolenko.timeseries;
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataSet {
-    private final ArrayList<DataPoint> dataPoints;
+    private final List<DataPoint> dataPoints;
     private final ArrayList<Double> growthRates;
     private final double averageGrowth;
     private final ArrayList<Double> growthRatesToAverage;
     private final double growthRateToAverageSquared;
     private final double variance;
 
-    public DataSet(ArrayList<DataPoint> dataPoints) {
+    public DataSet(List<DataPoint> dataPoints) {
         if(!this.isSortedDesc(dataPoints)) {
             throw new IllegalArgumentException("TSDataPoints should be sorted in desc order");
         }
@@ -80,8 +78,44 @@ public class DataSet {
         return true;
     }
 
-    public ArrayList<DataPoint> getDataPoints() {
+    public List<DataPoint> getDataPoints() {
         return this.dataPoints;
+    }
+
+    public double getAverage() {
+        double expectedSum = 0;
+        for(DataPoint dp: this.getDataPoints()) {
+            expectedSum += dp.getValue();
+        }
+        return expectedSum / this.getDataPoints().size();
+    }
+
+    public double getNthAverage(int n) {
+        if(n > this.dataPoints.size() || n <= 0) {
+            throw new IndexOutOfBoundsException("n is out of the bound of data points");
+        }
+        double expectedSum = 0;
+        for(int i = 0; i < n; i++) {
+            expectedSum += this.dataPoints.get(i).getValue();
+        }
+        return expectedSum / n;
+    }
+
+    public DataSet sliceFromHead(int toIndex) {
+        return new DataSet(this.dataPoints.subList(0, toIndex));
+    }
+
+    public double getMedian() {
+        List<DataPoint> newDataPoints = new ArrayList<>(this.dataPoints);
+        Collections.sort(newDataPoints, DataPoint.valueOrder());
+        int median = (int) Math.floor(newDataPoints.size() / 2.0);
+        if(this.dataPoints.size() % 2 == 0) {
+            double firstMiddle = newDataPoints.get(median).getValue();
+            double secondMiddle = newDataPoints.get(median - 1).getValue();
+            return (firstMiddle + secondMiddle) / 2;
+        } else {
+            return newDataPoints.get(median).getValue();
+        }
     }
 
     public static void main(String[] args) {
