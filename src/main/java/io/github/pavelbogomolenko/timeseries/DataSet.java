@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class DataSet {
     private final List<DataPoint> dataPoints;
+    private final List<DataPoint> sortedDataPoints;
     private final ArrayList<Double> growthRates;
     private final double averageGrowth;
     private final ArrayList<Double> growthRatesToAverage;
@@ -19,6 +20,8 @@ public class DataSet {
             throw new IllegalArgumentException("TSDataPoints should be sorted in desc order");
         }
         this.dataPoints = dataPoints;
+        this.sortedDataPoints = new ArrayList<>(this.dataPoints);
+        Collections.sort(this.sortedDataPoints, DataPoint.valueOrder());
         this.growthRates = calculateGrowthRates();
         this.averageGrowth = this.growthRates.stream()
                 .reduce(0.0, (acc, cur) -> acc + cur, Double::sum) / this.growthRates.size();
@@ -106,16 +109,22 @@ public class DataSet {
     }
 
     public double getMedian() {
-        List<DataPoint> newDataPoints = new ArrayList<>(this.dataPoints);
-        Collections.sort(newDataPoints, DataPoint.valueOrder());
-        int median = (int) Math.floor(newDataPoints.size() / 2.0);
+        int median = (int) Math.floor(this.sortedDataPoints.size() / 2.0);
         if(this.dataPoints.size() % 2 == 0) {
-            double firstMiddle = newDataPoints.get(median).getValue();
-            double secondMiddle = newDataPoints.get(median - 1).getValue();
+            double firstMiddle = this.sortedDataPoints.get(median).getValue();
+            double secondMiddle = this.sortedDataPoints.get(median - 1).getValue();
             return (firstMiddle + secondMiddle) / 2;
         } else {
-            return newDataPoints.get(median).getValue();
+            return this.sortedDataPoints.get(median).getValue();
         }
+    }
+
+    public DataPoint getMin() {
+        return this.sortedDataPoints.get(0);
+    }
+
+    public DataPoint getMax() {
+        return this.sortedDataPoints.get(this.sortedDataPoints.size() - 1);
     }
 
     public static void main(String[] args) {

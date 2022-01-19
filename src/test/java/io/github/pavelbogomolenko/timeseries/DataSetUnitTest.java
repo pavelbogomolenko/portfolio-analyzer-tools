@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -317,5 +318,29 @@ public class DataSetUnitTest {
         double expectedMedian = (janPriceTimeSeries.getClose() + aprPriceTimeSeries.getClose()) / 2;
         DataSet ds = ListToDataSet.convert(oldTs, "date", "close");
         assertThat(ds.getMedian(), equalTo(expectedMedian));
+    }
+
+    @Test
+    void shouldFindMin() {
+        DataPoint dp1 = new DataPoint(1050.0, LocalDate.parse("2020-04-30"));
+        DataPoint dp2 = new DataPoint(990.0, LocalDate.parse("2020-03-30"));
+        DataPoint dp3 = new DataPoint(1100.0, LocalDate.parse("2020-02-28"));
+        DataPoint dp4 = new DataPoint(1000.0, LocalDate.parse("2020-01-30"));
+
+        DataSet ds = new DataSet(List.of(dp1, dp2, dp3, dp4));
+
+        assertThat(ds.getMin(), equalTo(dp2));
+    }
+
+    @Test
+    void shouldFindMax() {
+        DataPoint dp1 = new DataPoint(1050.0, LocalDate.parse("2020-04-30"));
+        DataPoint dp2 = new DataPoint(990.0, LocalDate.parse("2020-03-30"));
+        DataPoint dp3 = new DataPoint(1100.0, LocalDate.parse("2020-02-28"));
+        DataPoint dp4 = new DataPoint(1000.0, LocalDate.parse("2020-01-30"));
+
+        DataSet ds = new DataSet(List.of(dp1, dp2, dp3, dp4));
+
+        assertThat(ds.getMax(), equalTo(dp3));
     }
 }
