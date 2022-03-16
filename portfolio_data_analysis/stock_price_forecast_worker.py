@@ -6,7 +6,7 @@ import os
 import sys
 
 from common.rabbitmq_wrapper import RabbitBlockingTopicExchangeWrapper
-from historical_data import stock_monthly_adj_close_prices
+from historical_data.provider.av import stock_monthly_adj_close_prices
 from stock_price_forecasting.arima import *
 
 

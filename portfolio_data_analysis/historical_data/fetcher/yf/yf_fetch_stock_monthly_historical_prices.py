@@ -2,28 +2,12 @@ import os
 import csv
 
 from datetime import datetime as dt
-import requests
+
+from historical_data.provider.yf.data import get_data_for_symbol
+from historical_data.fetcher.yf.symbols import MARKET_INDICIES
 
 
-from historical_data.symbols import MARKET_INDICIES
-
-USER_AGENT_HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 DIRNAME = os.path.dirname(os.path.abspath(__file__))
-BASE_URL = 'https://query1.finance.yahoo.com/v7/finance/download/' \
-           + '{}?period1=915145200&period2={}&interval=1d&events=history&includeAdjustedClose=true'
-
-
-def fetch_raw_data_for_symbol(symbol):
-    now_ts = round(dt.today().timestamp())
-    url = BASE_URL.format(symbol, now_ts)
-    print("Fetching data for: {}".format(url))
-    r = requests.get(url, headers=USER_AGENT_HEADERS)
-    if r.status_code != 200:
-        print("API status_code was not 200. Will try again later")
-        print(r.text)
-        return None
-
-    return r.text
 
 
 def convert_yf_daily_historical_csv_price_data_to_av_monthly_json_format(symbol, raw_data):
@@ -56,7 +40,7 @@ def convert_yf_daily_historical_csv_price_data_to_av_monthly_json_format(symbol,
 
 
 def fetch_and_save_data_for_symbol(symbol):
-    raw_data = fetch_raw_data_for_symbol(symbol)
+    raw_data = get_data_for_symbol(symbol)
     if raw_data is None:
         return
 
@@ -65,10 +49,10 @@ def fetch_and_save_data_for_symbol(symbol):
         file.write(convert_yf_daily_historical_csv_price_data_to_av_monthly_json_format(symbol, raw_data))
 
 
-def fetch_and_process_symbols():
+def fetch_and_save_data_for_symbols():
     for symbol in MARKET_INDICIES:
         fetch_and_save_data_for_symbol(symbol)
 
 
 if __name__ == '__main__':
-    fetch_and_process_symbols()
+    fetch_and_save_data_for_symbols()
