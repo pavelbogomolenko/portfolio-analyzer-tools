@@ -113,6 +113,37 @@ docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/fetch_us_treasu
 docker push pavlobogomolenko/fetch_us_treasury_yields
 ```
 
+#### EOD Stock Daily Historical Prices
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/eod_fetch_stock_daily_historical_prices/Dockerfile 
+    . -t pavlobogomolenko/eod_fetch_stock_daily_historical_prices
+
+# Run
+sudo docker run -ti -v $(pwd)/data:/usr/src/app/data 
+    -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_daily_historical_prices
+
+# Push
+docker push pavlobogomolenko/eod_fetch_stock_daily_historical_prices
+```
+
+#### EOD Stock Fundamentals (overview, financials, earnings, insider and etc)
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/eod_fetch_stock_fundamentals/Dockerfile 
+    . -t pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
+
+# Push
+docker push pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
+```
+
 ### Portfolio Frontier
 
 ### Portfolio Simulation
