@@ -1,4 +1,4 @@
-package io.github.pavelbogomolenko.portfolio;
+package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 import io.github.pavelbogomolenko.timeseries.DataSet;

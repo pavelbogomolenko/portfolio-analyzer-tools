@@ -1,8 +1,8 @@
 package io.github.pavelbogomolenko.timeseries;
 
 
-import io.github.pavelbogomolenko.portfolio.PortfolioHistoricalDatasetParams;
-import io.github.pavelbogomolenko.portfolio.PortfolioHistoricalDataSetService;
+import io.github.pavelbogomolenko.stockhistoricalpricedataset.StockPriceHistoricalDatasetListParams;
+import io.github.pavelbogomolenko.stockhistoricalpricedataset.StockPriceHistoricalDataSetListService;
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 
 import java.time.YearMonth;
@@ -92,7 +92,7 @@ public class DataSetsRelation {
     public static void main(String[] args) {
         AVStockHistoricalPriceProviderService stockHistoricalPriceProvider = AVStockHistoricalPriceProviderService.newBuilder()
                 .buildWithFsDataSource();
-        PortfolioHistoricalDataSetService portfolioHistoricalDataSetService = new PortfolioHistoricalDataSetService(stockHistoricalPriceProvider);
+        StockPriceHistoricalDataSetListService stockPriceHistoricalDataSetListService = new StockPriceHistoricalDataSetListService(stockHistoricalPriceProvider);
         ArrayList<String> symbols = new ArrayList<>(Arrays.asList(
                 "AMZN",
                 "EBAY",
@@ -111,12 +111,12 @@ public class DataSetsRelation {
                 "BAC",
                 "T"
         ));
-        PortfolioHistoricalDatasetParams params = PortfolioHistoricalDatasetParams.newBuilder()
+        StockPriceHistoricalDatasetListParams params = StockPriceHistoricalDatasetListParams.newBuilder()
                 .symbols(symbols)
                 .dateFrom(YearMonth.parse("2013-02"))
                 .dateTo(YearMonth.parse("2020-12"))
                 .build();
-        ArrayList<DataSet> dataSetList = portfolioHistoricalDataSetService.getDataSetListForStocksMonthlyClosePrices(params);
+        ArrayList<DataSet> dataSetList = stockPriceHistoricalDataSetListService.getDataSetListForStocksMonthlyClosePrices(params);
 
         for(DataSet tsMeasure: dataSetList) {
             System.out.println("Dates: " + Arrays.toString(tsMeasure.getDataPoints().stream().map(dataPoint -> dataPoint.getDate()).toArray()));

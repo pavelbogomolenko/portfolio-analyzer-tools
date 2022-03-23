@@ -1,17 +1,17 @@
-package io.github.pavelbogomolenko.portfolio;
+package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
 import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceRangeParam;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
 
-public class PortfolioHistoricalDatasetParams {
+public class StockPriceHistoricalDatasetListParams {
     private final ArrayList<String> symbols;
     private final YearMonth dateFrom;
     private final YearMonth dateTo;
     private final StockHistoricalPriceRangeParam range;
 
-    private PortfolioHistoricalDatasetParams(Builder builder) {
+    private StockPriceHistoricalDatasetListParams(Builder builder) {
         this.symbols = builder.symbols;
         this.dateFrom = builder.dateFrom;
         this.dateTo = builder.dateTo;
@@ -49,8 +49,8 @@ public class PortfolioHistoricalDatasetParams {
             return this;
         }
 
-        public PortfolioHistoricalDatasetParams build() {
-            return new PortfolioHistoricalDatasetParams(this);
+        public StockPriceHistoricalDatasetListParams build() {
+            return new StockPriceHistoricalDatasetListParams(this);
         }
     }
 

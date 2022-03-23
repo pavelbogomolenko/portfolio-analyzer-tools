@@ -1,4 +1,4 @@
-package io.github.pavelbogomolenko.portfolio;
+package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
 import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceParams;
 import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceProviderService;
@@ -9,24 +9,24 @@ import io.github.pavelbogomolenko.timeseries.DataSet;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class PortfolioHistoricalDataSetService {
+public class StockPriceHistoricalDataSetListService {
     private final StockHistoricalPriceProviderService stockHistoricalPriceProviderService;
 
-    public PortfolioHistoricalDataSetService(StockHistoricalPriceProviderService stockHistoricalPriceProviderService) {
+    public StockPriceHistoricalDataSetListService(StockHistoricalPriceProviderService stockHistoricalPriceProviderService) {
         this.stockHistoricalPriceProviderService = stockHistoricalPriceProviderService;
     }
 
-    public ArrayList<DataSet> getDataSetListForStocksMonthlyClosePrices(PortfolioHistoricalDatasetParams portfolioHistoricalDatasetParams) {
+    public ArrayList<DataSet> getDataSetListForStocksMonthlyClosePrices(StockPriceHistoricalDatasetListParams stockPriceHistoricalDatasetListParams) {
         ArrayList<DataSet> allClosePriceTSMeasures = new ArrayList<>();
-        for(String symbol: portfolioHistoricalDatasetParams.getSymbols()) {
+        for(String symbol: stockPriceHistoricalDatasetListParams.getSymbols()) {
             StockHistoricalPriceParams.Builder serviceParamBuilder = StockHistoricalPriceParams.newBuilder()
                     .symbol(symbol);
-            if(portfolioHistoricalDatasetParams.getRange() == null) {
+            if(stockPriceHistoricalDatasetListParams.getRange() == null) {
                 serviceParamBuilder
-                        .dateFrom(portfolioHistoricalDatasetParams.getDateFrom())
-                        .dateTo(portfolioHistoricalDatasetParams.getDateTo());
+                        .dateFrom(stockPriceHistoricalDatasetListParams.getDateFrom())
+                        .dateTo(stockPriceHistoricalDatasetListParams.getDateTo());
             } else {
-                serviceParamBuilder.range(portfolioHistoricalDatasetParams.getRange());
+                serviceParamBuilder.range(stockPriceHistoricalDatasetListParams.getRange());
             }
             StockHistoricalPriceParams serviceParams = serviceParamBuilder.build();
             long expectedItemsCount = ChronoUnit.MONTHS.between(serviceParams.getDateFrom(), serviceParams.getDateTo()) + 1;
