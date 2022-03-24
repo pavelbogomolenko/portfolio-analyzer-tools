@@ -1,6 +1,6 @@
 import os
 
-from historical_data.stock_overview_index import create_update_stock_overview_index_file_from_path
+from historical_data.av_stock_overview_index import create_update_stock_overview_index_file_from_path
 
 DIRNAME = os.path.dirname(os.path.abspath(__file__))
 

@@ -19,8 +19,8 @@ public class AVHttpApiDataSourceUnitTest {
         String expectedReturn = "123";
         when(request.get(expectedUrl)).thenReturn(expectedReturn);
 
-        AVHttpApiDataSource avHttpApiDataSource = new AVHttpApiDataSource(request);
-        String actualResult = avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(symbol);
+        AVStockHistoricalHttpApi avHttpApiDataSource = new AVStockHistoricalHttpApi(request);
+        String actualResult = avHttpApiDataSource.getRawMonthlyAdjPriceData(symbol);
 
         assertThat(actualResult, is(expectedReturn));
     }

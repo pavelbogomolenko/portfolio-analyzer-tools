@@ -11,7 +11,7 @@ public class AVStockTimeSeriesMonthlyIntTest {
     @Test
     @Disabled
     void GivenAVHttpApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() {
-        AVHttpApiDataSource avHttpApiStockDataFetcher = new AVHttpApiDataSource();
+        AVStockHistoricalHttpApi avHttpApiStockDataFetcher = new AVStockHistoricalHttpApi();
         AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(avHttpApiStockDataFetcher);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
@@ -34,7 +34,7 @@ public class AVStockTimeSeriesMonthlyIntTest {
     @Test
     @Disabled
     void GivenAVFsApiStockDataFetcherImpl_WhenGetStockMonthlyTimeSeriesResponseWithSymbolIsCalled_ThenReturnAVTimeSeriesMonthlyResponse() {
-        AVFsApiDataSource avFsApiStockDataFetcher = new AVFsApiDataSource();
+        AVStockHistoricalFsApi avFsApiStockDataFetcher = new AVStockHistoricalFsApi();
         AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(avFsApiStockDataFetcher);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()

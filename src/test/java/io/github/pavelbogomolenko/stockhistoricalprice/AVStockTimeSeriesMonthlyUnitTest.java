@@ -45,9 +45,9 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
+        AVStockHistoricalHttpApi avHttpApiDataSource = mock(AVStockHistoricalHttpApi.class);
 
-        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
+        when(avHttpApiDataSource.getRawMonthlyAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
         AVStockHistoricalPriceProviderService avStockHistoricalPriceProviderService = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
@@ -55,7 +55,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
                 .build();
         StockPriceTimeSeries stockPriceTimeSeries = avStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
-        verify(avHttpApiDataSource, times(1)).getStockMonthlyHistoricalAdjPriceData("AMZN");
+        verify(avHttpApiDataSource, times(1)).getRawMonthlyAdjPriceData("AMZN");
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
@@ -70,9 +70,9 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     void shouldThrowWhenUnexpectedResponseHasBeenReturned() {
         String givenSymbol = "someSymbol";
         String unexpectedRawResponse = "{'some': thing}";
-        AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
+        AVStockHistoricalHttpApi avHttpApiDataSource = mock(AVStockHistoricalHttpApi.class);
 
-        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(givenSymbol.toUpperCase()))
+        when(avHttpApiDataSource.getRawMonthlyAdjPriceData(givenSymbol.toUpperCase()))
                 .thenReturn(unexpectedRawResponse);
         AVStockHistoricalPriceProviderService service = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
@@ -87,7 +87,7 @@ public class AVStockTimeSeriesMonthlyUnitTest {
     @Test
     void WhenGetStockMonthlyTimeSeriesResponseWithNullSymbolIsCalled_ThenThrowException_symbol_should_not_be_empty() {
         assertThrows(NullPointerException.class, () -> {
-            AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(mock(AVHttpApiDataSource.class));
+            AVStockHistoricalPriceProviderService avStockTimeSeriesServiceImpl = new AVStockHistoricalPriceProviderService(mock(AVStockHistoricalHttpApi.class));
             avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(null);
         });
     }
@@ -123,19 +123,19 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVHttpApiDataSource avHttpApiDataSource = mock(AVHttpApiDataSource.class);
+        AVStockHistoricalHttpApi avHttpApiDataSource = mock(AVStockHistoricalHttpApi.class);
 
-        when(avHttpApiDataSource.getStockMonthlyHistoricalAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
+        when(avHttpApiDataSource.getRawMonthlyAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
         AVStockHistoricalPriceProviderService avStockHistoricalPriceProviderService = new AVStockHistoricalPriceProviderService(avHttpApiDataSource);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol(givenSymbol)
-                .dateFrom(YearMonth.parse("2020-10"))
-                .dateTo(YearMonth.parse("2020-11"))
+                .dateFrom(LocalDate.parse("2020-10-01"))
+                .dateTo(LocalDate.parse("2020-11-01"))
                 .build();
         StockPriceTimeSeries stockPriceTimeSeries = avStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
-        verify(avHttpApiDataSource, times(1)).getStockMonthlyHistoricalAdjPriceData("AMZN");
+        verify(avHttpApiDataSource, times(1)).getRawMonthlyAdjPriceData("AMZN");
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
@@ -177,19 +177,19 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         rawStringResponse += "}"; // end
         String givenSymbol = "AMZN";
 
-        AVHttpApiDataSource avHttpApiDs = mock(AVHttpApiDataSource.class);
+        AVStockHistoricalHttpApi avHttpApiDs = mock(AVStockHistoricalHttpApi.class);
 
-        when(avHttpApiDs.getStockMonthlyHistoricalAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
+        when(avHttpApiDs.getRawMonthlyAdjPriceData(givenSymbol)).thenReturn(rawStringResponse);
         AVStockHistoricalPriceProviderService service = new AVStockHistoricalPriceProviderService(avHttpApiDs);
 
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
                 .symbol(givenSymbol)
-                .dateFrom(YearMonth.parse("2020-09"))
-                .dateTo(YearMonth.parse("2020-08"))
+                .dateFrom(LocalDate.parse("2020-09-01"))
+                .dateTo(LocalDate.parse("2020-08-01"))
                 .build();
         StockPriceTimeSeries stockPriceTimeSeries = service.getStockMonthlyHistoricalPrices(params);
 
-        verify(avHttpApiDs, times(1)).getStockMonthlyHistoricalAdjPriceData("AMZN");
+        verify(avHttpApiDs, times(1)).getRawMonthlyAdjPriceData("AMZN");
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
         assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));

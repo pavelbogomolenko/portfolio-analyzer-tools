@@ -2,7 +2,7 @@ package io.github.pavelbogomolenko.timeseries;
 
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,11 +128,11 @@ public class DataSet {
     }
 
     public static void main(String[] args) {
-        AVHttpApiDataSource avHttpApiStockDataFetcher = new AVHttpApiDataSource();
+        AVStockHistoricalHttpApi avHttpApiStockDataFetcher = new AVStockHistoricalHttpApi();
         StockHistoricalPriceProviderService stockHistoricalPriceProviderService = new AVStockHistoricalPriceProviderService(avHttpApiStockDataFetcher);
         StockHistoricalPriceParams params = StockHistoricalPriceParams.newBuilder()
-                .dateFrom(YearMonth.parse("2015-01-01"))
-                .dateTo(YearMonth.parse("2020-12-30"))
+                .dateFrom(LocalDate.parse("2015-01-01"))
+                .dateTo(LocalDate.parse("2020-12-30"))
                 .symbol("MSFT")
                 .build();
         StockPriceTimeSeries data = stockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);

@@ -5,7 +5,6 @@ import io.github.pavelbogomolenko.stockhistoricalpricedataset.StockPriceHistoric
 import io.github.pavelbogomolenko.stockhistoricalpricedataset.StockPriceHistoricalDataSetListService;
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -90,7 +89,7 @@ public class DataSetsRelation {
     }
 
     public static void main(String[] args) {
-        AVStockHistoricalPriceProviderService stockHistoricalPriceProvider = AVStockHistoricalPriceProviderService.newBuilder()
+        EODStockHistoricalPriceProviderService stockHistoricalPriceProvider = EODStockHistoricalPriceProviderService.newBuilder()
                 .buildWithFsDataSource();
         StockPriceHistoricalDataSetListService stockPriceHistoricalDataSetListService = new StockPriceHistoricalDataSetListService(stockHistoricalPriceProvider);
         ArrayList<String> symbols = new ArrayList<>(Arrays.asList(
@@ -111,10 +110,12 @@ public class DataSetsRelation {
                 "BAC",
                 "T"
         ));
+        StockHistoricalPriceRangeParam range = StockHistoricalPriceRangeParam.fromString("5y");
         StockPriceHistoricalDatasetListParams params = StockPriceHistoricalDatasetListParams.newBuilder()
                 .symbols(symbols)
-                .dateFrom(YearMonth.parse("2013-02"))
-                .dateTo(YearMonth.parse("2020-12"))
+//                .dateFrom(LocalDate.parse("2013-02-01"))
+//                .dateTo(LocalDate.parse("2020-11-30"))
+                .range(range)
                 .build();
         ArrayList<DataSet> dataSetList = stockPriceHistoricalDataSetListService.getDataSetListForStocksMonthlyClosePrices(params);
 

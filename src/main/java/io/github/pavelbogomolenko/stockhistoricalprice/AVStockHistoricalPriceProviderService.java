@@ -2,20 +2,20 @@ package io.github.pavelbogomolenko.stockhistoricalprice;
 
 import com.google.gson.GsonBuilder;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class AVStockHistoricalPriceProviderService implements StockHistoricalPriceProviderService {
-    private final AVApiDataSource avApiDataSource;
+    private final IStockHistoricalApi dataSource;
 
-    public AVStockHistoricalPriceProviderService(AVApiDataSource avApiDataSource) {
-        this.avApiDataSource = avApiDataSource;
+    public AVStockHistoricalPriceProviderService(IStockHistoricalApi dataSource) {
+        this.dataSource = dataSource;
     }
 
     public static class Builder {
         public AVStockHistoricalPriceProviderService buildWithFsDataSource() {
-            AVApiDataSource fs = new AVFsApiDataSource();
+            IStockHistoricalApi fs = new AVStockHistoricalFsApi();
             return new AVStockHistoricalPriceProviderService(fs);
         }
     }
@@ -27,24 +27,13 @@ public class AVStockHistoricalPriceProviderService implements StockHistoricalPri
     @Override
     public StockPriceTimeSeries getStockMonthlyHistoricalPrices(StockHistoricalPriceParams params) {
         Objects.requireNonNull(params.getSymbol());
-        String rawData = this.avApiDataSource.getStockMonthlyHistoricalAdjPriceData(params.getSymbol());
+        String rawData = this.dataSource.getRawMonthlyAdjPriceData(params.getSymbol());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(StockPriceTimeSeries.class, new AVStockHistoricalAdjPriceResponseDeserializer());
         StockPriceTimeSeries response = gsonBuilder.create().fromJson(rawData, StockPriceTimeSeries.class);
 
-        if(Objects.isNull(params.getDateFrom()) && Objects.isNull(params.getDateTo())) {
-            return response;
-        }
-
-        ArrayList<StockPrice> filteredPrices = new ArrayList<>();
-        for (StockPrice price: response.getPrices()) {
-            if(shouldFilterOutPrice(price, params)) {
-                filteredPrices.add(price);
-            }
-        }
-
-        return new StockPriceTimeSeries(response.getMeta(), filteredPrices);
+        return this.filterPrices(response, params);
     }
 
     @Override
@@ -52,15 +41,14 @@ public class AVStockHistoricalPriceProviderService implements StockHistoricalPri
         return null;
     }
 
-    private boolean shouldFilterOutPrice(StockPrice price, StockHistoricalPriceParams params) {
-        YearMonth d = YearMonth.of(price.getDate().getYear(), price.getDate().getMonth());
-        if(isLocalDateBetween(d, params.getDateFrom(), params.getDateTo())) {
-            return true;
-        }
-        return false;
+    @Override
+    public StockPriceTimeSeries getStockWeeklyHistoricalPrices(StockHistoricalPriceParams params) {
+        throw new UnsupportedOperationException("getStockWeeklyHistoricalPrices is not implemented");
     }
 
-    private boolean isLocalDateBetween(YearMonth date, YearMonth from, YearMonth to) {
-        return !(date.isBefore(from) || date.isAfter(to));
+    @Override
+    public boolean isDateBetween(LocalDate date, LocalDate dateFrom, LocalDate dateTo) {
+        YearMonth ymDate = YearMonth.of(date.getYear(), date.getMonth());
+        return !(ymDate.isBefore(YearMonth.from(dateFrom)) || ymDate.isAfter(YearMonth.from(dateTo)));
     }
 }

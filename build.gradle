@@ -22,8 +22,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:3.6.0'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.slf4j:slf4j-api:1.7.30'
+    testImplementation 'net.andreinc:mockneat:0.4.8'
 }
-
 
 test {
     useJUnitPlatform()

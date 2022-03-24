@@ -1,8 +1,7 @@
 # Portfolio analysis
 
-Project contains set of services that help to get, analyze and compare portfolio
-historical data as long as portfolio individual components (stocks, funds, etfs)
-from multiple sources
+Project contains set of services and tools that help to get, analyze and compare stocks
+historical data
 
 ## Services overview
 
@@ -122,11 +121,42 @@ docker build -f docker/historical_data/eod_fetch_stock_daily_historical_prices/D
     . -t pavlobogomolenko/eod_fetch_stock_daily_historical_prices
 
 # Run
-sudo docker run -ti -v $(pwd)/data:/usr/src/app/data 
+docker run -ti -v $(pwd)/data:/usr/src/app/data 
     -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_daily_historical_prices
 
 # Push
 docker push pavlobogomolenko/eod_fetch_stock_daily_historical_prices
+```
+
+#### EOD Stock Monthly Historical Prices
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/eod_fetch_stock_monthly_historical_prices/Dockerfile 
+    . -t pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data 
+    -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
+
+# Push
+docker push pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
+```
+
+#### EOD Stock Weekly Historical Prices
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/eod_fetch_stock_weekly_historical_prices/Dockerfile 
+    . -t pavlobogomolenko/eod_fetch_stock_weekly_historical_prices
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_weekly_historical_prices
+
+# Push
+docker push pavlobogomolenko/eod_fetch_stock_weekly_historical_prices
 ```
 
 #### EOD Stock Fundamentals (overview, financials, earnings, insider and etc)
@@ -134,8 +164,7 @@ docker push pavlobogomolenko/eod_fetch_stock_daily_historical_prices
 ##### Build
 ```
 # Build
-docker build -f docker/historical_data/eod_fetch_stock_fundamentals/Dockerfile 
-    . -t pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
+docker build -f docker/historical_data/eod_fetch_stock_fundamentals/Dockerfile . -t pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
 
 # Run
 docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
@@ -144,8 +173,22 @@ docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavl
 docker push pavlobogomolenko/eod_fetch_and_save_stock_fundamentals
 ```
 
-### Portfolio Frontier
+#### EOD Stock Overview Index
 
-### Portfolio Simulation
+##### Build
+```
+# Build
+docker build -f docker/historical_data/eod_stock_fundamentals_index/Dockerfile . -t pavlobogomolenko/eod_stock_fundamentals_index
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/eod_stock_fundamentals_index
+
+# Push
+docker push pavlobogomolenko/eod_stock_overview_index
+```
+
+### Efficient Frontier
+
+### Stocks Returns Simulation
 
 ### Stock Price Forecasting

@@ -20,8 +20,8 @@ import static org.hamcrest.Matchers.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DataSetsRelationUnitTest {
     private final ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
-    private final YearMonth dateFrom = YearMonth.parse("2020-10");
-    private final  YearMonth dateTo = YearMonth.parse("2020-12");
+    private final LocalDate dateFrom = LocalDate.parse("2020-10-01");
+    private final LocalDate dateTo = LocalDate.parse("2020-12-01");
     private final StockHistoricalPriceParams msftParams = StockHistoricalPriceParams.newBuilder()
             .symbol(symbols.get(0))
             .dateFrom(dateFrom)

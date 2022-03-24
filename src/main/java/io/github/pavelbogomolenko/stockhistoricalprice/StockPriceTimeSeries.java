@@ -1,12 +1,12 @@
 package io.github.pavelbogomolenko.stockhistoricalprice;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class StockPriceTimeSeries {
     private final StockPriceMeta meta;
-    private final ArrayList<StockPrice> prices;
+    private final List<StockPrice> prices;
 
-    public StockPriceTimeSeries(StockPriceMeta meta, ArrayList<StockPrice> prices) {
+    public StockPriceTimeSeries(StockPriceMeta meta, List<StockPrice> prices) {
         this.meta = meta;
         this.prices = prices;
     }
@@ -15,7 +15,7 @@ public class StockPriceTimeSeries {
         return meta;
     }
 
-    public ArrayList<StockPrice> getPrices() {
+    public List<StockPrice> getPrices() {
         return prices;
     }
 }

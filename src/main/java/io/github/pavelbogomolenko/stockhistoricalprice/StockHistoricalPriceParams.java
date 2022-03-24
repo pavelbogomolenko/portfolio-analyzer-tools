@@ -1,57 +1,52 @@
 package io.github.pavelbogomolenko.stockhistoricalprice;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
+
 
 public class StockHistoricalPriceParams {
     private final String symbol;
-    private final YearMonth dateFrom;
-    private final YearMonth dateTo;
+    private final LocalDate dateFrom;
+    private final LocalDate dateTo;
     private final StockHistoricalPriceRangeParam range;
+    private final StockHistoricalPricePeriodParam period;
 
     private StockHistoricalPriceParams(Builder builder) {
         this.symbol = builder.symbol;
         this.dateFrom = builder.dateFrom;
         this.dateTo = builder.dateTo;
         this.range = builder.range;
+        this.period = builder.period;
     }
 
     public static class Builder {
         private String symbol;
-        private YearMonth dateFrom;
-        private YearMonth dateTo;
+        private LocalDate dateFrom;
+        private LocalDate dateTo;
         private StockHistoricalPriceRangeParam range = StockHistoricalPriceRangeParam.NO_RANGE;
+        private StockHistoricalPricePeriodParam period;
 
         public Builder symbol(String s) {
             this.symbol = s.toUpperCase();
             return this;
         }
 
-        public Builder dateFrom(YearMonth d) {
+        public Builder dateFrom(LocalDate d) {
             this.dateFrom = d;
             return this;
         }
 
-        public Builder dateTo(YearMonth d) {
+        public Builder dateTo(LocalDate d) {
             this.dateTo = d;
             return this;
         }
 
         public Builder range(StockHistoricalPriceRangeParam range) {
             this.range = range;
-            String rangeStr = this.range.getRange();
-            if (rangeStr.isEmpty()) {
-                return this;
-            }
-            int rangeValue = Integer.parseInt(rangeStr.substring(0, 1));
-            if(rangeStr.length() > 2) {
-                rangeValue = Integer.parseInt(rangeStr.substring(0, 2));
-            }
-            LocalDate dateTo = LocalDate.now().minus(1, ChronoUnit.MONTHS);
-            LocalDate dateFrom = dateTo.minus(12 * rangeValue, ChronoUnit.MONTHS);
-            this.dateFrom = YearMonth.from(dateFrom);
-            this.dateTo = YearMonth.from(dateTo);
+            return this;
+        }
+
+        public Builder period(StockHistoricalPricePeriodParam period) {
+            this.period = period;
             return this;
         }
 
@@ -68,15 +63,19 @@ public class StockHistoricalPriceParams {
         return this.symbol;
     }
 
-    public YearMonth getDateFrom() {
+    public LocalDate getDateFrom() {
         return this.dateFrom;
     }
 
-    public YearMonth getDateTo() {
+    public LocalDate getDateTo() {
         return this.dateTo;
     }
 
-    public String getRange() {
-        return this.range.getRange();
+    public StockHistoricalPriceRangeParam getRange() {
+        return this.range;
+    }
+
+    public StockHistoricalPricePeriodParam getPeriod() {
+        return this.period;
     }
 }

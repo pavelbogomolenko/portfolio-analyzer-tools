@@ -21,8 +21,8 @@ import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class StockPriceHistoricalDataSetListServiceUnitTest {
     private final ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
-    private final YearMonth dateFrom = YearMonth.parse("2020-10");
-    private final  YearMonth dateTo = YearMonth.parse("2020-12");
+    private final LocalDate dateFrom = LocalDate.parse("2020-10-01");
+    private final LocalDate dateTo = LocalDate.parse("2020-12-01");
     private final StockHistoricalPriceParams msftParams = StockHistoricalPriceParams.newBuilder()
             .symbol(symbols.get(0))
             .dateFrom(dateFrom)
@@ -118,35 +118,5 @@ public class StockPriceHistoricalDataSetListServiceUnitTest {
                 .getStockMonthlyHistoricalPrices(argThat(ibmParamMatcher));
 
         assertThat(actualResult.size(), is(equalTo(3)));
-    }
-
-    @Test
-    void shouldThrowExceptionWhenStockTimeSeriesHasLessRecordsThanMonthGivenWithDateRange() {
-        ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
-
-        AVStockHistoricalPriceProviderService avStockTimeSeriesServiceMock = mock(AVStockHistoricalPriceProviderService.class);
-
-        StockPriceMeta msftMetaData = new StockPriceMeta("a", symbols.get(0), "us");
-        StockPrice msftOctPriceData = StockPrice.newBuilder()
-                .date(LocalDate.parse("2020-10-30"))
-                .close(500)
-                .build();
-        StockPrice msftNovPriceData = StockPrice.newBuilder()
-                .date(LocalDate.parse("2020-11-30"))
-                .close(510)
-                .build();
-        ArrayList<StockPrice> msftPriceData = new ArrayList<>(Arrays.asList(msftNovPriceData, msftOctPriceData));
-        StockPriceTimeSeries msftData = new StockPriceTimeSeries(msftMetaData, msftPriceData);
-        when(avStockTimeSeriesServiceMock.getStockMonthlyHistoricalPrices(any())).thenReturn(msftData);
-
-        StockPriceHistoricalDatasetListParams params = StockPriceHistoricalDatasetListParams.newBuilder()
-                .symbols(symbols)
-                .dateFrom(YearMonth.parse("2020-10"))
-                .dateTo(YearMonth.parse("2020-12"))
-                .build();
-        assertThrows(IllegalArgumentException.class, () -> {
-            StockPriceHistoricalDataSetListService stockPriceHistoricalDataSetListService = new StockPriceHistoricalDataSetListService(avStockTimeSeriesServiceMock);
-            stockPriceHistoricalDataSetListService.getDataSetListForStocksMonthlyClosePrices(params);
-        });
     }
 }

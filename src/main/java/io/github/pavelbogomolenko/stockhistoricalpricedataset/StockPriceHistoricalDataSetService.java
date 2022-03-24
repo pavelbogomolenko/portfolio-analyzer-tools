@@ -1,21 +1,18 @@
 package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
-import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceParams;
-import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceProviderService;
-import io.github.pavelbogomolenko.stockhistoricalprice.StockPriceTimeSeries;
-import io.github.pavelbogomolenko.timeseries.DataSet;
-import io.github.pavelbogomolenko.timeseries.ListToDataSet;
+import io.github.pavelbogomolenko.stockhistoricalprice.*;
+import io.github.pavelbogomolenko.timeseries.*;
 
 
 public class StockPriceHistoricalDataSetService {
-    private final StockHistoricalPriceProviderService stockHistoricalPriceProviderService;
+    private final StockHistoricalPriceDataProviderFactory stockPriceDataProviderFactory;
 
-    public StockPriceHistoricalDataSetService(StockHistoricalPriceProviderService stockHistoricalPriceProviderService) {
-        this.stockHistoricalPriceProviderService = stockHistoricalPriceProviderService;
+    public StockPriceHistoricalDataSetService(StockHistoricalPriceDataProviderFactory stockPriceDataProviderFactory) {
+        this.stockPriceDataProviderFactory = stockPriceDataProviderFactory;
     }
 
-    public DataSet getDataSetForStockMonthlyClosePrice(StockHistoricalPriceParams params) {
-        StockPriceTimeSeries tsData = this.stockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
+    public DataSet getDataSet(StockHistoricalPriceParams params) {
+        StockPriceTimeSeries tsData = this.stockPriceDataProviderFactory.getStockPriceTimeSeries(params);
         return ListToDataSet.convert(tsData.getPrices(), "date", "adjClose");
     }
 }

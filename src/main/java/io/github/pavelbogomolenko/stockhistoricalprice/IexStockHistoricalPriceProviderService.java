@@ -32,6 +32,11 @@ public class IexStockHistoricalPriceProviderService implements StockHistoricalPr
     }
 
     @Override
+    public StockPriceTimeSeries getStockWeeklyHistoricalPrices(StockHistoricalPriceParams params) {
+        throw new UnsupportedOperationException("getStockWeeklyHistoricalPrices is not implemented");
+    }
+
+    @Override
     public StockPriceTimeSeries getStockMonthlyHistoricalPrices(StockHistoricalPriceParams params) {
         StockPriceTimeSeries stockPriceDailyTimeSeriesData = this.getStockDailyHistoricalPrices(params);
 

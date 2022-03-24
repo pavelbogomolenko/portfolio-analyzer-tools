@@ -2,13 +2,13 @@ package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
 import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceRangeParam;
 
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class StockPriceHistoricalDatasetListParams {
     private final ArrayList<String> symbols;
-    private final YearMonth dateFrom;
-    private final YearMonth dateTo;
+    private final LocalDate dateFrom;
+    private final LocalDate dateTo;
     private final StockHistoricalPriceRangeParam range;
 
     private StockPriceHistoricalDatasetListParams(Builder builder) {
@@ -20,8 +20,8 @@ public class StockPriceHistoricalDatasetListParams {
 
     public static class Builder {
         private ArrayList<String> symbols = new ArrayList<>();
-        private YearMonth dateFrom;
-        private YearMonth dateTo;
+        private LocalDate dateFrom;
+        private LocalDate dateTo;
         private StockHistoricalPriceRangeParam range;
 
         public Builder symbol(String s) {
@@ -34,12 +34,12 @@ public class StockPriceHistoricalDatasetListParams {
             return this;
         }
 
-        public Builder dateFrom(YearMonth d) {
+        public Builder dateFrom(LocalDate d) {
             this.dateFrom = d;
             return this;
         }
 
-        public Builder dateTo(YearMonth d) {
+        public Builder dateTo(LocalDate d) {
             this.dateTo = d;
             return this;
         }
@@ -62,11 +62,11 @@ public class StockPriceHistoricalDatasetListParams {
         return symbols;
     }
 
-    public YearMonth getDateFrom() {
+    public LocalDate getDateFrom() {
         return dateFrom;
     }
 
-    public YearMonth getDateTo() {
+    public LocalDate getDateTo() {
         return dateTo;
     }
 
