@@ -1,26 +1,22 @@
 package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
+import java.time.LocalDate;
+import java.util.*;
+
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 import io.github.pavelbogomolenko.timeseries.DataSet;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Arrays;
+import org.junit.jupiter.api.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class StockPriceHistoricalDataSetListServiceUnitTest {
-    private final ArrayList<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
+    private final List<String> symbols = new ArrayList<>(Arrays.asList("MSFT", "GOOGLE", "IBM"));
     private final LocalDate dateFrom = LocalDate.parse("2020-10-01");
     private final LocalDate dateTo = LocalDate.parse("2020-12-01");
     private final StockHistoricalPriceParams msftParams = StockHistoricalPriceParams.newBuilder()
@@ -94,28 +90,29 @@ public class StockPriceHistoricalDataSetListServiceUnitTest {
     }
 
     @Test
-    void shouldReturnListTSMeasures_for_given_SybmolsAndDates() {
-        AVStockHistoricalPriceProviderService avStockTimeSeriesServiceMock = mock(AVStockHistoricalPriceProviderService.class);
-        when(avStockTimeSeriesServiceMock.getStockMonthlyHistoricalPrices(any())).thenReturn(msftData, googleData,ibmData);
+    void shouldReturnDataSetList_for_given_SymbolsAndDates() {
+        StockHistoricalPriceDataProviderFactory serviceFactory = mock(StockHistoricalPriceDataProviderFactory.class);
+        when(serviceFactory.getStockPriceTimeSeries(any())).thenReturn(msftData, googleData,ibmData);
 
-        StockPriceHistoricalDatasetListParams params = StockPriceHistoricalDatasetListParams.newBuilder()
+        StockHistoricalPriceDataSetParam params = StockHistoricalPriceDataSetParam.newBuilder()
                 .symbols(symbols)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
+                .property("adjClose")
                 .build();
-        StockPriceHistoricalDataSetListService portfolio = new StockPriceHistoricalDataSetListService(avStockTimeSeriesServiceMock);
-        ArrayList<DataSet> actualResult = portfolio.getDataSetListForStocksMonthlyClosePrices(params);
+        StockPriceHistoricalDataSetService sut = new StockPriceHistoricalDataSetService(serviceFactory);
+        List<DataSet> actualResult = sut.getMonthlyAdjustedDataSetListForProperty(params);
 
         StockHistoricalPriceParamsMatcher msftParamMatcher = new StockHistoricalPriceParamsMatcher(msftParams);
         StockHistoricalPriceParamsMatcher googleParamMatcher = new StockHistoricalPriceParamsMatcher(googleParams);
         StockHistoricalPriceParamsMatcher ibmParamMatcher = new StockHistoricalPriceParamsMatcher(ibmParams);
 
-        verify(avStockTimeSeriesServiceMock, times(1))
-                .getStockMonthlyHistoricalPrices(argThat(msftParamMatcher));
-        verify(avStockTimeSeriesServiceMock, times(1))
-                .getStockMonthlyHistoricalPrices(argThat(googleParamMatcher));
-        verify(avStockTimeSeriesServiceMock, times(1))
-                .getStockMonthlyHistoricalPrices(argThat(ibmParamMatcher));
+        verify(serviceFactory, times(1))
+                .getStockPriceTimeSeries(argThat(msftParamMatcher));
+        verify(serviceFactory, times(1))
+                .getStockPriceTimeSeries(argThat(googleParamMatcher));
+        verify(serviceFactory, times(1))
+                .getStockPriceTimeSeries(argThat(ibmParamMatcher));
 
         assertThat(actualResult.size(), is(equalTo(3)));
     }

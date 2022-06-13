@@ -3,7 +3,6 @@ package io.github.pavelbogomolenko.stockhistoricalprice;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -56,14 +55,14 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         StockPriceTimeSeries stockPriceTimeSeries = avStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
         verify(avHttpApiDataSource, times(1)).getRawMonthlyAdjPriceData("AMZN");
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("info"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("symbol"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("timeZone"));
 
-        assertThat(stockPriceTimeSeries.getPrices().get(0).getDate(), is(firstPrice.getDate()));
-        assertThat(stockPriceTimeSeries.getPrices().get(1).getDate(), is(secondPrice.getDate()));
-        assertThat(stockPriceTimeSeries.getPrices().get(0).getAdjClose(), is(firstPrice.getAdjClose()));
-        assertThat(stockPriceTimeSeries.getPrices().get(1).getAdjClose(), is(secondPrice.getAdjClose()));
+        assertThat(stockPriceTimeSeries.prices().get(0).getDate(), is(firstPrice.getDate()));
+        assertThat(stockPriceTimeSeries.prices().get(1).getDate(), is(secondPrice.getDate()));
+        assertThat(stockPriceTimeSeries.prices().get(0).getAdjClose(), is(firstPrice.getAdjClose()));
+        assertThat(stockPriceTimeSeries.prices().get(1).getAdjClose(), is(secondPrice.getAdjClose()));
     }
 
     @Test
@@ -136,13 +135,13 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         StockPriceTimeSeries stockPriceTimeSeries = avStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
         verify(avHttpApiDataSource, times(1)).getRawMonthlyAdjPriceData("AMZN");
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("info"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("symbol"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("timeZone"));
 
-        assertThat(stockPriceTimeSeries.getPrices().size(), equalTo(2));
-        assertThat(stockPriceTimeSeries.getPrices().get(0).getDate(), is(novPrice.getDate()));
-        assertThat(stockPriceTimeSeries.getPrices().get(1).getDate(), is(octPrice.getDate()));
+        assertThat(stockPriceTimeSeries.prices().size(), equalTo(2));
+        assertThat(stockPriceTimeSeries.prices().get(0).getDate(), is(novPrice.getDate()));
+        assertThat(stockPriceTimeSeries.prices().get(1).getDate(), is(octPrice.getDate()));
     }
 
     @Test
@@ -190,10 +189,10 @@ public class AVStockTimeSeriesMonthlyUnitTest {
         StockPriceTimeSeries stockPriceTimeSeries = service.getStockMonthlyHistoricalPrices(params);
 
         verify(avHttpApiDs, times(1)).getRawMonthlyAdjPriceData("AMZN");
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("info"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("symbol"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("timeZone"));
 
-        assertThat(stockPriceTimeSeries.getPrices().size(), equalTo(0));
+        assertThat(stockPriceTimeSeries.prices().size(), equalTo(0));
     }
 }

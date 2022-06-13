@@ -9,7 +9,7 @@ import java.util.List;
 public class ListToDataSet {
 
     public static <T> DataSet convert(List<T> from, String dateProp, String valueProp) {
-        ArrayList<DataPoint> dataPoints = new ArrayList<>();
+        List<DataPoint> dataPoints = new ArrayList<>();
         for (T item: from) {
             LocalDate date = ListToDataSet.getProperty(item, dateProp, null);
             double value = ListToDataSet.getProperty(item, valueProp, 0.0);

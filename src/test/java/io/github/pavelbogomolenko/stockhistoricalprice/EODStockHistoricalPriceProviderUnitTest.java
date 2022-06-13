@@ -50,8 +50,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .symbol(symbol)
                 .build();
         StockPriceTimeSeries result = sut.getStockDailyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo( symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(2)));
+        assertThat(result.meta().getSymbol(), is(equalTo( symbol)));
+        assertThat(result.prices().size(), is(equalTo(2)));
     }
 
     @ParameterizedTest
@@ -79,8 +79,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .period(StockHistoricalPricePeriodParam.DAILY)
                 .build();
         StockPriceTimeSeries result = sut.getStockDailyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(daysCount)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(daysCount)));
     }
 
     @Test
@@ -99,8 +99,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .period(StockHistoricalPricePeriodParam.WEEKLY)
                 .build();
         StockPriceTimeSeries result = sut.getStockWeeklyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(1)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(1)));
     }
 
     @Test
@@ -119,8 +119,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .period(StockHistoricalPricePeriodParam.WEEKLY)
                 .build();
         StockPriceTimeSeries result = sut.getStockWeeklyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(2)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(2)));
     }
 
     @Test
@@ -139,8 +139,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .period(StockHistoricalPricePeriodParam.MONTHLY)
                 .build();
         StockPriceTimeSeries result = sut.getStockMonthlyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(3)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(3)));
     }
 
     @Test
@@ -159,8 +159,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .period(StockHistoricalPricePeriodParam.MONTHLY)
                 .build();
         StockPriceTimeSeries result = sut.getStockMonthlyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(1)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(1)));
     }
 
     @Test
@@ -179,8 +179,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .period(StockHistoricalPricePeriodParam.MONTHLY)
                 .build();
         StockPriceTimeSeries result = sut.getStockMonthlyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(0)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(0)));
     }
 
     @Test
@@ -197,8 +197,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .symbol(symbol)
                 .build();
         StockPriceTimeSeries result = sut.getStockMonthlyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo( symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(2)));
+        assertThat(result.meta().getSymbol(), is(equalTo( symbol)));
+        assertThat(result.prices().size(), is(equalTo(2)));
     }
 
     @Test
@@ -215,8 +215,8 @@ public class EODStockHistoricalPriceProviderUnitTest {
                 .symbol(symbol)
                 .build();
         StockPriceTimeSeries result = sut.getStockWeeklyHistoricalPrices(params);
-        assertThat(result.getMeta().getSymbol(), is(equalTo(symbol)));
-        assertThat(result.getPrices().size(), is(equalTo(2)));
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(2)));
     }
 
     private String buildFsApiResponseForDateUnit(int count, ChronoUnit chronoUnit) {

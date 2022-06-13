@@ -26,7 +26,7 @@ public interface StockHistoricalPriceProviderService {
     StockPriceTimeSeries getStockWeeklyHistoricalPrices(StockHistoricalPriceParams params);
 
     default StockPriceTimeSeries filterPrices(StockPriceTimeSeries priceTimeSeries, StockHistoricalPriceParams params) {
-        if(priceTimeSeries.getPrices().size() == 0) {
+        if(priceTimeSeries.prices().size() == 0) {
             return priceTimeSeries;
         }
 
@@ -34,13 +34,13 @@ public interface StockHistoricalPriceProviderService {
         if(params.getRange() != null && params.getRange() != StockHistoricalPriceRangeParam.NO_RANGE) {
             int limit = this.calculateRangeLimit(params.getRange(), params.getPeriod());
             int count = 0;
-            for (StockPrice price: priceTimeSeries.getPrices()) {
+            for (StockPrice price: priceTimeSeries.prices()) {
                 if(count++ < limit) {
                     filteredPrices.add(price);
                 }
             }
         } else if(params.getDateFrom() != null && params.getDateTo() != null) {
-            for (StockPrice price: priceTimeSeries.getPrices()) {
+            for (StockPrice price: priceTimeSeries.prices()) {
                 if(isDateBetween(price.getDate(), params.getDateFrom(), params.getDateTo())) {
                     filteredPrices.add(price);
                 }
@@ -49,7 +49,7 @@ public interface StockHistoricalPriceProviderService {
             return priceTimeSeries;
         }
 
-        return new StockPriceTimeSeries(priceTimeSeries.getMeta(), filteredPrices);
+        return new StockPriceTimeSeries(priceTimeSeries.meta(), filteredPrices);
     }
 
     default int calculateRangeLimit(StockHistoricalPriceRangeParam range, StockHistoricalPricePeriodParam period) {

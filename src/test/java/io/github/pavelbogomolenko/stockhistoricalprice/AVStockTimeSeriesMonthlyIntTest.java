@@ -19,16 +19,16 @@ public class AVStockTimeSeriesMonthlyIntTest {
                 .build();
         StockPriceTimeSeries stockPriceTimeSeries = avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(params);
 
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("info"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("symbol"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("timeZone"));
 
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("date"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("open"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("low"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("high"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("close"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("volume"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("date"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("open"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("low"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("high"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("close"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("volume"));
     }
 
     @Test
@@ -42,15 +42,15 @@ public class AVStockTimeSeriesMonthlyIntTest {
                 .build();
         StockPriceTimeSeries stockPriceTimeSeries = avStockTimeSeriesServiceImpl.getStockMonthlyHistoricalPrices(params);
 
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("info"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("symbol"));
-        assertThat(stockPriceTimeSeries.getMeta(), hasProperty("timeZone"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("info"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("symbol"));
+        assertThat(stockPriceTimeSeries.meta(), hasProperty("timeZone"));
 
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("date"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("open"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("low"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("high"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("close"));
-        assertThat(stockPriceTimeSeries.getPrices().get(0), hasProperty("volume"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("date"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("open"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("low"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("high"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("close"));
+        assertThat(stockPriceTimeSeries.prices().get(0), hasProperty("volume"));
     }
 }

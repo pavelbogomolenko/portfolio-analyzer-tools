@@ -136,7 +136,7 @@ public class DataSet {
                 .symbol("MSFT")
                 .build();
         StockPriceTimeSeries data = stockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
-        DataSet ds = ListToDataSet.convert(data.getPrices(), "date", "close");
+        DataSet ds = ListToDataSet.convert(data.prices(), "date", "close");
         System.out.println("Stock: " + params.getSymbol());
         System.out.println("Returns: " + Arrays.toString(ds.getGrowthRates().toArray()));
         System.out.println("AverageReturn: " + ds.getAverageGrowth());

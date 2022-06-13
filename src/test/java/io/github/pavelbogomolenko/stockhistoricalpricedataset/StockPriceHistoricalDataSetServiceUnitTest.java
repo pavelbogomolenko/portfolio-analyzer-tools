@@ -42,11 +42,47 @@ public class StockPriceHistoricalDataSetServiceUnitTest {
 
         StockPriceHistoricalDataSetService sut = new StockPriceHistoricalDataSetService(mockPriceProvider);
 
-        StockHistoricalPriceParams sutParams = StockHistoricalPriceParams.newBuilder()
+        StockHistoricalPriceDataSetParam sutParams = StockHistoricalPriceDataSetParam.newBuilder()
                 .symbol(symbol)
+                .property("adjClose")
                 .build();
-        DataSet actualResult = sut.getDataSet(sutParams);
+        DataSet actualResult = sut.getDataSetForProperty(sutParams);
         DataSet expectedDataSet = ListToDataSet.convert(msftPriceData, "date", "adjClose");
+
+        assertThat(actualResult.getAverageGrowth(), is(expectedDataSet.getAverageGrowth()));
+        assertThat(actualResult.getStdDev(), is(expectedDataSet.getStdDev()));
+    }
+
+    @Test
+    void shouldGetDataSetForStockMonthlyVolume() {
+        String symbol = "msft";
+        StockPriceMeta msftMetaData = new StockPriceMeta("a", symbol, "us");
+        StockPrice msftOctPriceData = StockPrice.newBuilder()
+                .date(LocalDate.parse("2020-10-30"))
+                .volume(1000000)
+                .build();
+        StockPrice msftNovPriceData = StockPrice.newBuilder()
+                .date(LocalDate.parse("2020-11-30"))
+                .volume(1001500)
+                .build();
+        StockPrice msftDecPriceData = StockPrice.newBuilder()
+                .date(LocalDate.parse("2020-12-30"))
+                .volume(1001000)
+                .build();
+        ArrayList<StockPrice> msftPriceData = new ArrayList<>(Arrays.asList(msftDecPriceData, msftNovPriceData, msftOctPriceData));
+        StockPriceTimeSeries msftTs = new StockPriceTimeSeries(msftMetaData, msftPriceData);
+
+        StockHistoricalPriceDataProviderFactory mockPriceProvider = mock(StockHistoricalPriceDataProviderFactory.class);
+        when(mockPriceProvider.getStockPriceTimeSeries(any())).thenReturn(msftTs);
+
+        StockPriceHistoricalDataSetService sut = new StockPriceHistoricalDataSetService(mockPriceProvider);
+
+        StockHistoricalPriceDataSetParam sutParams = StockHistoricalPriceDataSetParam.newBuilder()
+                .symbol(symbol)
+                .property("volume")
+                .build();
+        DataSet actualResult = sut.getDataSetForProperty(sutParams);
+        DataSet expectedDataSet = ListToDataSet.convert(msftPriceData, "date", "volume");
 
         assertThat(actualResult.getAverageGrowth(), is(expectedDataSet.getAverageGrowth()));
         assertThat(actualResult.getStdDev(), is(expectedDataSet.getStdDev()));
@@ -75,10 +111,10 @@ public class StockPriceHistoricalDataSetServiceUnitTest {
         when(mockPriceProvider.getStockPriceTimeSeries(any())).thenReturn(msftTs);
 
         StockPriceHistoricalDataSetService sut = new StockPriceHistoricalDataSetService(mockPriceProvider);
-        StockHistoricalPriceParams sutParams = StockHistoricalPriceParams.newBuilder()
+        StockHistoricalPriceDataSetParam sutParams = StockHistoricalPriceDataSetParam.newBuilder()
                 .symbol(symbol)
                 .build();
-        DataSet actualResult = sut.getDataSet(sutParams);
+        DataSet actualResult = sut.getDataSetForProperty(sutParams);
 
         assertThat(actualResult.getDataPoints().size(), is(equalTo(msftPriceData.size())));
     }

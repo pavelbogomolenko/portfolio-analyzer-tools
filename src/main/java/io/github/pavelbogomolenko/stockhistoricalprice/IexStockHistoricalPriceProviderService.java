@@ -40,8 +40,8 @@ public class IexStockHistoricalPriceProviderService implements StockHistoricalPr
     public StockPriceTimeSeries getStockMonthlyHistoricalPrices(StockHistoricalPriceParams params) {
         StockPriceTimeSeries stockPriceDailyTimeSeriesData = this.getStockDailyHistoricalPrices(params);
 
-        StockPrice firstPrice = stockPriceDailyTimeSeriesData.getPrices().get(0);
-        Iterator<StockPrice> priceIterator = stockPriceDailyTimeSeriesData.getPrices().iterator();
+        StockPrice firstPrice = stockPriceDailyTimeSeriesData.prices().get(0);
+        Iterator<StockPrice> priceIterator = stockPriceDailyTimeSeriesData.prices().iterator();
 
         ArrayList<StockPrice> monthlyPrices = new ArrayList<>();
         StockPrice prevPrice = firstPrice;
@@ -55,7 +55,7 @@ public class IexStockHistoricalPriceProviderService implements StockHistoricalPr
             }
             prevPrice = curPrice;
         }
-        StockPriceMeta meta = stockPriceDailyTimeSeriesData.getMeta();
+        StockPriceMeta meta = stockPriceDailyTimeSeriesData.meta();
         return new StockPriceTimeSeries(meta, monthlyPrices);
     }
 }

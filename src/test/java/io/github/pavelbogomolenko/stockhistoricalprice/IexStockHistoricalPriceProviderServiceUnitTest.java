@@ -40,8 +40,8 @@ public class IexStockHistoricalPriceProviderServiceUnitTest {
         StockPriceTimeSeries response = iexStockHistoricalPriceProviderService.getStockDailyHistoricalPrices(params);
 
         assertThat(response, is(notNullValue()));
-        assertThat(response.getPrices().get(0).getDate(), is(firstPrice.getDate()));
-        assertThat(response.getPrices().get(1).getDate(), is(secondPrice.getDate()));
+        assertThat(response.prices().get(0).getDate(), is(firstPrice.getDate()));
+        assertThat(response.prices().get(1).getDate(), is(secondPrice.getDate()));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class IexStockHistoricalPriceProviderServiceUnitTest {
         StockPriceTimeSeries response = iexStockHistoricalPriceProviderService.getStockDailyHistoricalPrices(params);
 
         assertThat(response, is(notNullValue()));
-        assertThat(response.getPrices().get(0).getDate(), is(firstPrice.getDate()));
-        assertThat(response.getPrices().get(1).getDate(), is(secondPrice.getDate()));
+        assertThat(response.prices().get(0).getDate(), is(firstPrice.getDate()));
+        assertThat(response.prices().get(1).getDate(), is(secondPrice.getDate()));
     }
 
     @Test
@@ -121,8 +121,8 @@ public class IexStockHistoricalPriceProviderServiceUnitTest {
         IexStockHistoricalPriceProviderService iexStockHistoricalPriceProviderService = new IexStockHistoricalPriceProviderService(requestMock);
         StockPriceTimeSeries stockPriceTimeSeries = iexStockHistoricalPriceProviderService.getStockMonthlyHistoricalPrices(params);
 
-        assertThat(stockPriceTimeSeries.getPrices().size(), is(equalTo(2)));
-        assertThat(stockPriceTimeSeries.getPrices().get(0).getDate(), is(p1.getDate()));
-        assertThat(stockPriceTimeSeries.getPrices().get(1).getDate(), is(p3.getDate()));
+        assertThat(stockPriceTimeSeries.prices().size(), is(equalTo(2)));
+        assertThat(stockPriceTimeSeries.prices().get(0).getDate(), is(p1.getDate()));
+        assertThat(stockPriceTimeSeries.prices().get(1).getDate(), is(p3.getDate()));
     }
 }

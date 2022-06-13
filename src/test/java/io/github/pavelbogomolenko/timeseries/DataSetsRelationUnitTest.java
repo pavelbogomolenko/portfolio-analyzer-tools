@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -94,9 +93,9 @@ public class DataSetsRelationUnitTest {
 
     @Test
     void shouldBuildReturnsVarianceCovarianceMatrix() {
-        DataSet msftTs = ListToDataSet.convert(msftData.getPrices(), "date", "close");
-        DataSet googleTs = ListToDataSet.convert(googleData.getPrices(), "date", "close");
-        DataSet ibmTs = ListToDataSet.convert(ibmData.getPrices(), "date", "close");
+        DataSet msftTs = ListToDataSet.convert(msftData.prices(), "date", "close");
+        DataSet googleTs = ListToDataSet.convert(googleData.prices(), "date", "close");
+        DataSet ibmTs = ListToDataSet.convert(ibmData.prices(), "date", "close");
         ArrayList<DataSet> ts = new ArrayList<>(Arrays.asList(msftTs, googleTs, ibmTs));
 
         DataSetsRelation relations = new DataSetsRelation();
