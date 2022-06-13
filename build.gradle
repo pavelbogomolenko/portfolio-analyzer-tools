@@ -35,4 +35,3 @@ test {
 application {
     mainClass = 'io.github.pavelbogomolenko.timeseries.DataSetsRelation'
 }
-

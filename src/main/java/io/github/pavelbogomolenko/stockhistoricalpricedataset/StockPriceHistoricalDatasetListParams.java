@@ -4,9 +4,10 @@ import io.github.pavelbogomolenko.stockhistoricalprice.StockHistoricalPriceRange
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StockPriceHistoricalDatasetListParams {
-    private final ArrayList<String> symbols;
+    private final List<String> symbols;
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
     private final StockHistoricalPriceRangeParam range;
@@ -19,7 +20,7 @@ public class StockPriceHistoricalDatasetListParams {
     }
 
     public static class Builder {
-        private ArrayList<String> symbols = new ArrayList<>();
+        private List<String> symbols = new ArrayList<>();
         private LocalDate dateFrom;
         private LocalDate dateTo;
         private StockHistoricalPriceRangeParam range;
@@ -29,7 +30,7 @@ public class StockPriceHistoricalDatasetListParams {
             return this;
         }
 
-        public Builder symbols(ArrayList<String> s) {
+        public Builder symbols(List<String> s) {
             this.symbols = s;
             return this;
         }
@@ -58,7 +59,7 @@ public class StockPriceHistoricalDatasetListParams {
         return new Builder();
     }
 
-    public ArrayList<String> getSymbols() {
+    public List<String> getSymbols() {
         return symbols;
     }
 

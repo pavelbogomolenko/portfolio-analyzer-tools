@@ -1,6 +1,7 @@
 package io.github.pavelbogomolenko.stockhistoricalpricedataset;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.github.pavelbogomolenko.stockhistoricalprice.*;
 import io.github.pavelbogomolenko.timeseries.ListToDataSet;
@@ -16,7 +17,8 @@ public class StockPriceHistoricalDataSetListService {
 
     public ArrayList<DataSet> getDataSetListForStocksMonthlyClosePrices(StockPriceHistoricalDatasetListParams stockPriceHistoricalDatasetListParams) {
         ArrayList<DataSet> allClosePriceTSMeasures = new ArrayList<>();
-        int prevCount = 0;
+        int prevStockPriceCount = 0;
+        int symbolCounter = 0;
         for(String symbol: stockPriceHistoricalDatasetListParams.getSymbols()) {
             StockHistoricalPriceParams.Builder serviceParamBuilder = StockHistoricalPriceParams.newBuilder()
                     .period(StockHistoricalPricePeriodParam.MONTHLY)
@@ -34,12 +36,22 @@ public class StockPriceHistoricalDataSetListService {
             if(stockPricesSize == 0) {
                 throw new RuntimeException(String.format("No data found for stock '%s'", symbol));
             }
-            if(prevCount > 0 && prevCount != stockPricesSize) {
-                throw new RuntimeException(String.format("Stock data for '%s' less than given time range", symbol));
+            if(prevStockPriceCount > 0 && prevStockPriceCount != stockPricesSize) {
+                if(prevStockPriceCount > stockPricesSize) {
+                    for(int i = 0; i < symbolCounter; i++) {
+                        DataSet prevDs = allClosePriceTSMeasures.get(i);
+                        prevDs = prevDs.sliceFromHead(stockPricesSize);
+                        allClosePriceTSMeasures.remove(i);
+                        allClosePriceTSMeasures.add(i, prevDs);
+                    }
+                } else {
+                    data = new StockPriceTimeSeries(data.getMeta(), data.getPrices().subList(0, prevStockPriceCount));
+                }
             }
-            prevCount = stockPricesSize;
+            prevStockPriceCount = stockPricesSize;
             DataSet closePriceDataSet = ListToDataSet.convert(data.getPrices(), "date", "adjClose");
-            allClosePriceTSMeasures.add(closePriceDataSet);
+            allClosePriceTSMeasures.add(symbolCounter, closePriceDataSet);
+            symbolCounter++;
         }
         return allClosePriceTSMeasures;
     }
