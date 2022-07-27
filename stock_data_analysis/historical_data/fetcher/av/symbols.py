@@ -183,7 +183,7 @@ SP500 = [
     "EXR",
     "XOM",
     "FFIV",
-    "FB",
+    "META",
     "FAST",
     "FRT",
     "FDX",

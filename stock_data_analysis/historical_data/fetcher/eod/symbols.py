@@ -183,7 +183,7 @@ SP500 = [
     "EXR",
     "XOM",
     "FFIV",
-    "FB",
+    "META",
     "FAST",
     "FRT",
     "FDX",
@@ -618,4 +618,33 @@ CHINA_TECH = [
     "BIDU"
 ]
 
-ALL = sorted(set(SP500 + NASDAQ100 + CHINA_TECH))
+LAT = [
+    "MELI",
+    "STNE",
+    "FMX",
+    "SE"
+]
+
+US_TECH_GROWTH = [
+    "SHOP",
+    "SNAP",
+    "TWLO",
+    "ROKU",
+    "ZM",
+    "PLTR",
+    "DOCU",
+    "CRM",
+    "DDOG",
+    "SNOW"
+]
+
+HEALTH = [
+    "MRK",
+    "BNTX",
+    "BAYRY",
+    "ZTS",
+    "PFE",
+    "JNJ"
+]
+
+ALL = sorted(set(SP500 + NASDAQ100 + CHINA_TECH + LAT + US_TECH_GROWTH + HEALTH))
