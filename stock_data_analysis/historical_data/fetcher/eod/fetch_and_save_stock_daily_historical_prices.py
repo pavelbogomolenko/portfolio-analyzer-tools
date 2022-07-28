@@ -12,7 +12,7 @@ DIRNAME = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == '__main__':
     path = os.path.join(DIRNAME, "data/stockprice/daily/")
-    years_ago = datetime.now() - relativedelta(years=15)
+    years_ago = datetime.now() - relativedelta(years=1)
     date_from = years_ago.strftime("%Y-%m-%d")
     get_stock_daily_price_partial = partial(get_stock_daily_price_data_for_symbol, date_from=date_from)
     fetch_and_save_data_for_symbols(path, get_stock_daily_price_partial)
