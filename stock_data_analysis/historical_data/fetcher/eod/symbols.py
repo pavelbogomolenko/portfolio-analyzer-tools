@@ -647,4 +647,47 @@ HEALTH = [
     "JNJ"
 ]
 
-ALL = sorted(set(SP500 + NASDAQ100 + CHINA_TECH + LAT + US_TECH_GROWTH + HEALTH))
+DAX = [
+    "LIN.F",
+    "SAP.F",
+    "VOW3.F",
+    "DTE.F",
+    "MRK.F",
+    "AIR.F",
+    "ALV.F",
+    "MBG.F",
+    "BAYN.F",
+    "SHL.F",
+    "BMW.F",
+    "DPW.F",
+    "BAS.F",
+    "IFX.F",
+    "ADS.F",
+    "MUV2.F",
+    "DB1.F",
+    "SRT.F",
+    "HEN3.F",
+    "RWE.F",
+    "VNA.F",
+    "BEI.F",
+    "EOAN.F",
+    "PAH3.F",
+    "DBK.F",
+    "SY1.F",
+    "FRE.F",
+    "CON.F",
+    "FMS.F",
+    "ENR.F",
+    "DHER.F",
+    "PUM.F",
+    "ZAL.F",
+]
+
+JPN = [
+    "TM",
+    "SONY",
+    "NTDOY",
+    "HMC"
+]
+
+ALL = sorted(set(SP500 + NASDAQ100 + CHINA_TECH + LAT + US_TECH_GROWTH + HEALTH + DAX + JPN))
