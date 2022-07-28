@@ -39,7 +39,11 @@ def create_update_stock_overview_index_file_from_path(path):
                         "PERatio": highlights["PERatio"],
                         "PEGRatio": highlights["PEGRatio"],
                         "BookValue": highlights["BookValue"],
-                        "EarningsShare": highlights["EarningsShare"]
+                        "EarningsShare": highlights["EarningsShare"],
+                        "ProfitMargin":	highlights["ProfitMargin"],
+                        "OperatingMarginTTM": highlights["OperatingMarginTTM"],
+                        "RevenuePerShareTTM": highlights["RevenuePerShareTTM"],
+                        "QuarterlyRevenueGrowthYOY": highlights["QuarterlyRevenueGrowthYOY"],
                     },
                     "Valuation": {
                         "PriceSalesTTM": valuation["PriceSalesTTM"],

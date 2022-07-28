@@ -187,6 +187,20 @@ docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/eod_stock_funda
 docker push pavlobogomolenko/eod_stock_overview_index
 ```
 
+#### EOD Stock Sector Stats Index
+
+##### Build
+```
+# Build
+docker build -f docker/historical_data/eod_stock_sector_stats_index/Dockerfile . -t pavlobogomolenko/eod_stock_sector_stats_index
+
+# Run
+docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/eod_stock_sector_stats_index
+
+# Push
+docker push pavlobogomolenko/eod_stock_sector_stats_index
+```
+
 ### Efficient Frontier
 
 ### Stocks Returns Simulation
