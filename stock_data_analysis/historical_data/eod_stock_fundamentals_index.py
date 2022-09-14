@@ -2,13 +2,26 @@ import glob
 import json
 
 INDEX_OUTPUT_FILENAME = "index.json"
+EXCLUDE_LIST = ["index.json", "df_index.json", "df_industry_ranked_key_highlights_index.json",
+                "industry_grouped_key_valuations_highlights_index.json"]
+
+
+def __filter_file__(filename):
+    if filename.islower() is True:
+        return True
+
+    for exclude_file in EXCLUDE_LIST:
+        if filename.find(exclude_file) > -1:
+            return True
+
+    return False
 
 
 def create_update_stock_overview_index_file_from_path(path):
     overview_files = glob.glob(path + "*.json")
     json_lines = []
     for overview_file in overview_files:
-        if overview_file.find(INDEX_OUTPUT_FILENAME) > -1:
+        if __filter_file__(overview_file) is True:
             continue
         with open(overview_file) as f:
             try:
@@ -21,9 +34,11 @@ def create_update_stock_overview_index_file_from_path(path):
                 valuation = overview_content["Valuation"]
                 technicals = overview_content["Technicals"]
                 stats = overview_content["SharesStats"]
+                exch = ".F" if general["Exchange"] == "F" else ""
+                code = general["Code"].lower() + exch.lower()
                 d = {
                     "General": {
-                        "Code": general["Code"].lower(),
+                        "Code": code,
                         "Type": general["Type"],
                         "Name": general["Name"],
                         "Description": "",

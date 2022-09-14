@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./eod_stock_sector_stats_index.py" ]
+CMD [ "python", "./eod_stock_stats_by_industry_index.py" ]

@@ -690,4 +690,317 @@ JPN = [
     "HMC"
 ]
 
-ALL = sorted(set(SP500 + NASDAQ100 + CHINA_TECH + LAT + US_TECH_GROWTH + HEALTH + DAX + JPN))
+# "Beverages-Wineries & Distilleries"
+MISC_BEV = [
+    "DEO",
+    "MGPI",
+    "NAPA",
+    "BF-B"
+]
+
+# "Business Equipment & Supplies"
+MISC_BUSE = [
+    "ACCO",
+    "HNI",
+    "SCS"
+]
+
+# copper
+MISC_CPR = [
+    "SCCO",
+    "TRQ",
+    "HBM"
+]
+
+# food
+MISC_FOOD = [
+    "USFD",
+    "PFGC",
+    "CHEF",
+    "ANDE"
+]
+
+# gold
+MISC_GOLD = [
+    "AEM",
+    "GOLD",
+    "KGC",
+    "WPM"
+]
+
+# grocery stores
+MISC_GROCERY = [
+    "ACI",
+    "SFM",
+    "GO",
+    "DNUT"
+]
+
+#Insurance-Specialty
+MISC_INSU = [
+    "NMIH",
+    "AGO",
+    "FNF",
+    "RDN"
+]
+
+# Leisure
+MISC_LEISURE = [
+    "MAT",
+    "FNKO",
+    "SIX",
+    "JAKK"
+]
+
+# Lodging
+MISC_LODGING = [
+    "HLT",
+    "H",
+    "CHH",
+    "IHG",
+    "WH"
+]
+
+# Luxury Goods
+MISC_LUX = [
+    "CPRI",
+    "SIG",
+    "MOV",
+    "LVMUY",
+    "FOSL"
+]
+
+# Personal Services
+MISC_PERSONAL = [
+    "TMX",
+    "CSV",
+    "FTDR",
+    "SCI",
+    "BFAM"
+]
+
+# Pharmaceutical Retailers
+MISC_PHARM_R = [
+    "RAD",
+    "PETS",
+    "BIMI",
+    "HITI",
+    "LFMD"
+]
+
+# REIT-Hotel & Motel
+MISC_REIT_HM = [
+    "PK",
+    "DRH",
+    "PEB",
+    "RLJ",
+    "SHO",
+]
+
+MISC_RENTAL_LEAS = [
+    "HRI",
+    "UHAL",
+    "AER",
+    "CAR",
+    "AL",
+]
+
+MISC_SEC_PROT = [
+    "MSA",
+    "REZI",
+    "BRC",
+    "NSSC",
+    "NL",
+]
+
+MISC_SOLAR = [
+    "SEDG",
+    "FSLR",
+    "RUN",
+    "SPWR",
+    "CSIQ",
+]
+
+MISC_STEEL = [
+    "STLD",
+    "X",
+    "CLF",
+    "MT",
+    "CMC",
+]
+
+MISC_TOBACCO = [
+    "PM",
+    "BTI",
+    "UVV",
+    "VGR",
+    "IMBBY",
+]
+
+MISC_IND_POWER = [
+    "VST",
+    "KEN",
+    "TAC",
+    "PAM",
+    "UNPRF",
+]
+
+MISC_UT_WATER = [
+    "AWR",
+    "WTRG",
+    "CWT",
+    "YORW",
+    "CWCO",
+]
+
+MISC_ADVERT = [
+    "IPG",
+    "WPP",
+    "ZD",
+]
+
+MISC_AUTO_TRUCK = [
+    "LAD",
+    "KAR",
+    "AN"
+]
+
+MISC_BEV = [
+    "CCU",
+    "ABEV",
+    "HEINY",
+]
+
+MISC_MAT = [
+    "EXP",
+    "SUM",
+    "CX",
+]
+
+MISC_CEM = [
+    "HUN",
+    "TROX",
+    "DOW",
+]
+
+MISC_CONF = [
+    "TR",
+    "LDSVF",
+    "RSGUF",
+]
+
+MISC_CONG = [
+    "MDU",
+    "IEP",
+    "VMI"
+]
+
+MISC_CONS_E = [
+    "LPL",
+    "GPRO",
+    "SONO",
+    "XIACY"
+]
+
+MISC_E_CONST = [
+    "ACM",
+    "KBR",
+    "TTEK"
+]
+
+MISC_FARM_P = [
+    "BG",
+    "CALM",
+    "DOLE",
+    "APPH"
+]
+
+MISC_HOME_IMPR = [
+    "FND",
+    "LL",
+    "ARHS"
+]
+
+MISC_RE_INS = [
+    "RNR",
+    "RGA",
+    "SSREY"
+]
+
+MISC_OIL_GAS = [
+    "BP",
+    "SHEL",
+    "PBR",
+    "SU"
+]
+
+MISC_RES = [
+    "NMRK",
+    "CWK",
+    "JLL",
+]
+
+MISC_RES_CAS = [
+    "CZR",
+    "BYD",
+    "WYNN",
+    "PENN",
+]
+
+
+# TODO check rest
+MISC_REST = [
+    "DPZ",
+    "MCD",
+    "SBUX",
+    "BROS",
+]
+
+MISC_SPEC_BUS_S = [
+    "ARMK",
+    "LZ",
+    "MMS",
+    "IAA",
+]
+
+MISC_TOOLS_ACC = [
+    "TTC",
+    "SWT",
+    "TTNDY",
+]
+
+MISC_TRAVEL = [
+    "TRIP",
+    "ABNB",
+    "RCL",
+    "NCLH",
+]
+
+MISC_REG_GAS = [
+    "NJR",
+    "NWM",
+    "OGS",
+]
+
+MISC_WM = [
+    "WCN",
+    "CLH",
+    "GFL",
+    "LICY",
+]
+
+MISC_TRUCKING = [
+    "SAIA",
+    "KNX",
+    "ARCB",
+    "YELL",
+]
+
+ALL = sorted(set(SP500 + NASDAQ100 + CHINA_TECH + LAT + US_TECH_GROWTH + HEALTH + DAX + JPN
+                 + MISC_BEV + MISC_BUSE + MISC_CPR + MISC_FOOD + MISC_GOLD + MISC_GROCERY + MISC_INSU + MISC_LEISURE
+                 + MISC_LODGING + MISC_LUX + MISC_PERSONAL + MISC_PHARM_R + MISC_REIT_HM + MISC_RENTAL_LEAS
+                 + MISC_SEC_PROT + MISC_SOLAR + MISC_STEEL + MISC_TOBACCO + MISC_IND_POWER + MISC_UT_WATER
+                 + MISC_ADVERT + MISC_AUTO_TRUCK + MISC_BEV + MISC_MAT + MISC_CEM + MISC_CONF + MISC_CONG
+                 + MISC_CONS_E + MISC_E_CONST + MISC_FARM_P + MISC_HOME_IMPR + MISC_RE_INS + MISC_OIL_GAS + MISC_RES
+                 + MISC_RES_CAS + MISC_REST + MISC_SPEC_BUS_S + MISC_TOOLS_ACC + MISC_TRAVEL + MISC_REG_GAS + MISC_WM
+                 + MISC_TRUCKING))

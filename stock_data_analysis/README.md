@@ -117,12 +117,10 @@ docker push pavlobogomolenko/fetch_us_treasury_yields
 ##### Build
 ```
 # Build
-docker build -f docker/historical_data/eod_fetch_stock_daily_historical_prices/Dockerfile 
-    . -t pavlobogomolenko/eod_fetch_stock_daily_historical_prices
+docker build -f docker/historical_data/eod_fetch_stock_daily_historical_prices/Dockerfile . -t pavlobogomolenko/eod_fetch_stock_daily_historical_prices
 
 # Run
-docker run -ti -v $(pwd)/data:/usr/src/app/data 
-    -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_daily_historical_prices
+docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_daily_historical_prices
 
 # Push
 docker push pavlobogomolenko/eod_fetch_stock_daily_historical_prices
@@ -133,12 +131,10 @@ docker push pavlobogomolenko/eod_fetch_stock_daily_historical_prices
 ##### Build
 ```
 # Build
-docker build -f docker/historical_data/eod_fetch_stock_monthly_historical_prices/Dockerfile 
-    . -t pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
+docker build -f docker/historical_data/eod_fetch_stock_monthly_historical_prices/Dockerfile . -t pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
 
 # Run
-docker run -ti -v $(pwd)/data:/usr/src/app/data 
-    -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
+docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
 
 # Push
 docker push pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
@@ -149,8 +145,7 @@ docker push pavlobogomolenko/eod_fetch_stock_monthly_historical_prices
 ##### Build
 ```
 # Build
-docker build -f docker/historical_data/eod_fetch_stock_weekly_historical_prices/Dockerfile 
-    . -t pavlobogomolenko/eod_fetch_stock_weekly_historical_prices
+docker build -f docker/historical_data/eod_fetch_stock_weekly_historical_prices/Dockerfile . -t pavlobogomolenko/eod_fetch_stock_weekly_historical_prices
 
 # Run
 docker run -ti -v $(pwd)/data:/usr/src/app/data -e EOD_API_KEY=YOUR_API_KEY pavlobogomolenko/eod_fetch_stock_weekly_historical_prices
@@ -187,18 +182,18 @@ docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/eod_stock_funda
 docker push pavlobogomolenko/eod_stock_overview_index
 ```
 
-#### EOD Stock Sector Stats Index
+#### EOD Stock Fundamental Stats By Industry Index
 
 ##### Build
 ```
 # Build
-docker build -f docker/historical_data/eod_stock_sector_stats_index/Dockerfile . -t pavlobogomolenko/eod_stock_sector_stats_index
+docker build -f docker/historical_data/eod_stock_stats_by_industry_index/Dockerfile . -t pavlobogomolenko/eod_stock_stats_by_industry_index
 
 # Run
-docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/eod_stock_sector_stats_index
+docker run -ti -v $(pwd)/data:/usr/src/app/data pavlobogomolenko/eod_stock_stats_by_industry_index
 
 # Push
-docker push pavlobogomolenko/eod_stock_sector_stats_index
+docker push pavlobogomolenko/eod_stock_stats_by_industry_index
 ```
 
 ### Efficient Frontier
