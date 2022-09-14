@@ -219,6 +219,24 @@ public class EODStockHistoricalPriceProviderUnitTest {
         assertThat(result.prices().size(), is(equalTo(2)));
     }
 
+    @Test
+    void getStockYearlyHistoricalTimeSeriesDataBySymbol() {
+        String symbol = "BABA";
+        String apiResponse = this.buildFsApiResponseForDateUnit(36, ChronoUnit.MONTHS);
+        IStockHistoricalApi eodHistoricalPriceFsApi = mock(EODHistoricalPriceFsApi.class);
+        when(eodHistoricalPriceFsApi.getRawMonthlyAdjPriceData(symbol)).thenReturn(apiResponse);
+
+        EODStockHistoricalPriceProviderService sut = new EODStockHistoricalPriceProviderService(eodHistoricalPriceFsApi);
+
+        StockHistoricalPriceParams params = StockHistoricalPriceParams
+                .newBuilder()
+                .symbol(symbol)
+                .build();
+        StockPriceTimeSeries result = sut.getStockYearlyHistoricalPrices(params);
+        assertThat(result.meta().getSymbol(), is(equalTo(symbol)));
+        assertThat(result.prices().size(), is(equalTo(4)));
+    }
+
     private String buildFsApiResponseForDateUnit(int count, ChronoUnit chronoUnit) {
         LocalDate to = LocalDate.now();
         List<String> dates = new ArrayList<>();

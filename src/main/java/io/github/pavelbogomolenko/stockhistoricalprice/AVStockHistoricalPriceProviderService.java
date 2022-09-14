@@ -25,6 +25,11 @@ public class AVStockHistoricalPriceProviderService implements StockHistoricalPri
     }
 
     @Override
+    public StockPriceTimeSeries getStockYearlyHistoricalPrices(StockHistoricalPriceParams params) {
+        throw new UnsupportedOperationException("getStockYearlyHistoricalPrices is not implemented");
+    }
+
+    @Override
     public StockPriceTimeSeries getStockMonthlyHistoricalPrices(StockHistoricalPriceParams params) {
         Objects.requireNonNull(params.getSymbol());
         String rawData = this.dataSource.getRawMonthlyAdjPriceData(params.getSymbol());
@@ -33,7 +38,7 @@ public class AVStockHistoricalPriceProviderService implements StockHistoricalPri
         gsonBuilder.registerTypeAdapter(StockPriceTimeSeries.class, new AVStockHistoricalAdjPriceResponseDeserializer());
         StockPriceTimeSeries response = gsonBuilder.create().fromJson(rawData, StockPriceTimeSeries.class);
 
-        return this.filterPrices(response, params);
+        return this.limitPricesByRange(response, params);
     }
 
     @Override

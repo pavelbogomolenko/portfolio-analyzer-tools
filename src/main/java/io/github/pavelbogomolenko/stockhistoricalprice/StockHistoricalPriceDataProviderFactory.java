@@ -12,6 +12,7 @@ public class StockHistoricalPriceDataProviderFactory {
            put(StockHistoricalPricePeriodParam.DAILY, priceProviderService::getStockDailyHistoricalPrices);
            put(StockHistoricalPricePeriodParam.WEEKLY, priceProviderService::getStockWeeklyHistoricalPrices);
            put(StockHistoricalPricePeriodParam.MONTHLY, priceProviderService::getStockMonthlyHistoricalPrices);
+           put(StockHistoricalPricePeriodParam.YEARLY, priceProviderService::getStockYearlyHistoricalPrices);
         }};
     }
 

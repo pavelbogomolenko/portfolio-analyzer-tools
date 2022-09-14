@@ -2,6 +2,10 @@ package io.github.pavelbogomolenko.stockhistoricalprice;
 
 import com.google.gson.GsonBuilder;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class EODStockHistoricalPriceProviderService implements StockHistoricalPriceProviderService {
     private final IStockHistoricalApi dataSource;
@@ -22,24 +26,43 @@ public class EODStockHistoricalPriceProviderService implements StockHistoricalPr
     }
 
     @Override
+    public StockPriceTimeSeries getStockYearlyHistoricalPrices(StockHistoricalPriceParams params) {
+        String rawData = this.dataSource.getRawMonthlyAdjPriceData(params.getSymbol());
+        StockPriceTimeSeries stockPriceTimeSeries = this.jsonStringToStockPriceTimeSeries(rawData, params.getSymbol());
+        List<StockPrice> eoyPrices = new ArrayList<>();
+        StockPrice lastStockPrice = stockPriceTimeSeries.prices().get(0);
+        int prevYear = lastStockPrice.getDate().getYear();
+        eoyPrices.add(lastStockPrice);
+        for(StockPrice stockPrice: stockPriceTimeSeries.prices()) {
+            LocalDate d = stockPrice.getDate();
+            if(prevYear != d.getYear()) {
+                eoyPrices.add(stockPrice);
+                prevYear = d.getYear();
+            }
+        }
+        StockPriceTimeSeries yearlyStockPriceTimeSeries = new StockPriceTimeSeries(stockPriceTimeSeries.meta(), eoyPrices);
+        return this.limitPricesByRange(yearlyStockPriceTimeSeries, params);
+    }
+
+    @Override
     public StockPriceTimeSeries getStockMonthlyHistoricalPrices(StockHistoricalPriceParams params) {
         String rawData = this.dataSource.getRawMonthlyAdjPriceData(params.getSymbol());
         StockPriceTimeSeries stockPriceTimeSeries = this.jsonStringToStockPriceTimeSeries(rawData, params.getSymbol());
-        return this.filterPrices(stockPriceTimeSeries, params);
+        return this.limitPricesByRange(stockPriceTimeSeries, params);
     }
 
     @Override
     public StockPriceTimeSeries getStockDailyHistoricalPrices(StockHistoricalPriceParams params) {
         String rawData = this.dataSource.getRawDailyAdjPriceData(params.getSymbol());
         StockPriceTimeSeries stockPriceTimeSeries = this.jsonStringToStockPriceTimeSeries(rawData, params.getSymbol());
-        return this.filterPrices(stockPriceTimeSeries, params);
+        return this.limitPricesByRange(stockPriceTimeSeries, params);
     }
 
     @Override
     public StockPriceTimeSeries getStockWeeklyHistoricalPrices(StockHistoricalPriceParams params) {
         String rawData = this.dataSource.getRawWeeklyAdjPriceData(params.getSymbol());
         StockPriceTimeSeries stockPriceTimeSeries = this.jsonStringToStockPriceTimeSeries(rawData, params.getSymbol());
-        return this.filterPrices(stockPriceTimeSeries, params);
+        return this.limitPricesByRange(stockPriceTimeSeries, params);
     }
 
     private StockPriceTimeSeries jsonStringToStockPriceTimeSeries(String data, String symbol) {

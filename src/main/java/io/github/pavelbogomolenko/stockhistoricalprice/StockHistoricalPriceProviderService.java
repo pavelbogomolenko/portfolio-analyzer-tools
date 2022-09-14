@@ -21,11 +21,12 @@ public interface StockHistoricalPriceProviderService {
         put("DD", 1.0);
         put("YY", 1.0);
     }};
+    StockPriceTimeSeries getStockYearlyHistoricalPrices(StockHistoricalPriceParams params);
     StockPriceTimeSeries getStockMonthlyHistoricalPrices(StockHistoricalPriceParams params);
     StockPriceTimeSeries getStockDailyHistoricalPrices(StockHistoricalPriceParams params);
     StockPriceTimeSeries getStockWeeklyHistoricalPrices(StockHistoricalPriceParams params);
 
-    default StockPriceTimeSeries filterPrices(StockPriceTimeSeries priceTimeSeries, StockHistoricalPriceParams params) {
+    default StockPriceTimeSeries limitPricesByRange(StockPriceTimeSeries priceTimeSeries, StockHistoricalPriceParams params) {
         if(priceTimeSeries.prices().size() == 0) {
             return priceTimeSeries;
         }

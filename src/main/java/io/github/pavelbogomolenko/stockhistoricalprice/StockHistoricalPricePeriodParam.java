@@ -6,7 +6,8 @@ import java.util.*;
 public enum StockHistoricalPricePeriodParam {
     DAILY("d"),
     WEEKLY("w"),
-    MONTHLY("m");
+    MONTHLY("m"),
+    YEARLY("y");
 
     private static final Map<String, StockHistoricalPricePeriodParam> ENUM_LABELS = new HashMap<>();
     static {
